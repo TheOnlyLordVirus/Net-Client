@@ -13,14 +13,14 @@ yum install php php-fpm php-mysqlnd php-zip php-devel php-gd php-mcrypt php-mbst
 
 nano /etc/yum.repos.d/MariaDB.repo
 
-**inside /etc/yum.repos.d/MariaDB.repo:**
-``
+**Inside /etc/yum.repos.d/MariaDB.repo Add:**
+```
 [mariadb]
 name = MariaDB
 baseurl = http://yum.mariadb.org/10.2/centos7-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
-``
+```
 
 **Running the Api Socket**
 --------------------------
@@ -36,11 +36,11 @@ nano /etc/httpd/conf/httpd.conf
 ``<Directory /var/www/html>``
 
 **Remove its contents and then add:**
-``
+```
 order deny, allow
 allow from 127.0.0.1
 deny from all
-``
+```
 
 **Start Webserver and DB**
 --------------------------
