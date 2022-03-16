@@ -23,6 +23,29 @@ gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 ```
 
+**Run this command, don't alow remote connections or anonymouse users, Set your root db password.**
+``
+mysql_secure_installation
+``
+
+**Login as root and Run Build_DB.sql querys on DB:**
+``
+mysql -pYOUR_PASS
+``
+
+**Create a new account:**
+```
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'password' require ssl;
+GRANT ALL PRIVILEGES ON USER_INFO_DB.* TO 'admin'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+**Login to new account and verify it exists with DB access:**
+```
+mysql -uadmin -ppassword
+```
+
 **Compiling and running the Api Socket**
 --------------------------
 ```
