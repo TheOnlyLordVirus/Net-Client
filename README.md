@@ -1,6 +1,3 @@
-**AuthApi**
--------
-
 **CentOS 7 LAMP stack install**
 -------------------------------
 yum upgrade -y
@@ -13,10 +10,11 @@ yum install php php-fpm php-mysqlnd php-zip php-devel php-gd php-mcrypt php-mbst
 
 **Setup DB**
 ------------
+
 nano /etc/yum.repos.d/MariaDB.repo
 
-**inside /etc/yum.repos.d/MariaDB.repo:**
------------------------------------------
+**>inside /etc/yum.repos.d/MariaDB.repo:
+
 [mariadb]
 name = MariaDB
 baseurl = http://yum.mariadb.org/10.2/centos7-amd64
@@ -28,17 +26,16 @@ gpgcheck=1
 cd /var/www/html/CPP-Api
 g++ -g -o AuthApi main.cpp -std=gnu++11
 
+
 **Blocking Apache from accepting outside requests**
 ---------------------------------------------------
 nano /etc/httpd/conf/httpd.conf
 
-**Go to:**
-----------
+**> Go to:
 <Directory /var/www/html>
 ...
 
-**Remove its contents and then add**
-------------------------------------
+**> Remove its contents and then add:
 order deny, allow
 allow from 127.0.0.1
 deny from all
