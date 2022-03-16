@@ -12,7 +12,7 @@
 #include "HTTPRequest.hpp"
 
 // New
-#define PORT 80
+#define PORT 5060
 
 // Old
 #define POST_VALUES "host=%s&user=%s&pass=%s&name=%s&username=%s&password=%s&cheese=%s&parms=%s"
