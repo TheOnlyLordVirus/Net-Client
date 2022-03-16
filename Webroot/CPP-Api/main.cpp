@@ -9,26 +9,14 @@
 #include <sys/types.h> 
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include "HTTPRequest.hpp"
 
-// New
 #define PORT 5060
-
-// Old
-#define POST_VALUES "host=%s&user=%s&pass=%s&name=%s&username=%s&password=%s&cheese=%s&parms=%s"
-#define DB_HOST "localhost"
-#define DB_USER "admin"
-#define DB_PASS "Kush986753421"
-#define DB_NAME "USER_INFO_DB"
-#define USERNAME "pastafarian"
-#define PASSWORD "cheesetoast"
-#define CHEESE "add_user"
-#define PARM "{\"email\": \"test123@mail.com\", \"username\": \"New Test\", \"password\": \"pass123\", \"ip_addy\": \"0.0.0.0\", \"admin\": \"true\", \"time_value\": \"7\"}"
-
-#pragma warning(disable:4996)
 
 using namespace std;
 
+#pragma warning(disable:4996)
 
 /**
  * @brief Pass the arguments to the DB.
@@ -50,7 +38,7 @@ void apiAssistant(char* args[])
 
 		// send a post request
 		std::cout << "send request" << std::endl;
-		const char* response = request.send
+		const auto response = request.send
 		(
 			"POST",
 			connection_buffer,
@@ -73,7 +61,7 @@ void apiAssistant(char* args[])
 }
 
 /**
- * @brief 
+ * @brief Opens a socket and waits for a message.
  */
 char* socketListener()
 {
@@ -134,7 +122,7 @@ char* socketListener()
 		std::cout << "ERROR opening socket" << std::endl;
 	}
 
-	printf("Server: got connection from %s port %d\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
+	printf("Server: got connection from %s port %d\n",inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
 
 
 	// This send() function sends the 13 bytes of the string to the new socket
@@ -162,25 +150,29 @@ char* socketListener()
 int main(int argc, char* args[])
 {
 	// Test custom input
-	if(argc > 0)
+	if(/*argc > 0*/ false)
 	{
 		apiAssistant(args);
 
 		std::string inputbuffer = "";
 		std::cin >> inputbuffer;
-		return 0;
 	}
 
 
-	// Call socket listenr, when input buffer is returned from packet data, we then will send the buffer params to apiAssistant 
+	// Call socket listener, when input buffer is returned from packet data, we then will send the buffer params to apiAssistant 
 	else
 	{
-		char* client_input = socketListener();
+		while(true)
+		{
+			char* client_command = socketListener();
 		
-		apiAssistant(client_input);
+			//apiAssistant();
 
-		std::string inputbuffer = "";
-		std::cin >> inputbuffer;
-		return 0;
+			std::string inputbuffer = "";
+			std::cin >> inputbuffer;
+		}
 	}
+
+	// Exit script.
+	return false;
 }
