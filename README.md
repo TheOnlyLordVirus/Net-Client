@@ -49,3 +49,9 @@ deny from all
 --------------------------
 ``systemctl start httpd``
 ``systemctl start mariadb``
+
+
+**Abstract**
+------------
+``CPP Socket reference.``
+https://www.bogotobogo.com/cplusplus/sockets_server_client.php
