@@ -35,7 +35,7 @@ nano /etc/httpd/conf/httpd.conf
 **Go to:**
 ``<Directory /var/www/html>``
 
-**Remove its contents and then add:**
+**Remove the contents of the Directory Markup and then add:**
 ```
 order deny, allow
 allow from 127.0.0.1
