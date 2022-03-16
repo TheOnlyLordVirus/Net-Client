@@ -53,5 +53,5 @@ deny from all
 
 **Abstract**
 ------------
-``CPP Socket reference.``
+**CPP Socket reference:**
 https://www.bogotobogo.com/cplusplus/sockets_server_client.php
