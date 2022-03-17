@@ -23,35 +23,43 @@ using namespace std;
  * 
  * @param args POST_VALUES, DB_HOST, DB_USER, DB_PASS, DB_NAME, USERNAME, PASSWORD, CHEESE, PARM
  */
-void apiAssistant(char* args[])
+char* apiAssistant(char* args[])
 {
 	try
 	{
-		std::cout << "try post" << std::endl;
+		std::cout << "Api Response:" << std::endl;
 
-		char connection_buffer[sizeof(args)];
-		memset(connection_buffer, 0, 0xFFFF);
-		sprintf(connection_buffer, /*POST_VALUES*/args[0], /*DB_HOST*/args[1], /*DB_USER*/args[2], /*DB_PASS*/args[3], /*DB_NAME*/args[4], /*USERNAME*/args[5], /*PASSWORD*/args[6], /*CHEESE*/args[7], /*PARM*/args[8]);
+		if(sizeof(args) / sizeof(args[0]) == 9)
+		{
+			char connection_buffer[sizeof(args)];
+			memset(connection_buffer, 0, sizeof(args));
+			sprintf(connection_buffer, /*POST_VALUES*/args[0], /*DB_HOST*/args[1], /*DB_USER*/args[2], /*DB_PASS*/args[3], /*DB_NAME*/args[4], /*USERNAME*/args[5], /*PASSWORD*/args[6], /*CHEESE*/args[7], /*PARM*/args[8]);
+			http::Request request{ "http://127.0.0.1/index.php" };
 
-		std::cout << "create request" << std::endl;
-		http::Request request{ "http://127.0.0.1/index.php" };
+			// send a post request
+			std::cout << "send request" << std::endl;
+			const auto response = request.send
+			(
+				"POST",
+				connection_buffer,
+				{
+					"Content-Type: application/x-www-form-urlencoded",
+					"User-Agent: runscope/0.1",
+					"Accept: */*"
+				}, std::chrono::seconds(2)
+			);
 
-		// send a post request
-		std::cout << "send request" << std::endl;
-		const auto response = request.send
-		(
-			"POST",
-			connection_buffer,
-			{
-				"Content-Type: application/x-www-form-urlencoded",
-				"User-Agent: runscope/0.1",
-				"Accept: */*"
-			}, std::chrono::seconds(2)
-		);
+			// Print response to console.
+			std::string str = std::string{ response.body.begin(), response.body.end() };
+			char* c = const_cast<char*>(str.c_str());
+			return c;
+		}
 
-		// Print response to console.
-		std::cout << "Response:" << std::endl;
-		std::cout << std::string{ response.body.begin(), response.body.end() } << std::endl;
+		else
+		{
+			// Invalid number of arguments, don't tell the client this for security purposes.
+			std::cerr << "Request failed, error!" << std::endl;
+		}
 	}
 
 	catch (const std::exception& e)
@@ -63,18 +71,18 @@ void apiAssistant(char* args[])
 /**
  * @brief Opens a socket and waits for a message.
  */
-char* socketListener()
+void socketListener()
 {
-	int sockfd, newsockfd;
+	int main_socket_file_descriptor, incomming_socket_file_descriptor;
 	socklen_t client_length;
-	char buffer[256];
+	char* recieved_client_command;
 	struct sockaddr_in server_address, client_address;
 	int n;
 
 	// create a socket
 	// socket(int domain, int type, int protocol)
-	sockfd =  socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd < 0) 
+	main_socket_file_descriptor =  socket(AF_INET, SOCK_STREAM, 0);
+	if (main_socket_file_descriptor < 0) 
 	{
 		std::cout << "ERROR opening socket" << std::endl;
 	}
@@ -82,61 +90,47 @@ char* socketListener()
 	// clear address structure
 	memset((char *) &server_address, 0, sizeof(server_address));
 
-	/* setup the host_addr structure for use in bind call */
-	// server byte order
 	server_address.sin_family = AF_INET;  
-
-	// automatically be filled with current host's IP address
 	server_address.sin_addr.s_addr = INADDR_ANY;  
-
-	// convert short integer value for port must be converted into network byte order
 	server_address.sin_port = htons(PORT);
 
-	// bind(int fd, struct sockaddr *local_addr, socklen_t addr_length)
-	// bind() passes file descriptor, the address structure, 
-	// and the length of the address structure
-	// This bind() call will bind  the socket to the current IP address on port, PORT
-	if (bind(sockfd, (struct sockaddr *) &server_address, sizeof(server_address)) < 0)
+	if (bind(main_socket_file_descriptor, (struct sockaddr *) &server_address, sizeof(server_address)) < 0)
 	{
 		std::cout << "ERROR opening socket" << std::endl;
 	}
-
-	// This listen() call tells the socket to listen to the incoming connections.
-	// The listen() function places all incoming connection into a backlog queue
-	// until accept() call accepts the connection.
-	// Here, we set the maximum size for the backlog queue to 5.
-	listen(sockfd, 5);
+	
+	// Listen
+	listen(main_socket_file_descriptor, 5/*Size of the backlock of incomming connections.*/);
+	std::cout << "Socket Open on port: " << PORT << std::endl;
 
 	// The accept() call actually accepts an incoming connection
 	client_length = sizeof(client_address);
-
-	// This accept() function will write the connecting client's address info 
-	// into the the address structure and the size of that structure is clilen.
-	// The accept() returns a new socket file descriptor for the accepted connection.
-	// So, the original socket file descriptor can continue to be used 
-	// for accepting new connections while the new socker file descriptor is used for
-	// communicating with the connected client.
-	newsockfd = accept(sockfd, (struct sockaddr *) &client_address, &client_length);
-	if (newsockfd < 0)
+	incomming_socket_file_descriptor = accept(main_socket_file_descriptor, (struct sockaddr *) &client_address, &client_length);
+	if (incomming_socket_file_descriptor < 0)
 	{
 		std::cout << "ERROR opening socket" << std::endl;
 	}
+	printf("Server: got connection from: %s , on port: %d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
 
-	printf("Server: got connection from %s port %d\n",inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-
-
-	// This send() function sends the 13 bytes of the string to the new socket
-	send(newsockfd, "Command Recieved!\n", 13, 0);
-
-	memset(buffer, 0, 256);
-
-	n = read(newsockfd, buffer, 255);
+	memset(recieved_client_command, 0, 256);
+	n = read(incomming_socket_file_descriptor, recieved_client_command, 255);
 	if (n < 0)
 	{
 		std::cout << "ERROR opening socket" << std::endl;
 	}
 
-	return buffer;
+	// Send api result back to client.
+	char* api_result = apiAssistant((char**)recieved_client_command);
+	if(api_result)
+	{
+		send(incomming_socket_file_descriptor, (char*)api_result, sizeof(api_result), 0);
+	}
+
+	// Error out.
+	else
+	{
+		send(incomming_socket_file_descriptor, "Api Error!", sizeof(11), 0);
+	}
 }
 
 
@@ -149,30 +143,28 @@ char* socketListener()
  */
 int main(int argc, char* args[])
 {
-	// Test custom input
-	if(/*argc > 0*/ false)
+	// Custom API call from Cli.
+	if(argc == 9)
 	{
 		apiAssistant(args);
-
 		std::string inputbuffer = "";
 		std::cin >> inputbuffer;
 	}
 
+	// Cli parameter error.
+	else if(argc > 9)
+	{
+		std:cerr << "Invalid number of aguments." << std::endl;
+	}
 
 	// Call socket listener, when input buffer is returned from packet data, we then will send the buffer params to apiAssistant 
 	else
 	{
-		while(true)
+		while(1)
 		{
-			char* client_command = socketListener();
-		
-			//apiAssistant();
-
-			std::string inputbuffer = "";
-			std::cin >> inputbuffer;
+			socketListener();
 		}
 	}
 
-	// Exit script.
-	return false;
+	return 0;
 }
