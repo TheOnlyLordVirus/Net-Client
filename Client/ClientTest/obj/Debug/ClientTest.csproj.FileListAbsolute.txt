@@ -1,0 +1,11 @@
+C:\Users\TheNe\source\repos\ClientTest\ClientTest\obj\Debug\ClientTest.csproj.AssemblyReference.cache
+C:\Users\TheNe\source\repos\ClientTest\ClientTest\obj\Debug\ClientTest.csproj.SuggestedBindingRedirects.cache
+C:\Users\TheNe\source\repos\ClientTest\ClientTest\obj\Debug\ClientTest.Properties.Resources.resources
+C:\Users\TheNe\source\repos\ClientTest\ClientTest\obj\Debug\ClientTest.csproj.GenerateResource.cache
+C:\Users\TheNe\source\repos\ClientTest\ClientTest\obj\Debug\ClientTest.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\source\repos\ClientTest\ClientTest\bin\Debug\ClientTest.exe.config
+C:\Users\TheNe\source\repos\ClientTest\ClientTest\bin\Debug\ClientTest.exe
+C:\Users\TheNe\source\repos\ClientTest\ClientTest\bin\Debug\ClientTest.pdb
+C:\Users\TheNe\source\repos\ClientTest\ClientTest\obj\Debug\ClientTest.exe
+C:\Users\TheNe\source\repos\ClientTest\ClientTest\obj\Debug\ClientTest.pdb
+C:\Users\TheNe\source\repos\ClientTest\ClientTest\obj\Debug\ClientTest.TestForm.resources

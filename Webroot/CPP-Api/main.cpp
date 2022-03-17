@@ -75,7 +75,7 @@ void socketListener()
 {
 	int main_socket_file_descriptor, incomming_socket_file_descriptor;
 	socklen_t client_length;
-	char* recieved_client_command;
+	char recieved_client_command[0xFF];
 	struct sockaddr_in server_address, client_address;
 	int n;
 
@@ -89,14 +89,13 @@ void socketListener()
 
 	// clear address structure
 	memset((char *) &server_address, 0, sizeof(server_address));
-
 	server_address.sin_family = AF_INET;  
 	server_address.sin_addr.s_addr = INADDR_ANY;  
 	server_address.sin_port = htons(PORT);
 
 	if (bind(main_socket_file_descriptor, (struct sockaddr *) &server_address, sizeof(server_address)) < 0)
 	{
-		std::cout << "ERROR opening socket" << std::endl;
+		std::cout << "ERROR binding socket" << std::endl;
 	}
 	
 	// Listen
@@ -108,16 +107,17 @@ void socketListener()
 	incomming_socket_file_descriptor = accept(main_socket_file_descriptor, (struct sockaddr *) &client_address, &client_length);
 	if (incomming_socket_file_descriptor < 0)
 	{
-		std::cout << "ERROR opening socket" << std::endl;
+		std::cout << "ERROR accepting socket" << std::endl;
 	}
-	printf("Server: got connection from: %s , on port: %d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+	printf("Server: got connection from: %s, on port: %d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
 
-	memset(recieved_client_command, 0, 256);
-	n = read(incomming_socket_file_descriptor, recieved_client_command, 255);
+	memset(recieved_client_command, 0, 0xFF);
+	n = read(incomming_socket_file_descriptor, recieved_client_command, 0xFF);
 	if (n < 0)
 	{
 		std::cout << "ERROR opening socket" << std::endl;
 	}
+	std::cout << "(DEBUG) Data Recieved:" << (char*)recieved_client_command << std::endl;
 
 	// Send api result back to client.
 	char* api_result = apiAssistant((char**)recieved_client_command);
@@ -160,10 +160,13 @@ int main(int argc, char* args[])
 	// Call socket listener, when input buffer is returned from packet data, we then will send the buffer params to apiAssistant 
 	else
 	{
+		socketListener();
+		/*
 		while(1)
 		{
 			socketListener();
 		}
+		*/
 	}
 
 	return 0;
