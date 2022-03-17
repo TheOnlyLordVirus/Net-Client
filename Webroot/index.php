@@ -22,12 +22,12 @@ class cheesey_api
     {
         if(isset($host) && isset($user) && isset($pass) && isset($name) && isset($username) && isset($password) && isset($cheese) && isset($parmesan))
         {
-            $DATABASE_HOST = $host;
-            $DATABASE_USER = $user;
-            $DATABASE_PASS = $pass;
-            $DATABASE_NAME = $name;
-            $USER_ACCOUNT = $username;
-            $USER_PASSWORD = $password;
+            $DATABASE_HOST = $this->stripSomeSymbols($host);
+            $DATABASE_USER = $this->stripAllSymbols($user);
+            $DATABASE_PASS = $this->stripSomeSymbols($pass);
+            $DATABASE_NAME = $this->stripSomeSymbols($name);
+            $USER_ACCOUNT = $this->stripAllSymbols($username);
+            $USER_PASSWORD = $this->stripSomeSymbols($password);
 
             $this->connection = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 
@@ -96,11 +96,11 @@ class cheesey_api
      */
     private function addUser($parmesan)
     {
-        $email = $this->stripSymbols($parmesan['email']);
-        $username = $this->stripSymbols($parmesan['username']);
-        $password = $this->stripSymbols($parmesan['password']);
+        $email = $this->stripSomeSymbols($parmesan['email']);
+        $username = $this->stripAllSymbols($parmesan['username']);
+        $password = $this->stripSomeSymbols($parmesan['password']);
         $harwareid = 'xxxxx-xxxxx-xxxxx-xxxxx-xxxxx';
-        $admin = $this->stripSymbols($parmesan['admin']);
+        $admin = $this->stripAllSymbols($parmesan['admin']);
 
         if ($add_user_query = $this->connection->prepare('call addUser(?, ?, ?, ?, ?)'))
         {
@@ -124,9 +124,9 @@ class cheesey_api
      */
     private function removeUser($parmesan)
     {
-        $email = $this->stripSymbols($parmesan['email']);
-        $username = $this->stripSymbols($parmesan['username']);
-        $password = $this->stripSymbols($parmesan['password']);
+        $email = $this->stripSomeSymbols($parmesan['email']);
+        $username = $this->stripAllSymbols($parmesan['username']);
+        $password = $this->stripSomeSymbols($parmesan['password']);
 
         if ($remove_user_query = $this->connection->prepare('DELETE FROM USER WHERE USER_EMAIL = ? AND USER_NAME = ? AND USER_PASS = ?'))
         {
@@ -150,8 +150,8 @@ class cheesey_api
      */
     private function login($parmesan)
     {
-        $username = $this->stripSymbols($parmesan['username']);
-        $password = $this->stripSymbols($parmesan['password']);
+        $username = $this->stripAllSymbols($parmesan['username']);
+        $password = $this->stripSomeSymbols($parmesan['password']);
 
         if ($login_query = $this->connection->prepare('SELECT USER_ID, USER_PASS, IS_ADMIN FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
         {
@@ -224,7 +224,7 @@ class cheesey_api
             }
         }
 
-        $time_value = $this->stripSymbols($parmesan['time_value']);
+        $time_value = $this->stripSomeSymbols($parmesan['time_value']);
         $key = genKey();
 
         if($key_exists_query = $this->connection->prepare('select TIME_KEY from TIME_KEYS where TIME_KEY = ?'))
@@ -257,6 +257,9 @@ class cheesey_api
         return false;
     }
 
+    /*
+     * TODO: Returns the time left in keys for an account.
+     */
     private function checkTime($parmesan)
     {
         return true;
@@ -269,8 +272,8 @@ class cheesey_api
      */
     private function logIp($parmesan)
     {
-        $username = $this->stripSymbols($parmesan['username']);
-        $password = $this->stripSymbols($parmesan['password']);
+        $username = $this->stripAllSymbols($parmesan['username']);
+        $password = $this->stripSomeSymbols($parmesan['password']);
 
         if($login_query = $this->connection->prepare('SELECT USER_ID, IS_ADMIN FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
         {
@@ -304,9 +307,15 @@ class cheesey_api
         return false;
     }
 
-    private function stripSymbols($inputStream)
+    private function stripAllSymbols($inputStream)
     {
         $outputStreams = preg_replace('/[^0-9a-zA-Z]+/', '', $inputStream);
+        return $outputStreams;
+    }
+
+    private function stripSomeSymbols($inputStream)
+    {
+        $outputStreams = preg_replace('/[^0-9a-zA-Z@#$%^&*!.]+/', '', $inputStream);
         return $outputStreams;
     }
 }
