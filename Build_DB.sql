@@ -36,6 +36,13 @@ create table IP_HISTORY
   LOGGIN_DATE datetime not null default NOW()
 );
 
+create table GAME_DATA
+(
+	GAME_ID int primary key auto_increment,
+	GAME_NAME varchar(40) not null,
+	GAME_CHEAT_VERSION decimal(3,1)
+);
+
 create view STORED_IP as select u.USER_NAME, h.LOGGED_IP, h.LOGGIN_DATE from IP_HISTORY h inner join USER u on h.USER_ID = u.USER_ID;
 
 DELIMITER $$ ;
@@ -53,7 +60,7 @@ begin
 end
 $$
 
-create procedure TIME_KEYS (IN `TIME_KEY` VARCHAR(29), IN `TIME_VALUE` INT)
+create procedure addKey (IN `TIME_KEY` VARCHAR(29), IN `TIME_VALUE` INT)
 begin
   insert into TIME_KEYS (TIME_KEY, TIME_VALUE) values (TIME_KEY, TIME_VALUE);
 end
@@ -64,5 +71,5 @@ DELIMITER ; $$
 call addUser('test@mail.com', 'pastafarian', 'cheesetoast', 'none', true);
 
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES on *.* to 'admin'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON USER_INFO_DB.* TO 'admin'@'localhost';
 FLUSH PRIVILEGES;

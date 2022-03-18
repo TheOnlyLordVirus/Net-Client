@@ -1,11 +1,12 @@
 <?php
+// Show errors, remove this after testing is done.
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 
+// Verify that all of the parameters have been set.
 if(isset($_POST['host']) && isset($_POST['user']) && isset($_POST['pass']) && isset($_POST['name']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['cheese']) && isset($_POST['parms']))
 {
-    $parmesan  = json_decode($_POST['parms'], true);
-    $api = new cheesey_api($_POST['host'], $_POST['user'], $_POST['pass'], $_POST['name'], $_POST['username'], $_POST['password'], $_POST['cheese'], $parmesan);
+    $api = new cheesey_api($_POST['host'], $_POST['user'], $_POST['pass'], $_POST['name'], $_POST['username'], $_POST['password'], $_POST['cheese'], $_POST['parms']);
 }
 
 else
@@ -14,6 +15,9 @@ else
     exit;
 }
 
+/**
+ * Self contained Api object with proper access modifyers.
+ */
 class cheesey_api
 {
     private $connection = null;
@@ -50,27 +54,27 @@ class cheesey_api
                         switch ($cheese)
                         {
                             case 'add_user':
-                                echo $this->addUser($parmesan);
+                                echo $this->addUser(json_decode($parmesan, true));
                                 break;
 
                             case 'delete_user':
-                                echo $this->removeUser($parmesan);
+                                echo $this->removeUser(json_decode($parmesan, true));
                                 break;
 
                             case 'login':
-                                echo $this->login($parmesan);
+                                echo $this->login(json_decode($parmesan, true));
                                 break;
 
                             case 'log_ip':
-                                echo $this->logIp($parmesan);
+                                echo $this->logIp(json_decode($parmesan, true));
                                 break;
 
                             case 'key_check':
-                                echo $this->checkTime($parmesan);
+                                echo $this->checkTime(json_decode($parmesan, true));
                                 break;
 
                             case 'add_key':
-                                echo $this->addKey($parmesan);
+                                echo $this->addKey(json_decode($parmesan, true));
                                 break;
                         }
                     }
@@ -315,7 +319,7 @@ class cheesey_api
 
     private function stripSomeSymbols($inputStream)
     {
-        $outputStreams = preg_replace('/[^0-9a-zA-Z@#$%^&*!.]+/', '', $inputStream);
+        $outputStreams = preg_replace('/[^0-9a-zA-Z.!@#$%^&*]+/', '', $inputStream);
         return $outputStreams;
     }
 }
