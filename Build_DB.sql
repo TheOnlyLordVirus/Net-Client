@@ -44,6 +44,7 @@ create table GAME_DATA
 );
 
 create view STORED_IP as select u.USER_NAME, h.LOGGED_IP, h.LOGGIN_DATE from IP_HISTORY h inner join USER u on h.USER_ID = u.USER_ID;
+create view USER_KEY_DATA as select u.USER_NAME, uk.USER_KEY, uk.TIME_KEYS from USER_KEY uk inner join USER u on uk.USER_ID = u.USER_ID;
 
 DELIMITER $$ ;
 
