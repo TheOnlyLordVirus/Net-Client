@@ -266,6 +266,9 @@ class cheesey_api
      */
     private function checkTime($parmesan)
     {
+        
+
+
         return true;
     }
 
@@ -319,7 +322,7 @@ class cheesey_api
 
     private function stripSomeSymbols($inputStream)
     {
-        $outputStreams = preg_replace('/[^0-9a-zA-Z.!@#$%^&*]+/', '', $inputStream);
+        $outputStreams = preg_replace('/[^0-9a-zA-Z.!@#$%^&*-_]+/', '', $inputStream);
         return $outputStreams;
     }
 }
