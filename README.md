@@ -119,6 +119,20 @@ iptables -t mangle -A PREROUTING -p udp --sport 53 -m length --length 58 -j DROP
 #PUBGBypass Patch
 iptables -t mangle -A PREROUTING -p udp --sport 29445 -m length --length 28 -j DROP
 iptables -A INPUT -p udp --sport 29445 -m limit --limit 6/s --limit-burst 12 -j DROP
+#Frag Patch
+iptables -t mangle -A PREROUTING -p tcp --sport 12024 -m length --length 40 -j DROP
+iptables -t mangle -A PREROUTING -p udp --sport 12321 -m length --length 799 -j DROP
+#CPU-DROP
+iptables -t mangle -A PREROUTING -p udp --sport 665 -m length --length 116 -j DROP
+iptables -t mangle -A PREROUTING -p tcp --sport 665 -m length --length 116 -j DROP
+iptables -A INPUT -p udp --sport 665 -m limit --limit 6/s --limit-burst 12 -j DROP
+iptables -A INPUT -p tcp --sport 665 -m limit --limit 6/s --limit-burst 12 -j DROP
+#TCP-AMP Patch
+iptables -t mangle -A PREROUTING -p tcp --sport 21 -m length --length 44 -j DROP
+iptables -A INPUT -p tcp --sport 21 -m limit --limit 6/s --limit-burst 12 -j DROP
+#Mix of UDP Amplifications, Raw UDP & Bypass
+iptables -t mangle -A PREROUTING -p udp --sport 61013 -m length --length 29 -j DROP
+iptables -A INPUT -p udp --sport 61013 -m limit --limit 6/s --limit-burst 12 -j DROP
 ```
 
 **Abstract**
