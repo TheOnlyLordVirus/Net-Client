@@ -76,5 +76,9 @@ deny from all
 
 **Abstract**
 ------------
+**TODO:**
+Update MariaDB to patch this exploit:
+https://github.com/Al1ex/CVE-2021-27928
+
 **CPP Socket reference:**
 https://www.bogotobogo.com/cplusplus/sockets_server_client.php
