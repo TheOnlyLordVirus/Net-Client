@@ -18,9 +18,14 @@ yum install php php-fpm php-mysqlnd php-zip php-devel php-gd php-mbstring php-cu
 ```
 [mariadb]
 name = MariaDB
-baseurl = http://yum.mariadb.org/10.2/centos7-amd64
+baseurl = http://yum.mariadb.org/10.8.2/centos7-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
+```
+
+**Install MariaDB from newly added repo**
+```
+yum install MariaDB-server MariaDB-client httpd -y
 ```
 
 **Run this command, don't alow remote connections or anonymouse users, Set your root db password.**
