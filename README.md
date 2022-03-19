@@ -62,10 +62,6 @@ You already have your root account protected, so you can safely answer 'n'.
 Change the root password? [Y/n] y
 New password:
 Re-enter new password:
-Sorry, passwords do not match.
-
-New password:
-Re-enter new password:
 Password updated successfully!
 Reloading privilege tables..
  ... Success!
