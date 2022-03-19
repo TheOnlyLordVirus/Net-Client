@@ -28,8 +28,9 @@ gpgcheck=1
 yum install MariaDB-server MariaDB-client -y
 ```
 
-**Run this command, don't alow remote connections or anonymouse users, Set your root db password.**
+**Run these commands to start mysql, don't alow remote connections or anonymouse users, Set your root db password.**
 ``
+systemctl start mariadb
 mariadb-secure-installation
 ``
 
@@ -73,10 +74,9 @@ allow from 127.0.0.1
 deny from all
 ```
 
-**Start Webserver and DB**
+**Start Apache**
 --------------------------
 ``systemctl start httpd``
-``systemctl start mariadb``
 
 **Ddos port filtering** (Work in progress)
 -----------------------
