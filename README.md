@@ -231,9 +231,5 @@ iptables -A INPUT -p udp --sport 61013 -m limit --limit 6/s --limit-burst 12 -j 
 
 **Abstract**
 ------------
-**TODO:**
-Update MariaDB to patch this exploit:
-https://github.com/Al1ex/CVE-2021-27928
-
 **CPP Socket reference:**
 https://www.bogotobogo.com/cplusplus/sockets_server_client.php
