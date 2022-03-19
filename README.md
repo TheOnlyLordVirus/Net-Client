@@ -161,6 +161,7 @@ echo net.nf_conntrack_max = 1000000 >> /etc/sysctl.conf
 iptables -A INPUT -p udp -m limit --limit 6/s --limit-burst 66 -j DROP
 
 # TCP Flood
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 iptables -A INPUT -p tcp -m limit --limit 6/s --limit-burst 66 -j DROP
 
 # Dropping all common AMP source ports
