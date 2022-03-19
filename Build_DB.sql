@@ -25,7 +25,7 @@ create table TIME_KEYS
 
 create table USER_KEY
 (
-	USER_ID int primary key references TIME_KEYS(USER_ID),
+	USER_ID int primary key references USER(USER_ID),
 	TIME_KEY varchar(29) references TIME_KEYS(TIME_KEY)
 );
 
