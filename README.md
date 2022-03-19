@@ -158,7 +158,7 @@ echo net.netfilter.nf_conntrack_buckets = 125000 >> /etc/sysctl.conf
 echo net.nf_conntrack_max = 1000000 >> /etc/sysctl.conf
 
 # UDP Flood
-Iptables -A INPUT -p udp -m limit --limit 6/s --limit-burst 66 -j DROP
+iptables -A INPUT -p udp -m limit --limit 6/s --limit-burst 66 -j DROP
 
 # TCP Flood
 iptables -A INPUT -p tcp -m limit --limit 6/s --limit-burst 66 -j DROP
