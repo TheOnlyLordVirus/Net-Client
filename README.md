@@ -139,7 +139,8 @@ g++ -g -o AuthApi main.cpp -std=gnu++11
 
 **Remove the contents of the Directory Markup and then add:**
 ```
-order deny, allow
+AllowOverride All
+order deny,allow
 allow from 127.0.0.1
 deny from all
 ```
