@@ -29,10 +29,10 @@ yum install MariaDB-server MariaDB-client -y
 ```
 
 **Run these commands to start mysql, don't alow remote connections or anonymouse users, Set your root db password.**
-``
+```
 systemctl start mariadb
 mariadb-secure-installation
-``
+```
 
 **Login as root and Run Build_DB.sql querys on DB:**
 ``
