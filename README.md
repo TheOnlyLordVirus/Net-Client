@@ -25,7 +25,7 @@ gpgcheck=1
 
 **Install MariaDB from newly added repo**
 ```
-yum install MariaDB-server MariaDB-client httpd -y
+yum install MariaDB-server MariaDB-client -y
 ```
 
 **Run this command, don't alow remote connections or anonymouse users, Set your root db password.**
