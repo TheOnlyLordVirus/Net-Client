@@ -139,7 +139,8 @@ g++ -g -o AuthApi main.cpp -std=gnu++11
 
 **Remove the contents of the Directory Markup and then add:**
 ```
-order deny, allow
+AllowOverride All
+order deny,allow
 allow from 127.0.0.1
 deny from all
 ```
@@ -157,9 +158,10 @@ echo net.netfilter.nf_conntrack_buckets = 125000 >> /etc/sysctl.conf
 echo net.nf_conntrack_max = 1000000 >> /etc/sysctl.conf
 
 # UDP Flood
-Iptables -A INPUT -p udp -m limit --limit 6/s --limit-burst 66 -j DROP
+iptables -A INPUT -p udp -m limit --limit 6/s --limit-burst 66 -j DROP
 
 # TCP Flood
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 iptables -A INPUT -p tcp -m limit --limit 6/s --limit-burst 66 -j DROP
 
 # Dropping all common AMP source ports
