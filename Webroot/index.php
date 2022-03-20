@@ -3,6 +3,10 @@
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 
+
+var_dump($_POST);
+exit;
+
 // Verify that all of the parameters have been set.
 if(isset($_POST['host']) && isset($_POST['user']) && isset($_POST['pass']) && isset($_POST['name']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['cheese']) && isset($_POST['parms']))
 {

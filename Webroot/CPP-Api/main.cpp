@@ -10,8 +10,14 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <bits/stdc++.h>
 #include "HTTPRequest.hpp"
 
+#define POST_VALUES "host=%s&user=%s&pass=%s&name=%s&username=%s&password=%s&cheese=%s&parms=%s"
+#define DB_HOST "127.0.0.1"
+#define DB_USER "root"
+#define DB_PASS "Kush007"
+#define DB_NAME "USER_INFO_DB"
 #define PORT 5060
 
 using namespace std;
@@ -23,21 +29,31 @@ using namespace std;
  * 
  * @param args POST_VALUES, DB_HOST, DB_USER, DB_PASS, DB_NAME, USERNAME, PASSWORD, CHEESE, PARM
  */
-char* apiAssistant(char* args[])
+void apiAssistant(char* args[])
 {
 	try
 	{
+		char* token = strtok((char*)args, ";");
+		char* arguments[5];
+		for (int i = 0; token != NULL || i != 5; i++)
+		{
+			arguments[i] = token;
+			token = strtok(NULL, ";");
+		}
+
 		std::cout << "Api Response:" << std::endl;
 
-		if(sizeof(args) / sizeof(args[0]) == 9)
+		std::cout << (sizeof(arguments) / sizeof(arguments[0])) << std::endl;
+
+		if(sizeof(arguments) / sizeof(arguments[0]) == 5)
 		{
-			char connection_buffer[sizeof(args)];
-			memset(connection_buffer, 0, sizeof(args));
-			sprintf(connection_buffer, /*POST_VALUES*/args[0], /*DB_HOST*/args[1], /*DB_USER*/args[2], /*DB_PASS*/args[3], /*DB_NAME*/args[4], /*USERNAME*/args[5], /*PASSWORD*/args[6], /*CHEESE*/args[7], /*PARM*/args[8]);
+			char connection_buffer[sizeof(arguments)];
+			memset(connection_buffer, 0, sizeof(arguments));
+			sprintf(connection_buffer, "host=%s&user=%s&pass=%s&name=%s&username=%s&password=%s&cheese=%s&parms=%s", "127.0.0.1", "root", "Kush007", "USER_INFO_DB", /*USERNAME*/arguments[0], /*PASSWORD*/arguments[1], /*CHEESE*/arguments[2], /*PARM*/arguments[3]);
 			http::Request request{ "http://127.0.0.1/index.php" };
 
 			// send a post request
-			std::cout << "send request" << std::endl;
+			std::cout << "Sending request" << std::endl;
 			const auto response = request.send
 			(
 				"POST",
@@ -51,8 +67,13 @@ char* apiAssistant(char* args[])
 
 			// Print response to console.
 			std::string str = std::string{ response.body.begin(), response.body.end() };
+
+			std::cout << str << std::endl;
+
+			/*
 			char* c = const_cast<char*>(str.c_str());
 			return c;
+			*/
 		}
 
 		else
@@ -120,7 +141,10 @@ void socketListener()
 	std::cout << "(DEBUG) Data Recieved:" << (char*)recieved_client_command << std::endl;
 
 	// Send api result back to client.
-	char* api_result = apiAssistant((char**)recieved_client_command);
+	apiAssistant((char**)recieved_client_command);
+	//char* api_result = apiAssistant((char**)recieved_client_command);
+
+	/*
 	if(api_result)
 	{
 		send(incomming_socket_file_descriptor, (char*)api_result, sizeof(api_result), 0);
@@ -131,6 +155,7 @@ void socketListener()
 	{
 		send(incomming_socket_file_descriptor, "Api Error!", sizeof(11), 0);
 	}
+	*/
 }
 
 
