@@ -47,8 +47,8 @@ void apiAssistant(char* args[])
 
 		if(sizeof(arguments) / sizeof(arguments[0]) == 5)
 		{
-			char connection_buffer[sizeof(arguments)];
-			memset(connection_buffer, 0, sizeof(arguments));
+			char connection_buffer[0xFF];
+			memset(connection_buffer, 0, sizeof(0xFF));
 			sprintf(connection_buffer, "host=%s&user=%s&pass=%s&name=%s&username=%s&password=%s&cheese=%s&parms=%s", "127.0.0.1", "root", "Kush007", "USER_INFO_DB", /*USERNAME*/arguments[0], /*PASSWORD*/arguments[1], /*CHEESE*/arguments[2], /*PARM*/arguments[3]);
 			http::Request request{ "http://127.0.0.1/index.php" };
 
