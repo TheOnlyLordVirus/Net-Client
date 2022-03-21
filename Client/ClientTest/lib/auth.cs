@@ -8,7 +8,7 @@ namespace ClientTest.lib
     class Auth
     {
         private string Cheese = "add_user";
-        private string Parmesan = "{\"email\": \"test123@mail.com\", \"username\": \"New Test\", \"password\": \"pass123\", \"ip_addy\": \"0.0.0.0\", \"admin\": \"true\", \"time_value\": \"7\"}";
+        private string Parmesan = "{'email': 'test123@mail.com', 'username': 'testificate', 'password': 'MyPass123', 'ip_addy': '0.0.0.0', 'admin': 1, 'time_value': 7}";
         public Auth()
         {
             // Get host related information.
@@ -22,8 +22,18 @@ namespace ClientTest.lib
             try
             {
                 senderSocket.Connect(authApiEndpoint);
-                byte[] data = Encoding.ASCII.GetBytes("pasafarian;cheesetoast;" + Cheese + ";" + Parmesan);
+                byte[] data = Encoding.ASCII.GetBytes("pastafarian;cheesetoast;" + Cheese + ";" + Parmesan);
                 senderSocket.Send(data);
+
+                try
+                {
+                    senderSocket.Shutdown(SocketShutdown.Both);
+                }
+
+                finally
+                {
+                    senderSocket.Close();
+                }
             }
 
             // We failed to connect.

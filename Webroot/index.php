@@ -3,10 +3,6 @@
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 
-
-var_dump($_POST);
-exit;
-
 // Verify that all of the parameters have been set.
 if(isset($_POST['host']) && isset($_POST['user']) && isset($_POST['pass']) && isset($_POST['name']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['cheese']) && isset($_POST['parms']))
 {
@@ -41,51 +37,44 @@ class cheesey_api
 
             if (mysqli_connect_errno())
             {
-                echo 'Failed to connect to MySQL: ' . mysqli_connect_error();
+                return 'Failed to connect to MySQL: ' . mysqli_connect_error();
             }
 
             else
             {
-                if ($user_query = $this->connection->prepare('SELECT USER_ID, IS_ADMIN FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+                if ($this->login(['username' => $USER_ACCOUNT, 'password' => $USER_PASSWORD]))
                 {
-                    $user_query->bind_param('ss', $USER_ACCOUNT, $USER_PASSWORD);
-                    $user_query->execute();
-                    $user_query->store_result();
-
-                    // Spaghetti
-                    if ($user_query->num_rows > 0)
+                    switch ($cheese)
                     {
-                        switch ($cheese)
-                        {
-                            case 'add_user':
-                                echo $this->addUser(json_decode($parmesan, true));
-                                break;
+                        case 'add_user':
+                            $eggnoodle = json_decode($parmesan, true);
+                            echo $this->addUser($eggnoodle);
+                            break;
 
-                            case 'delete_user':
-                                echo $this->removeUser(json_decode($parmesan, true));
-                                break;
+                        case 'delete_user':
+                            $eggnoodle = json_decode($parmesan, true);
+                            echo $this->removeUser(json_decode($eggnoodle, true));
+                            break;
 
-                            case 'login':
-                                echo $this->login(json_decode($parmesan, true));
-                                break;
+                        case 'login':
+                            $eggnoodle = json_decode($parmesan, true);
+                            echo $this->login(json_decode($eggnoodle, true));
+                            break;
 
-                            case 'log_ip':
-                                echo $this->logIp(json_decode($parmesan, true));
-                                break;
+                        case 'log_ip':
+                            $eggnoodle = json_decode($parmesan, true);
+                            echo $this->logIp(json_decode($eggnoodle, true));
+                            break;
 
-                            case 'key_check':
-                                echo $this->checkTime(json_decode($parmesan, true));
-                                break;
+                        case 'key_check':
+                            $eggnoodle = json_decode($parmesan, true);
+                            echo $this->checkTime(json_decode($eggnoodle, true));
+                            break;
 
-                            case 'add_key':
-                                echo $this->addKey(json_decode($parmesan, true));
-                                break;
-                        }
-                    }
-
-                    else
-                    {
-                        return false;
+                        case 'add_key':
+                            $eggnoodle = json_decode($parmesan, true);
+                            echo $this->addKey(json_decode($eggnoodle, true));
+                            break;
                     }
                 }
 
@@ -104,21 +93,29 @@ class cheesey_api
      */
     private function addUser($parmesan)
     {
+        var_dump($parmesan);
+        exit;
         $email = $this->stripSomeSymbols($parmesan['email']);
         $username = $this->stripAllSymbols($parmesan['username']);
         $password = $this->stripSomeSymbols($parmesan['password']);
         $harwareid = 'xxxxx-xxxxx-xxxxx-xxxxx-xxxxx';
         $admin = $this->stripAllSymbols($parmesan['admin']);
 
+        echo $email;
+        echo $username;
+        echo $password;
+        echo $harwareid;
+        echo $admin;
+
         if ($add_user_query = $this->connection->prepare('call addUser(?, ?, ?, ?, ?)'))
         {
-            $add_user_query->bind_param('sssss', $email, $username, $password, $harwareid, $admin);
+            $add_user_query->bind_param('ssssi', $email, $username, $password, $harwareid, $admin);
             $add_user_query->execute();
             $add_user_query->store_result();
 
             if($add_user_query->affected_rows > 0)
             {
-               return true;
+                return true;
             }
         }
 
