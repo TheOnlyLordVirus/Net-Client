@@ -1,4 +1,11 @@
 <?php
+/*
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+*/
+date_default_timezone_set('UTC');
+
 // Verify that all of the parameters have been set.
 if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['cheese']) && isset($_POST['parms']))
 {
@@ -7,7 +14,6 @@ if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['chees
 
 else
 {
-    echo 'nope';
     $datalogger = new data_logger();
 }
 
@@ -45,7 +51,7 @@ class cheesey_api
                     switch ($cheese)
                     {
                         case 'login':
-                            echo 1;
+                            echo $this->logIp($eggnoodle);
                             break;
 
                         case 'add_user': // Adds a user to the cheat api
@@ -58,11 +64,6 @@ class cheesey_api
                             echo $this->removeUser($eggnoodle);
                             break;
 
-                        case 'log_ip': // Log their IP address
-                            $eggnoodle = json_decode($parmesan, true);
-                            echo $this->logIp($eggnoodle);
-                            break;
-
                         case 'time_check':
                             $eggnoodle = json_decode($parmesan, true);
                             echo $this->checkTime($eggnoodle);
@@ -71,6 +72,10 @@ class cheesey_api
                         case 'add_key':
                             $eggnoodle = json_decode($parmesan, true);
                             echo $this->addKey($eggnoodle);
+                            break;
+
+                        default:
+                            echo 0;
                             break;
                     }
                 }
@@ -290,7 +295,7 @@ class cheesey_api
      */
     private function checkTime($parmesan)
     {
-        $user = stripAllSymbols($parmesan['username']);
+        $user = $this->stripAllSymbols($parmesan['username']);
 
         if ($check_time_query = $this->connection->prepare('select AUTH_END_DATE from USER where USER_NAME = ?'))
         {
@@ -338,9 +343,8 @@ class cheesey_api
                 if ($ip_query = $this->connection->prepare('call logIP(?, ?)'))
                 {
                     $ip_query->bind_param('is', $id, data_logger::getIPAddress());
-                    $ip_query->execute();
-
-                    if($ip_query->num_rows > 0)
+           
+                    if($ip_query->execute())
                     {
                         return 1;
                     }
@@ -364,6 +368,9 @@ class cheesey_api
     }
 }
 
+/**
+ * Used to log all of the trafic to this page.
+ */
 class data_logger
 {
     function __construct()

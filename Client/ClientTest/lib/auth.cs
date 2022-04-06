@@ -24,6 +24,7 @@ namespace ClientTest.lib
         private string username = null;
 
         private string password = null;
+
         #endregion
 
         #region Methods
@@ -50,6 +51,28 @@ namespace ClientTest.lib
 
             this.authorized = false;
             return false;
+        }
+
+        /// <summary>
+        /// Attempt to log in to the server.
+        /// </summary>
+        /// <returns></returns>
+        public bool checkAuthenticationTime()
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "username", username }
+            };
+
+            if (authorized && !sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values)).Equals("0"))
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }    
         }
 
         /// <summary>

@@ -48,7 +48,7 @@
             this.testButton2.Name = "testButton2";
             this.testButton2.Size = new System.Drawing.Size(198, 84);
             this.testButton2.TabIndex = 1;
-            this.testButton2.Text = "Test Failed Login";
+            this.testButton2.Text = "Check time";
             this.testButton2.UseVisualStyleBackColor = true;
             this.testButton2.Click += new System.EventHandler(this.testButton2_Click);
             // 

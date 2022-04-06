@@ -23,7 +23,6 @@ namespace ClientTest
         private void testButton_Click(object sender, EventArgs e)
         {
             //Debugger.Log(1, "Test:", api.login("pastafarian", "cheesetoast").ToString()); 
-
             if(api.login("pastafarian", "cheesetoast"))
             {
                 MessageBox.Show("Success", "Logged in!", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -38,16 +37,15 @@ namespace ClientTest
 
         private void testButton2_Click(object sender, EventArgs e)
         {
-            //Debugger.Log(1, "Test:", api.login("pastafarian", "sex").ToString());
-            if (api.login("pastafarian", "Fuck"))
+            if (api.checkAuthenticationTime())
             {
-                MessageBox.Show("Success", "Logged in!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Time left", "true", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Task.Run(() => checkAuthentication());
             }
 
             else
             {
-                MessageBox.Show("Error", "Failed to login!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error", "You have no time left!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
