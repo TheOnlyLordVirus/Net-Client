@@ -39,7 +39,7 @@ namespace ClientTest
         {
             if (api.checkAuthenticationTime())
             {
-                MessageBox.Show("Seconds left: " + api.getTimeLeft(), "true", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Seconds left: " + api.SecondsLeft, "true", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Task.Run(() => checkAuthentication());
             }
 

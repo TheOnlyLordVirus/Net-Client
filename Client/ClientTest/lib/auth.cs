@@ -74,7 +74,7 @@ namespace ClientTest.lib
         /// Attempt to log in to the server.
         /// </summary>
         /// <returns>The seconds left from the server as a string</returns>
-        public string getTimeLeft()
+        private string getTimeLeft()
         {
             Dictionary<string, string> values = new Dictionary<string, string>
             {
@@ -202,6 +202,17 @@ namespace ClientTest.lib
                     return password;
                 else
                     return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the seconds this person has authed left.
+        /// </summary>
+        public string SecondsLeft
+        {
+            get
+            {
+                return getTimeLeft();
             }
         }
         #endregion
