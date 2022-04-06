@@ -5,9 +5,13 @@ yum upgrade -y
 
 yum install nano httpd -y
 
-yum groupinstall "Development Tools" -y
-
 yum install php php-fpm php-mysqlnd php-zip php-devel php-gd php-mbstring php-curl php-xml php-pear php-bcmath php-json php-pdo -y
+
+yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm yum-utils -y
+
+yum-config-manager --enable remi-php74
+
+yum update -y
 ```
 **Setup DB**
 ------------
