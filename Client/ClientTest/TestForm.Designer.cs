@@ -28,25 +28,37 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.testButton = new System.Windows.Forms.Button();
+            this.testButton1 = new System.Windows.Forms.Button();
+            this.testButton2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // testButton
+            // testButton1
             // 
-            this.testButton.Location = new System.Drawing.Point(325, 166);
-            this.testButton.Name = "testButton";
-            this.testButton.Size = new System.Drawing.Size(198, 84);
-            this.testButton.TabIndex = 0;
-            this.testButton.Text = "Test Client Command";
-            this.testButton.UseVisualStyleBackColor = true;
-            this.testButton.Click += new System.EventHandler(this.testButton_Click);
+            this.testButton1.Location = new System.Drawing.Point(108, 184);
+            this.testButton1.Name = "testButton1";
+            this.testButton1.Size = new System.Drawing.Size(198, 84);
+            this.testButton1.TabIndex = 0;
+            this.testButton1.Text = "Test Client Command";
+            this.testButton1.UseVisualStyleBackColor = true;
+            this.testButton1.Click += new System.EventHandler(this.testButton_Click);
+            // 
+            // testButton2
+            // 
+            this.testButton2.Location = new System.Drawing.Point(470, 184);
+            this.testButton2.Name = "testButton2";
+            this.testButton2.Size = new System.Drawing.Size(198, 84);
+            this.testButton2.TabIndex = 1;
+            this.testButton2.Text = "Test Failed Login";
+            this.testButton2.UseVisualStyleBackColor = true;
+            this.testButton2.Click += new System.EventHandler(this.testButton2_Click);
             // 
             // TestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(852, 450);
-            this.Controls.Add(this.testButton);
+            this.ClientSize = new System.Drawing.Size(760, 413);
+            this.Controls.Add(this.testButton2);
+            this.Controls.Add(this.testButton1);
             this.Name = "TestForm";
             this.Text = "Test Client Command";
             this.ResumeLayout(false);
@@ -55,7 +67,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button testButton;
+        private System.Windows.Forms.Button testButton1;
+        private System.Windows.Forms.Button testButton2;
     }
 }
 

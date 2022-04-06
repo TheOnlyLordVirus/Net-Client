@@ -1,18 +1,14 @@
 <?php
-// Show errors, remove this after testing is done.
-ini_set('display_errors', true);
-error_reporting(E_ALL);
-
 // Verify that all of the parameters have been set.
-if(isset($_POST['host']) && isset($_POST['user']) && isset($_POST['pass']) && isset($_POST['name']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['cheese']) && isset($_POST['parms']))
+if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['cheese']) && isset($_POST['parms']))
 {
-    $api = new cheesey_api($_POST['host'], $_POST['user'], $_POST['pass'], $_POST['name'], $_POST['username'], $_POST['password'], $_POST['cheese'], $_POST['parms']);
+    $api = new cheesey_api($_POST['username'], $_POST['password'], $_POST['cheese'], $_POST['parms']);
 }
 
 else
 {
-    echo "Fuck Off!";
-    exit;
+    echo 'nope';
+    $datalogger = new data_logger();
 }
 
 /**
@@ -21,18 +17,20 @@ else
 class cheesey_api
 {
     private $connection = null;
+    private $user_account = null;
+    private $user_password = null;
 
-    function __construct($host, $user, $pass, $name, $username, $password, $cheese, $parmesan)
+    function __construct($username, $password, $cheese, $parmesan)
     {
-        if(isset($host) && isset($user) && isset($pass) && isset($name) && isset($username) && isset($password) && isset($cheese) && isset($parmesan))
+        if(isset($username) && isset($password) && isset($cheese) && isset($parmesan))
         {
-            $DATABASE_HOST = $this->stripSomeSymbols($host);
-            $DATABASE_USER = $this->stripAllSymbols($user);
-            $DATABASE_PASS = $this->stripSomeSymbols($pass);
-            $DATABASE_NAME = $this->stripSomeSymbols($name);
-            $USER_ACCOUNT = $this->stripAllSymbols($username);
-            $USER_PASSWORD = $this->stripSomeSymbols($password);
+            $DATABASE_HOST = 'localhost';
+            $DATABASE_USER = 'admin';
+            $DATABASE_PASS = 'JeffStar';
+            $DATABASE_NAME = 'USER_INFO_DB';
 
+            $this->user_account = $this->stripAllSymbols($username);
+            $this->user_password = $this->stripSomeSymbols($password);
             $this->connection = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 
             if (mysqli_connect_errno())
@@ -42,45 +40,44 @@ class cheesey_api
 
             else
             {
-                if ($this->login(['username' => $USER_ACCOUNT, 'password' => $USER_PASSWORD]))
+                if ($this->login())
                 {
                     switch ($cheese)
                     {
-                        case 'add_user':
+                        case 'login':
+                            echo 1;
+                            break;
+
+                        case 'add_user': // Adds a user to the cheat api
                             $eggnoodle = json_decode($parmesan, true);
                             echo $this->addUser($eggnoodle);
                             break;
 
-                        case 'delete_user':
+                        case 'delete_user': // Delete a user from the cheat api
                             $eggnoodle = json_decode($parmesan, true);
-                            echo $this->removeUser(json_decode($eggnoodle, true));
+                            echo $this->removeUser($eggnoodle);
                             break;
 
-                        case 'login':
+                        case 'log_ip': // Log their IP address
                             $eggnoodle = json_decode($parmesan, true);
-                            echo $this->login(json_decode($eggnoodle, true));
+                            echo $this->logIp($eggnoodle);
                             break;
 
-                        case 'log_ip':
+                        case 'time_check':
                             $eggnoodle = json_decode($parmesan, true);
-                            echo $this->logIp(json_decode($eggnoodle, true));
-                            break;
-
-                        case 'key_check':
-                            $eggnoodle = json_decode($parmesan, true);
-                            echo $this->checkTime(json_decode($eggnoodle, true));
+                            echo $this->checkTime($eggnoodle);
                             break;
 
                         case 'add_key':
                             $eggnoodle = json_decode($parmesan, true);
-                            echo $this->addKey(json_decode($eggnoodle, true));
+                            echo $this->addKey($eggnoodle);
                             break;
                     }
                 }
 
                 else
                 {
-                    return false;
+                    echo 0;
                 }
             }
         }
@@ -93,33 +90,28 @@ class cheesey_api
      */
     private function addUser($parmesan)
     {
-        var_dump($parmesan);
-        exit;
         $email = $this->stripSomeSymbols($parmesan['email']);
         $username = $this->stripAllSymbols($parmesan['username']);
         $password = $this->stripSomeSymbols($parmesan['password']);
-        $harwareid = 'xxxxx-xxxxx-xxxxx-xxxxx-xxxxx';
         $admin = $this->stripAllSymbols($parmesan['admin']);
+        $ip = data_logger::getIPAddress();
 
-        echo $email;
-        echo $username;
-        echo $password;
-        echo $harwareid;
-        echo $admin;
-
-        if ($add_user_query = $this->connection->prepare('call addUser(?, ?, ?, ?, ?)'))
+        if($this->isAdmin())
         {
-            $add_user_query->bind_param('ssssi', $email, $username, $password, $harwareid, $admin);
-            $add_user_query->execute();
-            $add_user_query->store_result();
-
-            if($add_user_query->affected_rows > 0)
+            if ($add_user_query = $this->connection->prepare('call addUser(?, ?, ?, ?, ?)'))
             {
-                return true;
+                $add_user_query->bind_param('ssssi', $email, $username, $password, $ip, $admin);
+                $add_user_query->execute();
+                $add_user_query->store_result();
+
+                if($add_user_query->affected_rows > 0)
+                {
+                    return 1;
+                }
             }
         }
 
-        return false;
+        return 0;
     }
 
     /**
@@ -133,44 +125,70 @@ class cheesey_api
         $username = $this->stripAllSymbols($parmesan['username']);
         $password = $this->stripSomeSymbols($parmesan['password']);
 
-        if ($remove_user_query = $this->connection->prepare('DELETE FROM USER WHERE USER_EMAIL = ? AND USER_NAME = ? AND USER_PASS = ?'))
+        if($this->isAdmin())
         {
-            $remove_user_query->bind_param('sss', $email, $username, $password);
-            $remove_user_query->execute();
-            $remove_user_query->store_result();
-
-            if($remove_user_query->affected_rows > 0)
+            if ($remove_user_query = $this->connection->prepare('DELETE FROM USER WHERE USER_EMAIL = ? AND USER_NAME = ? AND USER_PASS = ?'))
             {
-                return true;
+                $remove_user_query->bind_param('sss', $email, $username, $password);
+                $remove_user_query->execute();
+                $remove_user_query->store_result();
+    
+                if($remove_user_query->affected_rows > 0)
+                {
+                    return 1;
+                }
             }
         }
 
-        return false;
+        return 0;
     }
 
     /**
-     * Username, password
-     * @param $parmesan
+     * User authentication check.
      * @return bool
      */
-    private function login($parmesan)
+    private function login()
     {
-        $username = $this->stripAllSymbols($parmesan['username']);
-        $password = $this->stripSomeSymbols($parmesan['password']);
-
-        if ($login_query = $this->connection->prepare('SELECT USER_ID, USER_PASS, IS_ADMIN FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+        if ($login_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
         {
-            $login_query->bind_param('ss', $username, $password);
+            $login_query->bind_param('ss', $this->user_account, $this->user_password);
             $login_query->execute();
             $login_query->store_result();
 
             if($login_query->num_rows > 0)
             {
-                return true;
+                return 1;
             }
         }
 
-        return false;
+        return 0;
+    }
+
+    /**
+     * User admin check.
+     * @return bool
+     */
+    private function isAdmin()
+    {
+        if($this->login())
+        {
+            if($login_query = $this->connection->prepare('SELECT ADMIN FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+            {
+                $login_query->bind_param('ss', $this->user_account, $this->user_password);
+                $login_query->execute();
+                $login_query->store_result();
+                
+                if($login_query->num_rows > 0)
+                {
+                    $login_query->bind_result($admin);
+                    $login_query->fetch();
+    
+                    return $admin;
+                }
+            }
+        }
+
+        return 0;
     }
 
     /**
@@ -180,97 +198,89 @@ class cheesey_api
      */
     private function addKey($parmesan)
     {
-        if(!function_exists("genKey"))
+        if($this->isAdmin())
         {
-            function genKey()
+            if(!function_exists("genKey"))
             {
-                $chars =
-                    [
-                        'A',
-                        'B',
-                        'C',
-                        'D',
-                        'E',
-                        'F',
-                        '1',
-                        '2',
-                        '3',
-                        '4',
-                        '5',
-                        '6',
-                        '7',
-                        '8',
-                        '9'
-                    ];
-
-                $key = '';
-
-                for($i = 0; $i <= 20;$i++)
+                function genKey()
                 {
-                    $r = rand(0, 14);
-
-                    if($i == 1)
+                    $chars =
+                        [
+                            'A',
+                            'B',
+                            'C',
+                            'D',
+                            'E',
+                            'F',
+                            '1',
+                            '2',
+                            '3',
+                            '4',
+                            '5',
+                            '6',
+                            '7',
+                            '8',
+                            '9'
+                        ];
+    
+                    $key = '';
+    
+                    for($i = 0; $i <= 20;$i++)
                     {
-                        $key = $chars[$r];
+                        $r = rand(0, 14);
+    
+                        if($i == 1)
+                        {
+                            $key = $chars[$r];
+                        }
+    
+                        else
+                        {
+                            $key .= $chars[$r];
+                        }
+    
+                        if(!($i % 5) && $i != 0 && $i != 20)
+                        {
+                            $key .= '-';
+                        }
                     }
-
-                    else
-                    {
-                        $key .= $chars[$r];
-                    }
-
-                    if(!($i % 5) && $i != 0 && $i != 20)
-                    {
-                        $key .= '-';
-                    }
-                }
-
-                return $key;
-            }
-        }
-
-        $time_value = $this->stripSomeSymbols($parmesan['time_value']);
-        $key = genKey();
-
-        if($key_exists_query = $this->connection->prepare('select TIME_KEY from TIME_KEYS where TIME_KEY = ?'))
-        {
-            $key_exists_query->bind_param('s', $key);
-            $key_exists_query->execute();
-            $key_exists_query->store_result();
-
-            if($key_exists_query->num_rows == 0)
-            {
-                if ($add_key_query = $this->connection->prepare('call addKey(?, ?)'))
-                {
-                    $add_key_query->bind_param('ss', $key, $time_value);
-                    $add_key_query->execute();
-                    $add_key_query->store_result();
-
-                    if($add_key_query->affected_rows > 0)
-                    {
-                        return $key;
-                    }
+    
+                    return $key;
                 }
             }
-
-            else
+    
+            $time_value = $this->stripSomeSymbols($parmesan['time_value']);
+            $key = genKey();
+    
+            if($key_exists_query = $this->connection->prepare('select TIME_KEY from TIME_KEYS where TIME_KEY = ?'))
             {
-                return $this->addKey($parmesan);
+                $key_exists_query->bind_param('s', $key);
+                $key_exists_query->execute();
+                $key_exists_query->store_result();
+    
+                if($key_exists_query->num_rows == 0)
+                {
+                    if ($add_key_query = $this->connection->prepare('call addKey(?, ?)'))
+                    {
+                        $add_key_query->bind_param('ss', $key, $time_value);
+                        $add_key_query->execute();
+                        $add_key_query->store_result();
+    
+                        if($add_key_query->affected_rows > 0)
+                        {
+                            return $key;
+                        }
+                    }
+                }
+    
+                else
+                {
+                    return $this->addKey($parmesan);
+                }
             }
+    
+            return 0;
         }
-
-        return false;
-    }
-
-    /*
-     * TODO: Returns the time left in keys for an account.
-     */
-    private function checkTime($parmesan)
-    {
-        
-
-
-        return true;
     }
 
     /**
@@ -278,41 +288,67 @@ class cheesey_api
      * @param $parm
      * @return bool
      */
-    private function logIp($parmesan)
+    private function checkTime($parmesan)
     {
-        $username = $this->stripAllSymbols($parmesan['username']);
-        $password = $this->stripSomeSymbols($parmesan['password']);
+        $user = stripAllSymbols($parmesan['username']);
 
-        if($login_query = $this->connection->prepare('SELECT USER_ID, IS_ADMIN FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+        if ($check_time_query = $this->connection->prepare('select AUTH_END_DATE from USER where USER_NAME = ?'))
         {
-            $login_query->bind_param('ss', $username, $password);
-            $login_query->execute();
-            $login_query->store_result();
+            $check_time_query->bind_param('s', $user);
+            $check_time_query->execute();
+            $check_time_query->store_result();
+            $check_time_query->bind_result($auth_end_date);
 
-            if($login_query->num_rows > 0)
+            if($check_time_query->affected_rows > 0)
             {
-                $login_query->bind_result($id, $isadmin);
-                $login_query->fetch();
-
-                // Don't log admins ip addresses.
-                if(!$isadmin)
+                // 2022-03-19 23:08:33 SQL date time syntax...
+                while($check_time_query->fetch())
                 {
-                    $ip = $parmesan['ip_addy'];
-                    if ($ip_query = $this->connection->prepare('call logIP(?, ?)'))
-                    {
-                        $ip_query->bind_param('is', $id, $ip);
-                        $ip_query->execute();
+                    $time_left = (strtotime($auth_end_date) - strtotime(date("d-m-Y h:i:s A")));
 
-                        if($ip_query->num_rows > 0)
-                        {
-                            return true;
-                        }
+                    if($time_left > 0)
+                    {
+                        return $time_left;
                     }
                 }
             }
         }
 
-        return false;
+        return 0;
+    }
+
+    /**
+     * Just log ip.
+     * @param $parm
+     * @return bool
+     */
+    private function logIp()
+    {
+        if($login_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+        {
+            $login_query->bind_param('ss', $this->user_account, $this->user_password);
+            $login_query->execute();
+            $login_query->store_result();
+
+            if($login_query->num_rows > 0)
+            {
+                $login_query->bind_result($id);
+                $login_query->fetch();
+
+                if ($ip_query = $this->connection->prepare('call logIP(?, ?)'))
+                {
+                    $ip_query->bind_param('is', $id, data_logger::getIPAddress());
+                    $ip_query->execute();
+
+                    if($ip_query->num_rows > 0)
+                    {
+                        return 1;
+                    }
+                }
+            }
+        }
+
+        return 0;
     }
 
     private function stripAllSymbols($inputStream)
@@ -326,5 +362,61 @@ class cheesey_api
         $outputStreams = preg_replace('/[^0-9a-zA-Z.!@#$%^&*-_]+/', '', $inputStream);
         return $outputStreams;
     }
+}
+
+class data_logger
+{
+    function __construct()
+    {
+        $DATABASE_HOST = 'localhost';
+        $DATABASE_USER = 'admin';
+        $DATABASE_PASS = 'JeffStar';
+        $DATABASE_NAME = 'API_NETWORK_INFO_DB';
+        $connection   = null;
+
+        $this->connection = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
+
+        if (mysqli_connect_errno())
+        {
+            return 'Failed to connect to MySQL: ' . mysqli_connect_error();
+        }
+
+        else
+        {
+            if($log_anon_ip_query = $this->connection->prepare('call logAnonIp(?)'))
+            {
+                $log_anon_ip_query->bind_param('s', data_logger::getIPAddress());
+                $log_anon_ip_query->execute();
+            }
+        }
+    }
+
+    /**
+     * Pretty self explanitory.
+     */
+    public static function getIPAddress() {
+		$ipaddress = NULL;
+		if (getenv('HTTP_CLIENT_IP')){
+			$ipaddress = getenv('HTTP_CLIENT_IP');
+		}
+		else if(getenv('HTTP_X_FORWARDED_FOR')){
+			$ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+		}
+		else if(getenv('HTTP_X_FORWARDED')){
+			$ipaddress = getenv('HTTP_X_FORWARDED');
+		}
+		else if(getenv('HTTP_FORWARDED_FOR')){
+			$ipaddress = getenv('HTTP_FORWARDED_FOR');
+		}
+		else if(getenv('HTTP_FORWARDED')){
+			$ipaddress = getenv('HTTP_FORWARDED');
+		}
+		else if(getenv('REMOTE_ADDR')){
+			$ipaddress = getenv('REMOTE_ADDR');
+		} else {
+			$ipaddress = 'UNKNOWN';
+		}
+		return $ipaddress;
+	}
 }
 ?>
