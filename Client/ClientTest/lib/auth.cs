@@ -15,7 +15,7 @@ namespace ClientTest.lib
     {
         #region Variables
         /// <summary>
-        /// The http client we use to send commands to our API.
+        /// The http client we use to send commands to our server.
         /// </summary>
         private static readonly HttpClient client = new HttpClient();
 
@@ -39,8 +39,12 @@ namespace ClientTest.lib
 
             if(sendCommand(user, password, "login", "").Equals("1"))
             {
-                Task.Run(() => heartbeat());
-                this.authorized = true;
+                if(!authorized)
+                {
+                    Task.Run(() => heartbeat());
+                    this.authorized = true;
+                }
+
                 return true;
             }
 
@@ -49,14 +53,14 @@ namespace ClientTest.lib
         }
 
         /// <summary>
-        /// 
+        /// Checks if the user is logged in every 5 seconds.
         /// </summary>
         /// <returns></returns>
         private Task heartbeat()
         {
             while(this.login(this.Username, this.Password))
             {
-                Debugger.Log(1, "", "heart beat");
+                Debugger.Log(1, "", "\nheart beat");
                 Thread.Sleep(5000);
             }
 
@@ -75,30 +79,19 @@ namespace ClientTest.lib
         /// <returns></returns>
         private string sendCommand(string username, string password, string command, string parameters) 
         {
-            try
+            Dictionary<string, string> values = new Dictionary<string, string>
             {
-                Dictionary<string, string> values = new Dictionary<string, string>
-                {
-                    { "username", username },
-                    { "password", password },
-                    { "cheese", command },
-                    { "parms", parameters }
-                };
+                { "username", username },
+                { "password", password },
+                { "cheese", command },
+                { "parms", parameters }
+            };
 
-                var postContent = new FormUrlEncodedContent(values);
-                var runPostRequestTask = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), postContent));
-                runPostRequestTask.Wait();
+            var postContent = new FormUrlEncodedContent(values);
+            var runPostRequestTask = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), postContent));
+            runPostRequestTask.Wait();
 
-                return runPostRequestTask.Result;
-            }
-
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine("Message :{0} ", e.Message);
-            }
-
-            return null;
+            return runPostRequestTask.Result;
         }
 
         /// <summary>
@@ -109,20 +102,31 @@ namespace ClientTest.lib
         /// <returns>http response body content</returns>
         private static async Task<string> PostURI(Uri uri, HttpContent postContent)
         {
-            string response = string.Empty;
-            using (HttpClient client = new HttpClient())
+            try
             {
-                HttpResponseMessage result = await client.PostAsync(uri, postContent);
-                if (result.IsSuccessStatusCode)
+                string response = string.Empty;
+                using (HttpClient client = new HttpClient())
                 {
-                    response = await result.Content.ReadAsStringAsync();
+                    HttpResponseMessage result = await client.PostAsync(uri, postContent);
+                    if (result.IsSuccessStatusCode)
+                    {
+                        response = await result.Content.ReadAsStringAsync();
+                    }
                 }
+                return response;
             }
-            return response;
+
+            catch (HttpRequestException e)
+            {
+                Debugger.Log(1, "", "\nException Caught!");
+                Debugger.Log(1, "", "\nMessage : " + e.Message);
+                return string.Empty;
+            }
         }
         #endregion
 
         #region Propertys
+
         /// <summary>
         /// Is the client currently authorized?
         /// This is fequently updated by the heartbeat.
