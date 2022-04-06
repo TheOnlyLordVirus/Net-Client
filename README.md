@@ -135,6 +135,7 @@ g++ -g -o AuthApi main.cpp -std=gnu++11
 ```
 
 **Blocking Apache from accepting outside requests**
+(No longer needed with the new direct api model)
 ---------------------------------------------------
 ``nano /etc/httpd/conf/httpd.conf``
 
