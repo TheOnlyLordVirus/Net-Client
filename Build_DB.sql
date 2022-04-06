@@ -21,7 +21,8 @@ create table TIME_KEYS
 	TIME_KEY varchar(29) primary key not null,
 	TIME_VALUE int notdrop null,
 	KEY_GEN_DATE datetime not null default now(),
-	CREATED_BY int references USER(USER_ID)
+	CREATED_BY int references USER(USER_ID),
+	ACTIVE boolean not null default TRUE
 );
 
 create table IP_HISTORY
