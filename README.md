@@ -117,6 +117,7 @@ mysql -pYOUR_PASS
 ```
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'password' require ssl;
 GRANT ALL PRIVILEGES ON USER_INFO_DB.* TO 'admin'@'localhost';
+GRANT ALL PRIVILEGES ON API_NETWORK_INFO_DB.* TO 'admin'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
 ```
@@ -124,30 +125,6 @@ EXIT;
 **Login to new account and verify it exists with DB access:**
 ```
 mysql -uadmin -ppassword
-```
-
-**Compiling and running the Api Socket**
---------------------------
-```
-cd /var/www/html/CPP-Api
-g++ -g -o AuthApi main.cpp -std=gnu++11
-./AuthApi
-```
-
-**Blocking Apache from accepting outside requests**
-(No longer needed with the new direct api model)
----------------------------------------------------
-``nano /etc/httpd/conf/httpd.conf``
-
-**Go to:**
-``<Directory /var/www/html>``
-
-**Remove the contents of the Directory Markup and then add:**
-```
-AllowOverride All
-order deny,allow
-allow from 127.0.0.1
-deny from all
 ```
 
 **Start Apache**
@@ -235,8 +212,3 @@ iptables -A INPUT -p tcp --sport 21 -m limit --limit 6/s --limit-burst 12 -j DRO
 iptables -t mangle -A PREROUTING -p udp --sport 61013 -m length --length 29 -j DROP
 iptables -A INPUT -p udp --sport 61013 -m limit --limit 6/s --limit-burst 12 -j DROP
 ```
-
-**Abstract**
-------------
-**CPP Socket reference:**
-https://www.bogotobogo.com/cplusplus/sockets_server_client.php
