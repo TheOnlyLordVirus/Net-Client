@@ -74,6 +74,11 @@ class cheesey_api
                             echo $this->addKey($eggnoodle);
                             break;
 
+                        case 'redeem_key':
+                            $eggnoodle = json_decode($parmesan, true);
+                            echo $this->redeemKey($eggnoodle);
+                            break;
+
                         default:
                             echo 0;
                             break;
@@ -205,87 +210,108 @@ class cheesey_api
     {
         if($this->isAdmin())
         {
-            if(!function_exists("genKey"))
+            if($login_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
             {
-                function genKey()
+                $login_query->bind_param('ss', $this->user_account, $this->user_password);
+                $login_query->execute();
+                $login_query->store_result();
+    
+                if($login_query->num_rows > 0)
                 {
-                    $chars =
-                        [
-                            'A',
-                            'B',
-                            'C',
-                            'D',
-                            'E',
-                            'F',
-                            '1',
-                            '2',
-                            '3',
-                            '4',
-                            '5',
-                            '6',
-                            '7',
-                            '8',
-                            '9'
-                        ];
-    
-                    $key = '';
-    
-                    for($i = 0; $i <= 20;$i++)
+                    $login_query->bind_result($id);
+                    $login_query->fetch();
+
+                    if(!function_exists("genKey"))
                     {
-                        $r = rand(0, 14);
-    
-                        if($i == 1)
+                        function genKey()
                         {
-                            $key = $chars[$r];
-                        }
-    
-                        else
-                        {
-                            $key .= $chars[$r];
-                        }
-    
-                        if(!($i % 5) && $i != 0 && $i != 20)
-                        {
-                            $key .= '-';
-                        }
-                    }
-    
-                    return $key;
-                }
-            }
-    
-            $time_value = $this->stripSomeSymbols($parmesan['time_value']);
-            $key = genKey();
-    
-            if($key_exists_query = $this->connection->prepare('select TIME_KEY from TIME_KEYS where TIME_KEY = ?'))
-            {
-                $key_exists_query->bind_param('s', $key);
-                $key_exists_query->execute();
-                $key_exists_query->store_result();
-    
-                if($key_exists_query->num_rows == 0)
-                {
-                    if ($add_key_query = $this->connection->prepare('call addKey(?, ?)'))
-                    {
-                        $add_key_query->bind_param('ss', $key, $time_value);
-                        $add_key_query->execute();
-                        $add_key_query->store_result();
-    
-                        if($add_key_query->affected_rows > 0)
-                        {
+                            $chars =
+                                [
+                                    'A',
+                                    'B',
+                                    'C',
+                                    'D',
+                                    'E',
+                                    'F',
+                                    '1',
+                                    '2',
+                                    '3',
+                                    '4',
+                                    '5',
+                                    '6',
+                                    '7',
+                                    '8',
+                                    '9'
+                                ];
+            
+                            $key = '';
+            
+                            for($i = 0; $i <= 20;$i++)
+                            {
+                                $r = rand(0, 14);
+            
+                                if($i == 1)
+                                {
+                                    $key = $chars[$r];
+                                }
+            
+                                else
+                                {
+                                    $key .= $chars[$r];
+                                }
+            
+                                if(!($i % 5) && $i != 0 && $i != 20)
+                                {
+                                    $key .= '-';
+                                }
+                            }
+            
                             return $key;
                         }
                     }
-                }
-    
-                else
-                {
-                    return $this->addKey($parmesan);
+            
+                    $time_value = $this->stripSomeSymbols($parmesan['time_value']);
+                    $key = genKey();
+            
+                    if($key_exists_query = $this->connection->prepare('select TIME_KEY from TIME_KEYS where TIME_KEY = ?'))
+                    {
+                        $key_exists_query->bind_param('s', $key);
+                        $key_exists_query->execute();
+                        $key_exists_query->store_result();
+            
+                        if($key_exists_query->num_rows == 0)
+                        {
+                            if ($add_key_query = $this->connection->prepare('call addKey(?, ?, ?)'))
+                            {
+                                $add_key_query->bind_param('sss', $key, $time_value, $id);
+                                $add_key_query->execute();
+                                $add_key_query->store_result();
+            
+                                if($add_key_query->affected_rows > 0)
+                                {
+                                    return $key;
+                                }
+                            }
+                        }
+            
+                        else
+                        {
+                            return $this->addKey($parmesan);
+                        }
+                    }
                 }
             }
-    
-            return 0;
         }
+
+        return 0;
+    }
+
+
+    private function redeemKey($parmesan)
+    {
+        $key = $this->stripSomeSymbols($parmesan['key']);
+
+        return 0;
     }
 
     /**
