@@ -59,12 +59,7 @@ namespace ClientTest.lib
         /// <returns></returns>
         public bool checkAuthenticationTime()
         {
-            Dictionary<string, string> values = new Dictionary<string, string>
-            {
-                { "username", username }
-            };
-
-            if (authorized && !sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values)).Equals("0"))
+            if (authorized && !getTimeLeft().Equals("0"))
             {
                 return true;
             }
@@ -74,6 +69,29 @@ namespace ClientTest.lib
                 return false;
             }    
         }
+
+        /// <summary>
+        /// Attempt to log in to the server.
+        /// </summary>
+        /// <returns>The seconds left from the server as a string</returns>
+        public string getTimeLeft()
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "username", username }
+            };
+
+            if (authorized)
+            {
+                return sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
+            }
+
+            else
+            {
+                return "0";
+            }
+        }
+
 
         /// <summary>
         /// Checks if the user is logged in every 5 seconds.
