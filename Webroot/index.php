@@ -25,6 +25,7 @@ class cheesey_api
     private $connection = null;
     private $user_account = null;
     private $user_password = null;
+    private $server_response = ['key' => ''];
 
     function __construct($username, $password, $cheese, $parmesan)
     {
@@ -46,12 +47,12 @@ class cheesey_api
 
             else
             {
-                if ($this->login())
+                if ($this->login() && $this->logIp())
                 {
                     switch ($cheese)
                     {
                         case 'login':
-                            echo $this->logIp($eggnoodle);
+                            echo 1;
                             break;
 
                         case 'add_user': // Adds a user to the cheat api
@@ -131,13 +132,11 @@ class cheesey_api
      */
     private function removeUser($parmesan)
     {
-        $email = $this->stripSomeSymbols($parmesan['email']);
         $username = $this->stripAllSymbols($parmesan['username']);
-        $password = $this->stripSomeSymbols($parmesan['password']);
 
         if($this->isAdmin())
         {
-            if ($remove_user_query = $this->connection->prepare('DELETE FROM USER WHERE USER_EMAIL = ? AND USER_NAME = ? AND USER_PASS = ?'))
+            if ($remove_user_query = $this->connection->prepare('DELETE FROM USER WHERE USER_NAME = ?'))
             {
                 $remove_user_query->bind_param('sss', $email, $username, $password);
                 $remove_user_query->execute();
@@ -309,9 +308,9 @@ class cheesey_api
 
     private function redeemKey($parmesan)
     {
-        $key = $this->stripSomeSymbols($parmesan['key']);
+        //$key = $this->stripSomeSymbols($parmesan['key']);
 
-        return 0;
+        return $this->responseKey();
     }
 
     /**
@@ -379,6 +378,28 @@ class cheesey_api
         }
 
         return 0;
+    }
+
+    public function responseKey()
+    {
+        $carray = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'X', 'Y', 'Z' ];
+        $dayinyear = date('z') + 1;
+        $year = date("Y");
+        $a = ($year + $dayinyear) | ($year * $dayinyear) + ($year / $dayinyear);
+        $x = ($year + $dayinyear) ^ ($year | $dayinyear) + ($year ^ $dayinyear);
+        $numberstring = (string)abs($a * $x * (1 - $x));
+        $retVal = "@";
+
+        $chars = str_split($numberstring);
+        foreach($chars as $char)
+        {
+            if(is_numeric($char))
+            {
+                $retVal .= $carray[intval($char)];
+            }
+        }
+
+        return $retVal;
     }
 
     private function stripAllSymbols($inputStream)

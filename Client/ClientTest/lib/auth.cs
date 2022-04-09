@@ -14,6 +14,7 @@ namespace ClientTest.lib
     class Auth
     {
         #region Variables
+
         /// <summary>
         /// The http client we use to send commands to our server.
         /// </summary>
@@ -24,6 +25,10 @@ namespace ClientTest.lib
         private string username = null;
 
         private string password = null;
+
+        private int incrementor = 0;
+
+        private const int heartRate = 15;
 
         #endregion
 
@@ -43,6 +48,7 @@ namespace ClientTest.lib
                 if(!authorized)
                 {
                     Task.Run(() => heartbeat());
+                    Task.Run(() => heartrate());
                     this.authorized = true;
                 }
 
@@ -54,20 +60,22 @@ namespace ClientTest.lib
         }
 
         /// <summary>
-        /// Attempt to log in to the server.
+        /// 
         /// </summary>
         /// <returns></returns>
-        public bool checkAuthenticationTime()
+        public string redeemKey()
         {
-            if (authorized && !getTimeLeft().Equals("0"))
+            Dictionary<string, string> values = new Dictionary<string, string>
             {
-                return true;
+                { "username", username }
+            };
+
+            if (Authorized && HasTimeLeft)
+            {
+                return sendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
             }
 
-            else
-            {
-                return false;
-            }    
+            return string.Empty;
         }
 
         /// <summary>
@@ -81,15 +89,12 @@ namespace ClientTest.lib
                 { "username", username }
             };
 
-            if (authorized)
+            if (Authorized)
             {
                 return sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
             }
 
-            else
-            {
-                return "0";
-            }
+            return "0";
         }
 
 
@@ -102,11 +107,30 @@ namespace ClientTest.lib
             while(this.login(this.Username, this.Password))
             {
                 Debugger.Log(1, "", "\nheart beat");
+                Debugger.Log(1, "", "\n" + incrementor);
+                incrementor = 0;
+
+                getTimeLeft();
+
                 Thread.Sleep(5000);
             }
 
             Debugger.Log(1, "", "heart failed");
 
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Increments a int for every half a second to coenside with the heartbeat.
+        /// </summary>
+        /// <returns></returns>
+        private Task heartrate()
+        {
+            while (true)
+            {
+                incrementor++;
+                Thread.Sleep(500);
+            }
             return Task.CompletedTask;
         }
 
@@ -164,9 +188,43 @@ namespace ClientTest.lib
                 return string.Empty;
             }
         }
+
+        /// <summary>
+        /// Get the current key.
+        /// </summary>
+        /// <returns></returns>
+        public string responseKey()
+        {
+            char[] carray = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'X', 'Y', 'Z' };
+            long dayinyear = DateTime.Now.DayOfYear;
+            long year = DateTime.Now.Year;
+            long a = (int)((year + dayinyear) | (year * dayinyear) + (year / dayinyear));
+            long x = (int)((year + dayinyear) ^ (year | dayinyear) + (year ^ dayinyear));
+            string numberstring = Math.Abs(a * x * (1 - x)).ToString();
+            string retVal = "@";
+
+            foreach (char c in numberstring)
+            {
+                if(int.TryParse(c.ToString(), out int charpos))
+                {
+                    retVal += carray[charpos];
+                }
+            }
+
+            return $"{retVal}";
+        }
+
         #endregion
 
         #region Propertys
+
+        /// <summary>
+        /// Are we authorized with time left?
+        /// </summary>
+        public bool AuthorizedWithTimeLeft
+        {
+            get { return (Authorized && HasTimeLeft); }
+        }
 
         /// <summary>
         /// Is the client currently authorized?
@@ -175,6 +233,36 @@ namespace ClientTest.lib
         public bool Authorized
         {
             get { return authorized; }
+        }
+
+        /// <summary>
+        /// Gets the seconds this person has authed left.
+        /// </summary>
+        public string SecondsLeft
+        {
+            get
+            {
+                return getTimeLeft();
+            }
+        }
+
+        /// <summary>
+        /// Is there time left on this users account?
+        /// </summary>
+        public bool HasTimeLeft
+        {
+            get
+            {
+                return !getTimeLeft().Equals("0");
+            }
+        }
+
+        /// <summary>
+        /// Veryifys the integrity of the heart beat.
+        /// </summary>
+        public bool HeartRate
+        {
+            get { return this.incrementor >= Auth.heartRate; }
         }
 
         /// <summary>
@@ -205,16 +293,6 @@ namespace ClientTest.lib
             }
         }
 
-        /// <summary>
-        /// Gets the seconds this person has authed left.
-        /// </summary>
-        public string SecondsLeft
-        {
-            get
-            {
-                return getTimeLeft();
-            }
-        }
         #endregion
     }
 }
