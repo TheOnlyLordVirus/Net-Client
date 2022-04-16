@@ -7,9 +7,9 @@ error_reporting(E_ALL);
 date_default_timezone_set('UTC');
 
 // Verify that all of the parameters have been set.
-if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['cheese']) && isset($_POST['parms']))
+if($_POST['bluecheese'])
 {
-    $api = new cheesey_api($_POST['username'], $_POST['password'], $_POST['cheese'], $_POST['parms']);
+    $api = new cheesey_api($_POST['bluecheese']);
 }
 
 else
@@ -22,22 +22,30 @@ else
  */
 class cheesey_api
 {
+    private $iv = null;
+    private $dayinyear = 0;
+    private $year = 0;
     private $connection = null;
     private $user_account = null;
     private $user_password = null;
     private $server_response = ['key' => ''];
 
-    function __construct($username, $password, $cheese, $parmesan)
+    function __construct($bluecheese)
     {
-        if(isset($username) && isset($password) && isset($cheese) && isset($parmesan))
+        $iv = chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0xe) . chr(0x0);
+        $dayinyear = date('z');
+        $year = date("Y");
+        $decryptedInput = json_decode($this->decryptString($bluecheese));
+
+        if(isset($decryptedInput['username']) && isset($decryptedInput['password']) && isset($decryptedInput['cheese']) && isset($decryptedInput['parmesan']))
         {
             $DATABASE_HOST = 'localhost';
             $DATABASE_USER = 'admin';
             $DATABASE_PASS = 'JeffStar';
             $DATABASE_NAME = 'USER_INFO_DB';
 
-            $this->user_account = $this->stripAllSymbols($username);
-            $this->user_password = $this->stripSomeSymbols($password);
+            $this->user_account = $this->stripAllSymbols($decryptedInput['username']);
+            $this->user_password = $this->stripSomeSymbols($decryptedInput['password']);
             $this->connection = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 
             if (mysqli_connect_errno())
@@ -49,7 +57,8 @@ class cheesey_api
             {
                 if ($this->login() && $this->logIp())
                 {
-                    switch ($cheese)
+                    $parmesan = $decryptedInput['parmesan'];
+                    switch ($decryptedInput['cheese'])
                     {
                         case 'login':
                             echo 1;
@@ -91,6 +100,11 @@ class cheesey_api
                     echo 0;
                 }
             }
+        }
+
+        else
+        {
+            $datalogger = new data_logger();
         }
     }
 
@@ -308,8 +322,7 @@ class cheesey_api
 
     private function redeemKey($parmesan)
     {
-        //$key = $this->stripSomeSymbols($parmesan['key']);
-
+        $key = $parmesan['key'];
         return $this->responseKey();
     }
 
@@ -380,26 +393,21 @@ class cheesey_api
         return 0;
     }
 
-    public function responseKey()
+    private function echoResponse($array)
     {
-        $carray = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'X', 'Y', 'Z' ];
-        $dayinyear = date('z') + 1;
-        $year = date("Y");
-        $a = ($year + $dayinyear) | ($year * $dayinyear) + ($year / $dayinyear);
-        $x = ($year + $dayinyear) ^ ($year | $dayinyear) + ($year ^ $dayinyear);
-        $numberstring = (string)abs($a * $x * (1 - $x));
-        $retVal = "@";
+        echo $this->encryptString(json_encode($array));
+    }
 
-        $chars = str_split($numberstring);
-        foreach($chars as $char)
-        {
-            if(is_numeric($char))
-            {
-                $retVal .= $carray[intval($char)];
-            }
-        }
+    private function encryptString($plainText)
+    {
+        $password = substr(hash('sha256', ($this->dayinyear - $this->year), true), 0, 32);
+        return base64_encode(openssl_encrypt($plainText, 'aes-256-cbc', $password, OPENSSL_RAW_DATA, $this->iv));
+    }
 
-        return $retVal;
+    private function decryptString($encryptedString)
+    {
+        $password = substr(hash('sha256', ($this->dayinyear + $this->year), true), 0, 32);
+        return openssl_decrypt(base64_decode($encryptedString), 'aes-256-cbc', $password, OPENSSL_RAW_DATA, $this->iv);
     }
 
     private function stripAllSymbols($inputStream)

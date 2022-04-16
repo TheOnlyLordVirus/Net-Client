@@ -25,7 +25,7 @@ namespace ClientTest
             //Debugger.Log(1, "Test:", api.login("pastafarian", "cheesetoast").ToString()); 
             if(api.login("pastafarian", "cheesetoast"))
             {
-                MessageBox.Show($"{api.redeemKey()} \n{api.responseKey()}" , "Logged in!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"{api.redeemKey()}" , "Logged in!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Task.Run(() => checkAuthentication());
             }
 

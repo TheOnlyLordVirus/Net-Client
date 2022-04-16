@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.IO;
 
 namespace ClientTest.lib
 {
@@ -43,7 +45,7 @@ namespace ClientTest.lib
             this.username = user;
             this.password = password;
 
-            if(sendCommand(user, password, "login", "").Equals("1"))
+            if(!sendCommand(user, password, "login", "").Equals("1"))
             {
                 if(!authorized)
                 {
@@ -152,11 +154,13 @@ namespace ClientTest.lib
                 { "parms", parameters }
             };
 
-            var postContent = new FormUrlEncodedContent(values);
-            var runPostRequestTask = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), postContent));
+            string Json = JsonConvert.SerializeObject(values);
+            Dictionary<string, string> post = new Dictionary<string, string>{ { "bluecheese", Json } };
+
+            var runPostRequestTask = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(post)));
             runPostRequestTask.Wait();
 
-            return runPostRequestTask.Result;
+            return DecryptString(runPostRequestTask.Result);
         }
 
         /// <summary>
@@ -190,28 +194,89 @@ namespace ClientTest.lib
         }
 
         /// <summary>
-        /// Get the current key.
+        /// Encrypt a Key
         /// </summary>
+        /// <param name="plainText"></param>
         /// <returns></returns>
-        public string responseKey()
+        private string EncryptString(string plainText)
         {
-            char[] carray = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'X', 'Y', 'Z' };
-            long dayinyear = DateTime.Now.DayOfYear;
-            long year = DateTime.Now.Year;
-            long a = (int)((year + dayinyear) | (year * dayinyear) + (year / dayinyear));
-            long x = (int)((year + dayinyear) ^ (year | dayinyear) + (year ^ dayinyear));
-            string numberstring = Math.Abs(a * x * (1 - x)).ToString();
-            string retVal = "@";
+            string password = (DateTime.Now.DayOfYear + DateTime.Now.Year).ToString();
 
-            foreach (char c in numberstring)
+            // Create sha256 hash
+            SHA256 mySHA256 = SHA256Managed.Create();
+            byte[] key = mySHA256.ComputeHash(Encoding.ASCII.GetBytes(password));
+
+            // Create secret IV
+            byte[] iv = new byte[16] { 0x0, 0xf, 0x0, 0xf, 0x0, 0xf, 0x0, 0xf, 0x0, 0xf, 0x0, 0x0, 0x0, 0x0, 0xe, 0x0 };
+
+            // Instantiate a new Aes object to perform string symmetric encryption
+            Aes encryptor = Aes.Create();
+            encryptor.Mode = CipherMode.CBC;
+            encryptor.Key = key;
+            encryptor.IV = iv;
+
+            MemoryStream memoryStream = new MemoryStream();
+            ICryptoTransform aesEncryptor = encryptor.CreateEncryptor();
+            CryptoStream cryptoStream = new CryptoStream(memoryStream, aesEncryptor, CryptoStreamMode.Write);
+
+            byte[] plainBytes = Encoding.ASCII.GetBytes(plainText);
+            cryptoStream.Write(plainBytes, 0, plainBytes.Length);
+            cryptoStream.FlushFinalBlock();
+
+            byte[] cipherBytes = memoryStream.ToArray();
+            memoryStream.Close();
+            cryptoStream.Close();
+            string cipherText = Convert.ToBase64String(cipherBytes, 0, cipherBytes.Length);
+
+            return cipherText;
+        }
+
+        private string DecryptString(string cipherText)
+        {
+            string password = (DateTime.Now.DayOfYear - DateTime.Now.Year).ToString();
+
+            // Create sha256 hash
+            SHA256 mySHA256 = SHA256Managed.Create();
+            byte[] key = mySHA256.ComputeHash(Encoding.ASCII.GetBytes(password));
+
+            // Create secret IV
+            byte[] iv = new byte[16] { 0x0, 0xf, 0x0, 0xf, 0x0, 0xf, 0x0, 0xf, 0x0, 0xf, 0x0, 0x0, 0x0, 0x0, 0xe, 0x0 };
+
+            // Instantiate a new Aes object to perform string symmetric encryption
+            Aes encryptor = Aes.Create();
+            encryptor.Mode = CipherMode.CBC;
+            encryptor.Key = key;
+            encryptor.IV = iv;
+
+            MemoryStream memoryStream = new MemoryStream();
+            ICryptoTransform aesDecryptor = encryptor.CreateDecryptor();
+            CryptoStream cryptoStream = new CryptoStream(memoryStream, aesDecryptor, CryptoStreamMode.Write);
+            string plainText = String.Empty;
+
+            try
             {
-                if(int.TryParse(c.ToString(), out int charpos))
-                {
-                    retVal += carray[charpos];
-                }
+                byte[] cipherBytes = Convert.FromBase64String(cipherText);
+                cryptoStream.Write(cipherBytes, 0, cipherBytes.Length);
+
+                // Complete the decryption process
+                cryptoStream.FlushFinalBlock();
+
+                // Convert the decrypted data from a MemoryStream to a byte array
+                byte[] plainBytes = memoryStream.ToArray();
+
+                // Convert the decrypted byte array to string
+                plainText = Encoding.ASCII.GetString(plainBytes, 0, plainBytes.Length);
             }
 
-            return $"{retVal}";
+            finally
+            {
+                // Close both the MemoryStream and the CryptoStream
+                memoryStream.Close();
+                cryptoStream.Close();
+            }
+
+            // Return the decrypted data as a string
+            return plainText;
         }
 
         #endregion
