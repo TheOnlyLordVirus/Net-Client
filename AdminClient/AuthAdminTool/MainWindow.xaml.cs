@@ -28,27 +28,59 @@ namespace AuthAdminTool
             AdminApi = new AdminApi();
         }
 
+        private Task checkAuthentication()
+        {
+            while (AdminApi.Authorized && AdminApi.HeartRate) ;
+
+            MessageBox.Show("Auth Failed", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            return Task.CompletedTask;
+        }
+
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             if (AdminApi.login(userTextBox.Text, passTextBox.Text))
             {
+                MessageBox.Show("Login Succeeded", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 loginResultText.Content = "Login: Success";
+                Task.Run(() => checkAuthentication());
             }
 
             else
             {
+                MessageBox.Show("Login Failed", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 loginResultText.Content = "Login: Failure";
             }
         }
 
-        private Task checkAuthentication()
+        private void RedeemButton_Click(object sender, RoutedEventArgs e)
         {
-            while (AdminApi.Authorized && AdminApi.HeartRate);
+            if(AdminApi.redeemKey(redeemKeyTextBox.Text))
+            {
+                MessageBox.Show("Key Succeeded", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show
+                (
+                    $"Years Left: {AdminApi.YearsLeft}" +
+                    $"\nDays Left: {AdminApi.DaysLeft}" +
+                    $"\nHours Left: {AdminApi.HoursLeft}" +
+                    $"\nMinutes Left: {AdminApi.MinutesLeft}" +
+                    $"\nSeconds Left: {AdminApi.SecondsLeft}",
+                    "Time Left",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+            }
 
-            MessageBox.Show("Auth Failed", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            else
+            {
+                MessageBox.Show("Key Failed", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
-            return Task.CompletedTask;
+        private void GenerateButton_Click(object sender, RoutedEventArgs e)
+        {
+            generateKeyTextBox.Text = "Debug";
         }
     }
 }

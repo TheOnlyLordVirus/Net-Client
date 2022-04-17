@@ -16,7 +16,12 @@
         <Button Margin="400,76,0,0" Content="Send to server" Click="LoginButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"></Button>
 
 
+        <Label Content="Key: " Margin="42,158,0,0" Width="43" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="redeemKeyTextBox" Margin="90,161,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <Button Margin="400,161,0,0" Content="Redeem Key" Click="RedeemButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-
+        <Label Content="Key: " Margin="42,217,0,0" Width="43" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="generateKeyTextBox" IsReadOnly="True" Margin="90,217,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <Button Margin="400,217,0,0" Content="Generate Key" Click="GenerateButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
     </Grid>
 </Window>

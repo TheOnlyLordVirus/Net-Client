@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vDhl/wYGTxEVKwDv5FLF93O5bIlAX63fW73QBxK3fDztT/wYVvRgBVmuIM35XV/8/msm/wUvBzEXbVf016Sr2Q==",
+  "dgSpecHash": "c9dpqXEbXxBYuxONTNe+S6gorEH0iPnoNtFcxpWTwGN/ngbtSsHHnPqr3KkGpNcp+qaLoyHZnOIWT0XOZBCToQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\TheNe\\source\\repos\\AuthAdminTool\\AuthAdminTool\\AuthAdminTool.csproj",
+  "projectFilePath": "C:\\Users\\TheNe\\Documents\\GitHub\\AuthApi\\AdminClient\\AuthAdminTool\\AuthAdminTool.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\TheNe\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
   ],
