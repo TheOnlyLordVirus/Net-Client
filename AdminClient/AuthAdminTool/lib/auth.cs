@@ -7,14 +7,14 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
-namespace ClientAuth
+namespace AdminAuth
 {
-    class Auth
+    class AdminApi
     {
         #region Variables
 
@@ -69,7 +69,7 @@ namespace ClientAuth
         /// <summary>
         /// Class constructor
         /// </summary>
-        public Auth()
+        public AdminApi()
         {
             GetEncryptionKey();
         }
@@ -138,9 +138,13 @@ namespace ClientAuth
         {
             while(this.login(this.Username, this.Password))
             {
+                Debugger.Log(1, string.Empty, "\nheart beat");
+                Debugger.Log(1, string.Empty, "\n" + incrementor);
                 incrementor = 0;
                 Thread.Sleep(5000);
             }
+
+            Debugger.Log(1, string.Empty, "heart failed");
 
             return Task.CompletedTask;
         }
@@ -249,7 +253,7 @@ namespace ClientAuth
                 Task<string> response = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptedJson } })));
                 response.Wait();
 
-                if(!response.Result.Equals(string.Empty))
+                if (!response.Result.Equals(string.Empty))
                 {
                     DkeyResponse dkeyResponse = JsonConvert.DeserializeObject<DkeyResponse>(response.Result);
 
@@ -309,6 +313,8 @@ namespace ClientAuth
 
             catch (HttpRequestException e)
             {
+                Debugger.Log(1, string.Empty, "\nException Caught!");
+                Debugger.Log(1, string.Empty, "\nMessage : " + e.Message);
                 return string.Empty;
             }
         }
@@ -392,7 +398,7 @@ namespace ClientAuth
 
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
             }
 
             finally

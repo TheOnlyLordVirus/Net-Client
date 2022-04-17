@@ -73,6 +73,10 @@ class cheesey_api
 
                     switch ($decryptedInput->cheese)
                     {
+                        case 'get_dkey':
+                            echo json_encode(['dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500], true);
+                            break;
+
                         case 'login':
                             $json = json_encode(['loggedin' => true], true);
                             echo $this->encryptString($json);
@@ -84,17 +88,13 @@ class cheesey_api
                             echo $this->encryptString($json);
                             break;
 
-                        case 'get_dkey':
-                            echo json_encode(['dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500], true);;
-                            break;
-
                         case 'redeem_key':
                             $eggnoodle = json_decode($parmesan, true);
                             $json = json_encode(['keyres' => $this->redeemKey($eggnoodle)], true);
                             echo $this->encryptString($json);
                             break;
 
-                        /* Admin commands
+                        // Admin commands
                         case 'add_user': // Adds a user to the cheat api
                             //$eggnoodle = json_decode($parmesan, true);
                             //echo $this->addUser($eggnoodle);
@@ -109,8 +109,6 @@ class cheesey_api
                             //$eggnoodle = json_decode($parmesan, true);
                             //echo $this->addKey($eggnoodle);
                             break;
-                        */
-
                         default:
                             // Im a teapot, not a coffee maker.
                             http_response_code(418);

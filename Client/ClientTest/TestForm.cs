@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ClientTest.lib;
+using ClientAuth;
 using System.Diagnostics;
 
 namespace ClientTest
@@ -72,13 +72,8 @@ namespace ClientTest
 
         private Task checkAuthentication()
         {
-            while (api.Authorized)
-            {
-                if (api.HeartRate)
-                {
-                    Debugger.Log(1, "Test:", "Something happened with auth");
-                }
-            }
+            while (api.Authorized && api.HeartRate);
+
             MessageBox.Show("Error", "Authentication to server failed.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return Task.CompletedTask;
         }

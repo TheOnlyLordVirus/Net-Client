@@ -1,0 +1,22 @@
+﻿<Window x:Class="AuthAdminTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AuthAdminTool"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+    <Grid Background="Gray">
+        <Label Content="Login: " x:Name="loginResultText" Margin="90,34,0,0" Width="146" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"></Label>
+        <Label Content="User:" Margin="42,64,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="userTextBox" Margin="90,64,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <Label Content="Pass:" Margin="42,94,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="passTextBox" Margin="90,94,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <Button Margin="400,76,0,0" Content="Send to server" Click="LoginButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"></Button>
+
+
+
+
+    </Grid>
+</Window>
