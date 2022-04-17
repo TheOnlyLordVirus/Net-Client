@@ -19,7 +19,7 @@ create table USER
 create table TIME_KEYS
 (
 	TIME_KEY varchar(29) primary key not null,
-	TIME_VALUE int notdrop null,
+	TIME_VALUE int null,
 	KEY_GEN_DATE datetime not null default now(),
 	CREATED_BY int references USER(USER_ID),
 	ACTIVE boolean not null default TRUE
@@ -58,14 +58,40 @@ $$
 
 create procedure addKey (IN `TIME_KEY` VARCHAR(29), IN `TIME_VALUE` INT, IN `USER_ID` INT)
 begin
-  insert into TIME_KEYS (TIME_KEY, TIME_VALUE, CREATED_BY) values (TIME_KEY, TIME_VALUE, USER_ID);
+    IF((select u.IS_ADMIN from USER as u where u.USER_ID = USER_ID))
+    THEN
+        insert into TIME_KEYS (TIME_KEY, TIME_VALUE, CREATED_BY) values (TIME_KEY, TIME_VALUE, USER_ID);
+    END IF;
+end
+$$
+
+create procedure redeemKey (IN `TIME_KEY` VARCHAR(29), IN `USER_ID` INT)
+begin
+    IF((SELECT tk.ACTIVE
+        FROM TIME_KEYS as tk
+        WHERE tk.TIME_KEY = TIME_KEY and tk.ACTIVE = true) is not null)
+    THEN
+        SET @keytime = (SELECT tk.TIME_VALUE
+                        FROM TIME_KEYS as tk
+                        WHERE tk.TIME_KEY = TIME_KEY);
+
+        IF((select u.AUTH_END_DATE from USER as u where u.USER_ID = USER_ID) is null)
+        THEN
+            update USER as u set u.AUTH_END_DATE = DATE_ADD(now(), interval @keytime day) where u.USER_ID = USER_ID;
+        ELSE
+            update USER as u set u.AUTH_END_DATE = DATE_ADD(u.AUTH_END_DATE, interval @keytime day) where u.USER_ID = USER_ID;
+        END IF;
+
+        update TIME_KEYS as tk set tk.ACTIVE = false where tk.TIME_KEY = TIME_KEY;
+    END IF;
 end
 $$
 
 DELIMITER ; $$
 
 call addUser('test@mail.com', 'pastafarian', 'cheesetoast', '127.0.0.1', true);
-
+call addKey('00000-00000-00000-00000-00000', 7/*Days*/, 1);
+call redeemKey('00000-00000-00000-00000-00000', 1);
 
 /*Log attepmeted calls to our api*/
 create database API_NETWORK_INFO_DB;

@@ -90,7 +90,7 @@ class cheesey_api
 
                         case 'redeem_key':
                             //$eggnoodle = json_decode($parmesan, true);
-                            //echo $this->redeemKey($eggnoodle);
+                            echo $this->redeemKey($eggnoodle);
                             break;
 
                         /* Admin commands
@@ -345,7 +345,23 @@ class cheesey_api
 
     private function redeemKey($parmesan)
     {
+         $key = $this->stripAllSymbols($parmesan['key']);
 
+         if($this->checkKey($key))
+         {
+             if ($check_time_query = $this->connection->prepare('select AUTH_END_DATE from USER where USER_NAME = ?'))
+             {
+                 $check_time_query->bind_param('s', $user);
+                 $check_time_query->execute();
+                 $check_time_query->store_result();
+                 $check_time_query->bind_result($auth_end_date);
+
+                 if($check_time_query->affected_rows > 0)
+                 {
+
+                 }
+             }
+         }
     }
 
     /**
