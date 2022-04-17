@@ -23,3 +23,9 @@ C:\Users\TheNe\Documents\GitHub\AuthApi\Client\ClientTest\obj\Debug\ClientTest.p
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\ClientTest\bin\Debug\Newtonsoft.Json.dll
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\ClientTest\bin\Debug\Newtonsoft.Json.xml
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\ClientTest\obj\Debug\ClientTest.csproj.CopyComplete
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\ClientTest\bin\Debug\System.Buffers.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\ClientTest\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\ClientTest\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\ClientTest\bin\Debug\System.Buffers.xml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\ClientTest\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\ClientTest\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml

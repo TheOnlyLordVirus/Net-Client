@@ -22,10 +22,9 @@ namespace ClientTest
 
         private void testButton_Click(object sender, EventArgs e)
         {
-            //Debugger.Log(1, "Test:", api.login("pastafarian", "cheesetoast").ToString()); 
-            if(api.login("pastafarian", "cheesetoast"))
+            if (api.login("pastafarian", "cheesetoast"))
             {
-                MessageBox.Show($"{api.redeemKey()}" , "Logged in!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Logged in!" , "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Task.Run(() => checkAuthentication());
             }
 
@@ -37,16 +36,7 @@ namespace ClientTest
 
         private void testButton2_Click(object sender, EventArgs e)
         {
-            if (api.AuthorizedWithTimeLeft)
-            {
-                MessageBox.Show("Seconds left: " + api.SecondsLeft, "true", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Task.Run(() => checkAuthentication());
-            }
-
-            else
-            {
-                MessageBox.Show("Error", "You have no time left!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            MessageBox.Show($"Time Left: {api.SecondsLeft}", "Time Left", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private Task checkAuthentication()
@@ -55,7 +45,7 @@ namespace ClientTest
             {
                 if (api.HeartRate)
                 {
-                    MessageBox.Show("Something happened with auth");
+                    Debugger.Log(1, "Test:", "Something happened with auth");
                 }
             }
             MessageBox.Show("Error", "Authentication to server failed.", MessageBoxButtons.OK, MessageBoxIcon.Error);

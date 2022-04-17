@@ -1,13 +1,19 @@
 <?php
-/*
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-*/
 date_default_timezone_set('UTC');
 
-// Verify that all of the parameters have been set.
-if($_POST['bluecheese'])
+if(isset($_POST['cheese'])) {
+    if($_POST['cheese'] == "712b623bac9acc6c5956bcb629e1a8e0")
+    {
+        $dayinyear = date('z') + 1;
+        $year = date("Y");
+        echo base64_encode($dayinyear + $year);
+    }
+}
+
+else if(isset($_POST['bluecheese']))
 {
     $api = new cheesey_api($_POST['bluecheese']);
 }
@@ -25,27 +31,31 @@ class cheesey_api
     private $iv = null;
     private $dayinyear = 0;
     private $year = 0;
+    private $eKey = "";
+    private $dKey = "";
+
     private $connection = null;
     private $user_account = null;
     private $user_password = null;
-    private $server_response = ['key' => ''];
 
     function __construct($bluecheese)
     {
-        $iv = chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0xe) . chr(0x0);
-        $dayinyear = date('z');
-        $year = date("Y");
+        $this->iv = chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0xf) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0xe) . chr(0x0);
+        $this->dayinyear = date('z') + 1;
+        $this->year = date("Y");
+        $this->dKey = base64_encode($this->dayinyear + $this->year);
+        $this->eKey = base64_encode($this->dayinyear - $this->year);
         $decryptedInput = json_decode($this->decryptString($bluecheese));
 
-        if(isset($decryptedInput['username']) && isset($decryptedInput['password']) && isset($decryptedInput['cheese']) && isset($decryptedInput['parmesan']))
+        if(isset($decryptedInput->username) && isset($decryptedInput->password) && isset($decryptedInput->cheese) && isset($decryptedInput->parms))
         {
             $DATABASE_HOST = 'localhost';
             $DATABASE_USER = 'admin';
             $DATABASE_PASS = 'JeffStar';
             $DATABASE_NAME = 'USER_INFO_DB';
 
-            $this->user_account = $this->stripAllSymbols($decryptedInput['username']);
-            $this->user_password = $this->stripSomeSymbols($decryptedInput['password']);
+            $this->user_account = $this->stripAllSymbols($decryptedInput->username);
+            $this->user_password = $this->stripSomeSymbols($decryptedInput->password);
             $this->connection = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 
             if (mysqli_connect_errno())
@@ -57,53 +67,60 @@ class cheesey_api
             {
                 if ($this->login() && $this->logIp())
                 {
-                    $parmesan = $decryptedInput['parmesan'];
-                    switch ($decryptedInput['cheese'])
+                    $parmesan = $decryptedInput->parms;
+
+                    switch ($decryptedInput->cheese)
                     {
                         case 'login':
-                            echo 1;
+                            $json = json_encode(['loggedin' => true], true);
+                            echo $this->encryptString($json);
                             break;
 
                         case 'add_user': // Adds a user to the cheat api
-                            $eggnoodle = json_decode($parmesan, true);
-                            echo $this->addUser($eggnoodle);
+                            //$eggnoodle = json_decode($parmesan, true);
+                            //echo $this->addUser($eggnoodle);
                             break;
 
                         case 'delete_user': // Delete a user from the cheat api
-                            $eggnoodle = json_decode($parmesan, true);
-                            echo $this->removeUser($eggnoodle);
+                            //$eggnoodle = json_decode($parmesan, true);
+                            //echo $this->removeUser($eggnoodle);
                             break;
 
                         case 'time_check':
                             $eggnoodle = json_decode($parmesan, true);
-                            echo $this->checkTime($eggnoodle);
+                            $json = json_encode(['timeleft' => $this->checkTime($eggnoodle)], true);
+                            echo $this->encryptString($json);
                             break;
 
                         case 'add_key':
-                            $eggnoodle = json_decode($parmesan, true);
-                            echo $this->addKey($eggnoodle);
+                            //$eggnoodle = json_decode($parmesan, true);
+                            //echo $this->addKey($eggnoodle);
+                            break;
+
+                        case 'get_dkey':
+                            echo $this->eKey;
                             break;
 
                         case 'redeem_key':
-                            $eggnoodle = json_decode($parmesan, true);
-                            echo $this->redeemKey($eggnoodle);
+                            //$eggnoodle = json_decode($parmesan, true);
+                            //echo $this->redeemKey($eggnoodle);
                             break;
 
                         default:
-                            echo 0;
+                            echo "Debug";
                             break;
                     }
                 }
 
                 else
                 {
-                    echo 0;
+                    echo 69;
                 }
             }
         }
-
         else
         {
+            echo 420;
             $datalogger = new data_logger();
         }
     }
@@ -180,11 +197,11 @@ class cheesey_api
 
             if($login_query->num_rows > 0)
             {
-                return 1;
+                return true;
             }
         }
 
-        return 0;
+        return false;
     }
 
     /**
@@ -380,17 +397,18 @@ class cheesey_api
 
                 if ($ip_query = $this->connection->prepare('call logIP(?, ?)'))
                 {
-                    $ip_query->bind_param('is', $id, data_logger::getIPAddress());
+                    $IPAddress = data_logger::getIPAddress();
+                    $ip_query->bind_param('is', $id, $IPAddress);
            
                     if($ip_query->execute())
                     {
-                        return 1;
+                        return true;
                     }
                 }
             }
         }
 
-        return 0;
+        return false;
     }
 
     private function echoResponse($array)
@@ -400,13 +418,13 @@ class cheesey_api
 
     private function encryptString($plainText)
     {
-        $password = substr(hash('sha256', ($this->dayinyear - $this->year), true), 0, 32);
+        $password = substr(hash('sha256', $this->eKey, true), 0, 32);
         return base64_encode(openssl_encrypt($plainText, 'aes-256-cbc', $password, OPENSSL_RAW_DATA, $this->iv));
     }
 
     private function decryptString($encryptedString)
     {
-        $password = substr(hash('sha256', ($this->dayinyear + $this->year), true), 0, 32);
+        $password = substr(hash('sha256', $this->dKey, true), 0, 32);
         return openssl_decrypt(base64_decode($encryptedString), 'aes-256-cbc', $password, OPENSSL_RAW_DATA, $this->iv);
     }
 
@@ -447,7 +465,8 @@ class data_logger
         {
             if($log_anon_ip_query = $this->connection->prepare('call logAnonIp(?)'))
             {
-                $log_anon_ip_query->bind_param('s', data_logger::getIPAddress());
+                $IPAddress = data_logger::getIPAddress();
+                $log_anon_ip_query->bind_param('s', $IPAddress);
                 $log_anon_ip_query->execute();
             }
         }

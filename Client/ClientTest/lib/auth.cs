@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace ClientTest.lib
 {
@@ -32,9 +34,35 @@ namespace ClientTest.lib
 
         private const int heartRate = 15;
 
+        private string dkey = "";
+
+        private string ekey = "";
+
+        #endregion
+
+        #region Response Structs
+
+        private struct LoginResponse
+        {
+            public bool loggedin;
+        }
+
+        private struct TimeResponse
+        {
+            public int timeleft;
+        }
+
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        public Auth()
+        {
+            GetEncryptionKey();
+        }
 
         /// <summary>
         /// Attempt to log in to the server.
@@ -42,29 +70,48 @@ namespace ClientTest.lib
         /// <returns></returns>
         public bool login(string user, string password)
         {
-            this.username = user;
-            this.password = password;
-
-            if(!sendCommand(user, password, "login", "").Equals("1"))
+            if(dkey.Equals(""))
             {
-                if(!authorized)
-                {
-                    Task.Run(() => heartbeat());
-                    Task.Run(() => heartrate());
-                    this.authorized = true;
-                }
-
-                return true;
+                this.username = user;
+                this.password = password;
+                return GetDecryptionKey(user, password);
             }
 
-            this.authorized = false;
-            return false;
+            else
+            {
+                this.username = user;
+                this.password = password;
+
+                LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(sendCommand(user, password, "login", ""));
+
+                this.authorized = loginResponse.loggedin;
+                return loginResponse.loggedin;
+            }
         }
 
         /// <summary>
-        /// 
+        /// Attempt to log in to the server.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The seconds left from the server as a string</returns>
+        private int getTimeLeft()
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "username", this.username }
+            };
+
+            if (Authorized)
+            {
+                TimeResponse timeResponse = JsonConvert.DeserializeObject<TimeResponse>(sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values)));
+                return timeResponse.timeleft;
+            }
+
+            return 0;
+        }
+
+        #region Rework sendCommand functions later
+
+        /*
         public string redeemKey()
         {
             Dictionary<string, string> values = new Dictionary<string, string>
@@ -79,25 +126,8 @@ namespace ClientTest.lib
 
             return string.Empty;
         }
-
-        /// <summary>
-        /// Attempt to log in to the server.
-        /// </summary>
-        /// <returns>The seconds left from the server as a string</returns>
-        private string getTimeLeft()
-        {
-            Dictionary<string, string> values = new Dictionary<string, string>
-            {
-                { "username", username }
-            };
-
-            if (Authorized)
-            {
-                return sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
-            }
-
-            return "0";
-        }
+        */
+        #endregion
 
 
         /// <summary>
@@ -111,9 +141,6 @@ namespace ClientTest.lib
                 Debugger.Log(1, "", "\nheart beat");
                 Debugger.Log(1, "", "\n" + incrementor);
                 incrementor = 0;
-
-                getTimeLeft();
-
                 Thread.Sleep(5000);
             }
 
@@ -144,23 +171,86 @@ namespace ClientTest.lib
         /// <param name="command"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        private string sendCommand(string username, string password, string command, string parameters) 
+        private string sendCommand(string username, string password, string command, string parameters)
         {
-            Dictionary<string, string> values = new Dictionary<string, string>
+            if (!(ekey.Equals("") || ekey.Equals("0")) && !(dkey.Equals("") || dkey.Equals("0")) && IsBase64String(ekey) && IsBase64String(dkey))
             {
-                { "username", username },
-                { "password", password },
-                { "cheese", command },
-                { "parms", parameters }
-            };
+                Dictionary<string, string> values = new Dictionary<string, string>
+                {
+                    { "username", username },
+                    { "password", password },
+                    { "cheese", command },
+                    { "parms", parameters }
+                };
 
-            string Json = JsonConvert.SerializeObject(values);
-            Dictionary<string, string> post = new Dictionary<string, string>{ { "bluecheese", Json } };
+                string Json = JsonConvert.SerializeObject(values);
+                var runPostRequestTask = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptString(Json) } })));
+                runPostRequestTask.Wait();
 
-            var runPostRequestTask = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(post)));
-            runPostRequestTask.Wait();
+                return DecryptString(runPostRequestTask.Result);
+            }
 
-            return DecryptString(runPostRequestTask.Result);
+            return null;
+        }
+
+        /// <summary>
+        /// Get the Encryption Key
+        /// </summary>
+        private void GetEncryptionKey()
+        {
+            if (ekey.Equals(""))
+            {
+                var getEncryptionKey = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "cheese", "712b623bac9acc6c5956bcb629e1a8e0" } })));
+                getEncryptionKey.Wait();
+                this.ekey = getEncryptionKey.Result;
+            }
+        }
+
+        /// <summary>
+        /// Get the Decryption key
+        /// </summary>
+        private bool GetDecryptionKey(string username, string password)
+        {
+            if (dkey.Equals(""))
+            {
+                Dictionary<string, string> values = new Dictionary<string, string>
+                {
+                    { "username", username },
+                    { "password", password },
+                    { "cheese", "get_dkey" },
+                    { "parms", "" }
+                };
+
+                string Json = JsonConvert.SerializeObject(values);
+                string EncryptedJson = EncryptString(Json);
+
+                var response = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptedJson } })));
+                response.Wait();
+                string temp_dKey = response.Result;
+
+                if (!(temp_dKey.Equals("") || temp_dKey.Equals("0")) && IsBase64String(temp_dKey))
+                {
+                    this.dkey = temp_dKey;
+                    Task.Run(() => heartbeat());
+                    Task.Run(() => heartrate());
+                    this.authorized = true;
+                    return true;
+                }
+            }
+
+            this.authorized = false;
+            return false;
+        }
+
+        /// <summary>
+        /// Is this string a Base64 value?
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        private bool IsBase64String(string s)
+        {
+            s = s.Trim();
+            return (s.Length % 4 == 0) && Regex.IsMatch(s, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
         }
 
         /// <summary>
@@ -198,9 +288,9 @@ namespace ClientTest.lib
         /// </summary>
         /// <param name="plainText"></param>
         /// <returns></returns>
-        private string EncryptString(string plainText)
+        public string EncryptString(string plainText)
         {
-            string password = (DateTime.Now.DayOfYear + DateTime.Now.Year).ToString();
+            string password = ekey;
 
             // Create sha256 hash
             SHA256 mySHA256 = SHA256Managed.Create();
@@ -214,6 +304,7 @@ namespace ClientTest.lib
             encryptor.Mode = CipherMode.CBC;
             encryptor.Key = key;
             encryptor.IV = iv;
+            encryptor.Padding = PaddingMode.PKCS7;
 
             MemoryStream memoryStream = new MemoryStream();
             ICryptoTransform aesEncryptor = encryptor.CreateEncryptor();
@@ -231,9 +322,9 @@ namespace ClientTest.lib
             return cipherText;
         }
 
-        private string DecryptString(string cipherText)
+        public string DecryptString(string cipherText)
         {
-            string password = (DateTime.Now.DayOfYear - DateTime.Now.Year).ToString();
+            string password = dkey;
 
             // Create sha256 hash
             SHA256 mySHA256 = SHA256Managed.Create();
@@ -247,6 +338,7 @@ namespace ClientTest.lib
             encryptor.Mode = CipherMode.CBC;
             encryptor.Key = key;
             encryptor.IV = iv;
+            encryptor.Padding = PaddingMode.PKCS7;
 
             MemoryStream memoryStream = new MemoryStream();
             ICryptoTransform aesDecryptor = encryptor.CreateDecryptor();
@@ -266,6 +358,11 @@ namespace ClientTest.lib
 
                 // Convert the decrypted byte array to string
                 plainText = Encoding.ASCII.GetString(plainBytes, 0, plainBytes.Length);
+            }
+
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
             }
 
             finally
@@ -303,7 +400,7 @@ namespace ClientTest.lib
         /// <summary>
         /// Gets the seconds this person has authed left.
         /// </summary>
-        public string SecondsLeft
+        public int SecondsLeft
         {
             get
             {
@@ -318,7 +415,7 @@ namespace ClientTest.lib
         {
             get
             {
-                return !getTimeLeft().Equals("0");
+                return !getTimeLeft().Equals(0);
             }
         }
 
