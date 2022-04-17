@@ -32,7 +32,7 @@ namespace ClientTest.lib
 
         private int incrementor = 0;
 
-        private const int heartRate = 15;
+        private int heartRate = 0;
 
         private string dkey = string.Empty;
 
@@ -42,6 +42,12 @@ namespace ClientTest.lib
 
         #region Response Structs
 
+        private struct DkeyResponse
+        {
+            public string dkey;
+            public int heartrate;
+            public int heartrhythm;
+        }
         private struct LoginResponse
         {
             public bool loggedin;
@@ -50,6 +56,11 @@ namespace ClientTest.lib
         private struct TimeResponse
         {
             public int timeleft;
+        }
+
+        private struct KeyResponse
+        {
+            public bool keyres;
         }
 
         #endregion
@@ -120,28 +131,6 @@ namespace ClientTest.lib
             return 0;
         }
 
-        #region Rework sendCommand functions later
-
-        /*
-        public string redeemKey()
-        {
-            Dictionary<string, string> values = new Dictionary<string, string>
-            {
-                { "username", username }
-            };
-
-            if (Authorized && HasTimeLeft)
-            {
-                return sendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
-            }
-
-            return string.Empty;
-        }
-        */
-
-        #endregion
-
-
         /// <summary>
         /// Checks if the user is logged in every 5 seconds.
         /// </summary>
@@ -162,17 +151,44 @@ namespace ClientTest.lib
         }
 
         /// <summary>
-        /// Increments a int for every half a second to coenside with the heartbeat.
+        /// Increments a int to coenside with the heartbeat.
         /// </summary>
+        /// <param name="heartRhythm">Milliseconds to increment from between heart beats.</param>
         /// <returns></returns>
-        private Task heartrate()
+        private Task heartrate(int heartRhythm)
         {
             while (true)
             {
                 incrementor++;
-                Thread.Sleep(500);
+                Thread.Sleep(heartRhythm);
             }
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Attempt to redeem a key, return boolean result of attempt.
+        /// </summary>
+        /// <param name="timeKey"></param>
+        /// <returns></returns>
+        public bool redeemKey(string timeKey)
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "key", timeKey }
+            };
+
+            if (Authorized)
+            {
+                string commandResponse = sendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
+
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    KeyResponse keyResponse = JsonConvert.DeserializeObject<KeyResponse>(commandResponse);
+                    return keyResponse.keyres;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -238,13 +254,14 @@ namespace ClientTest.lib
 
                 Task<string> response = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptedJson } })));
                 response.Wait();
-                string temp_dKey = response.Result;
+                DkeyResponse dkeyResponse = JsonConvert.DeserializeObject<DkeyResponse>(response.Result);
 
-                if (!(temp_dKey.Equals(string.Empty) || temp_dKey.Equals("0")) && IsBase64String(temp_dKey))
+                if (!(dkeyResponse.dkey.Equals(string.Empty) || dkeyResponse.dkey.Equals("0")) && IsBase64String(dkeyResponse.dkey))
                 {
-                    this.dkey = temp_dKey;
+                    this.heartRate = dkeyResponse.heartrate;
+                    this.dkey = dkeyResponse.dkey;
                     Task.Run(() => heartbeat());
-                    Task.Run(() => heartrate());
+                    Task.Run(() => heartrate(dkeyResponse.heartrhythm));
                     this.authorized = true;
                     return true;
                 }
@@ -379,7 +396,7 @@ namespace ClientTest.lib
 
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
 
             finally
@@ -415,6 +432,50 @@ namespace ClientTest.lib
         }
 
         /// <summary>
+        /// Gets the Years this person has authed left.
+        /// </summary>
+        public int YearsLeft
+        {
+            get
+            {
+                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Days / 365;
+            }
+        }
+
+        /// <summary>
+        /// Gets the Days this person has authed left.
+        /// </summary>
+        public int DaysLeft
+        {
+            get
+            {
+                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Days;
+            }
+        }
+
+        /// <summary>
+        /// Gets the Hours this person has authed left.
+        /// </summary>
+        public int HoursLeft
+        {
+            get
+            {
+                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Hours;
+            }
+        }
+
+        /// <summary>
+        /// Gets the Minutes this person has authed left.
+        /// </summary>
+        public int MinutesLeft
+        {
+            get
+            {
+                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Minutes;
+            }
+        }
+
+        /// <summary>
         /// Gets the seconds this person has authed left.
         /// </summary>
         public int SecondsLeft
@@ -441,7 +502,7 @@ namespace ClientTest.lib
         /// </summary>
         public bool HeartRate
         {
-            get { return this.incrementor >= Auth.heartRate; }
+            get { return this.incrementor >= this.heartRate; }
         }
 
         /// <summary>

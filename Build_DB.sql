@@ -92,6 +92,8 @@ DELIMITER ; $$
 call addUser('test@mail.com', 'pastafarian', 'cheesetoast', '127.0.0.1', true);
 call addKey('00000-00000-00000-00000-00000', 7/*Days*/, 1);
 call redeemKey('00000-00000-00000-00000-00000', 1);
+call redeemKey('12345-12345-12345-12345-54321', 1);
+
 
 /*Log attepmeted calls to our api*/
 create database API_NETWORK_INFO_DB;

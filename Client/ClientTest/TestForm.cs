@@ -36,7 +36,38 @@ namespace ClientTest
 
         private void testButton2_Click(object sender, EventArgs e)
         {
-            MessageBox.Show($"Time Left: {api.SecondsLeft}", "Time Left", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if(api.AuthorizedWithTimeLeft)
+            {
+                MessageBox.Show
+                (
+                    $"Years Left: {api.YearsLeft}" +
+                    $"\nDays Left: {api.DaysLeft}" +
+                    $"\nHours Left: {api.HoursLeft}" +
+                    $"\nMinutes Left: {api.MinutesLeft}" +
+                    $"\nSeconds Left: {api.SecondsLeft}",
+                    "Time Left",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+            }
+
+            else
+            {
+                MessageBox.Show("User isn't authorized with time left.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void testButton3_Click(object sender, EventArgs e)
+        {
+            if(api.Authorized)
+            {
+                MessageBox.Show($"Key Redeemed: {api.redeemKey("12345-12345-12345-12345-54321")}", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            else
+            {
+                MessageBox.Show("User isn't authorized.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private Task checkAuthentication()

@@ -85,12 +85,13 @@ class cheesey_api
                             break;
 
                         case 'get_dkey':
-                            echo $this->eKey;
+                            echo json_encode(['dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500], true);;
                             break;
 
                         case 'redeem_key':
-                            //$eggnoodle = json_decode($parmesan, true);
-                            echo $this->redeemKey($eggnoodle);
+                            $eggnoodle = json_decode($parmesan, true);
+                            $json = json_encode(['keyres' => $this->redeemKey($eggnoodle)], true);
+                            echo $this->encryptString($json);
                             break;
 
                         /* Admin commands
@@ -342,26 +343,36 @@ class cheesey_api
         return false;
     }
 
-
+    /**
+     * Key
+     * @param $parmesan
+     * @return bool
+     */
     private function redeemKey($parmesan)
     {
-         $key = $this->stripAllSymbols($parmesan['key']);
+        $key = $parmesan['key'];
 
-         if($this->checkKey($key))
-         {
-             if ($check_time_query = $this->connection->prepare('select AUTH_END_DATE from USER where USER_NAME = ?'))
-             {
-                 $check_time_query->bind_param('s', $user);
-                 $check_time_query->execute();
-                 $check_time_query->store_result();
-                 $check_time_query->bind_result($auth_end_date);
+        if($uid_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+        {
+            $uid_query->bind_param('ss', $this->user_account, $this->user_password);
+            $uid_query->execute();
+            $uid_query->store_result();
+            $uid_query->bind_result($uid);
 
-                 if($check_time_query->affected_rows > 0)
-                 {
+            if($key_query = $this->connection->prepare('call redeemKey(?, ?)'))
+            {
+                $key_query->bind_param('si', $key, $uid);
+                $key_query->execute();
+                $key_query->store_result();
 
-                 }
-             }
-         }
+                if($key_query->affected_rows > 0)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -385,7 +396,7 @@ class cheesey_api
                 // 2022-03-19 23:08:33 SQL date time syntax...
                 while($check_time_query->fetch())
                 {
-                    $time_left = (strtotime($auth_end_date) - strtotime(date("d-m-Y h:i:s A")));
+                    $time_left = (strtotime($auth_end_date) - strtotime(date("Y-m-d H:i:s")));
 
                     if($time_left > 0)
                     {
@@ -430,11 +441,6 @@ class cheesey_api
         }
 
         return false;
-    }
-
-    private function echoResponse($array)
-    {
-        echo $this->encryptString(json_encode($array));
     }
 
     private function encryptString($plainText)
