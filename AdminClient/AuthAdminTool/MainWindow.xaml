@@ -22,7 +22,7 @@
         <Label Content="Key: " Margin="42,217,0,0" Width="43" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <TextBox x:Name="generateKeyTextBox" MaxLength="500" IsReadOnly="True" Margin="90,217,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="217"/>
         <Label Content="Days: " Margin="307,217,0,0" Width="40" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.946,0.575"/>
-        <TextBox x:Name="keyDayValueTextBox" MaxLength="4" Margin="352,217,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="43"/>
+        <TextBox x:Name="keyDayValueTextBox" MaxLength="4" Margin="347,217,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="35"/>
         <Button Margin="400,217,0,0" Content="Generate Key" Click="GenerateButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
 

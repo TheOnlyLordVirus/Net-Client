@@ -361,18 +361,22 @@ class cheesey_api
             $uid_query->bind_param('ss', $this->user_account, $this->user_password);
             $uid_query->execute();
             $uid_query->store_result();
-            $uid_query->bind_result($uid);
+            $uid_query->bind_result($id);
+
+            if($uid_query->num_rows <= 0)
+                return false;
+
+            $uid_query->bind_result($id);
+            $uid_query->fetch();
 
             if($key_query = $this->connection->prepare('call redeemKey(?, ?)'))
             {
-                $key_query->bind_param('si', $key, $uid);
+                $key_query->bind_param('si', $key, $id);
                 $key_query->execute();
                 $key_query->store_result();
 
                 if($key_query->affected_rows > 0)
-                {
                     return true;
-                }
             }
         }
 
