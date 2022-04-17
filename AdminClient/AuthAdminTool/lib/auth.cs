@@ -62,6 +62,11 @@ namespace AdminAuth
             public bool keyres;
         }
 
+        private struct GenKeyResponse
+        {
+            public string key;
+        }
+
         #endregion
 
         #region Methods
@@ -103,6 +108,31 @@ namespace AdminAuth
                 this.authorized = false;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Generates a key if the user is logged in and is an admin.
+        /// </summary>
+        /// <returns></returns>
+        public string generateKey(int dayValue)
+        {
+            Dictionary<string, int> values = new Dictionary<string, int>
+            {
+                { "time_value", dayValue }
+            };
+
+            if (Authorized)
+            {
+                string commandResponse = sendCommand(this.username, this.password, "add_key", JsonConvert.SerializeObject(values));
+
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    GenKeyResponse KeyResponse = JsonConvert.DeserializeObject<GenKeyResponse>(commandResponse);
+
+                    return KeyResponse.key;
+                }
+            }
+            return string.Empty;
         }
 
         /// <summary>
@@ -358,6 +388,11 @@ namespace AdminAuth
             return cipherText;
         }
 
+        /// <summary>
+        /// Decrypts a string.
+        /// </summary>
+        /// <param name="cipherText"></param>
+        /// <returns></returns>
         public string DecryptString(string cipherText)
         {
             string password = dkey;
@@ -504,7 +539,7 @@ namespace AdminAuth
         /// </summary>
         public bool HeartRate
         {
-            get { return this.incrementor >= this.heartRate; }
+            get { return this.incrementor <= this.heartRate; }
         }
 
         /// <summary>

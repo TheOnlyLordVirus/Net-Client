@@ -15,13 +15,24 @@
         <TextBox x:Name="passTextBox" Margin="90,94,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
         <Button Margin="400,76,0,0" Content="Send to server" Click="LoginButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"></Button>
 
-
         <Label Content="Key: " Margin="42,158,0,0" Width="43" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <TextBox x:Name="redeemKeyTextBox" Margin="90,161,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
         <Button Margin="400,161,0,0" Content="Redeem Key" Click="RedeemButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
         <Label Content="Key: " Margin="42,217,0,0" Width="43" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <TextBox x:Name="generateKeyTextBox" IsReadOnly="True" Margin="90,217,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <TextBox x:Name="generateKeyTextBox" MaxLength="500" IsReadOnly="True" Margin="90,217,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="217"/>
+        <Label Content="Days: " Margin="307,217,0,0" Width="40" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.946,0.575"/>
+        <TextBox x:Name="keyDayValueTextBox" MaxLength="4" Margin="352,217,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="43"/>
         <Button Margin="400,217,0,0" Content="Generate Key" Click="GenerateButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+
+        <Label Content="Create User: " x:Name="createAccountResultText" Margin="90,253,0,0" Width="146" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"></Label>
+        <Label Content="Email:" Margin="42,285,0,0" Width="44" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="createEmailTextBox" Margin="90,315,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <Label Content="User:" Margin="42,315,0,0" Width="43" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.493,-0.651"/>
+        <TextBox x:Name="createUserTextBox" Margin="90,284,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <Label Content="Pass:" Margin="42,345,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="createPassTextBox" Margin="90,345,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <Button Margin="400,316,0,0" Content="Create User" Click="CreateUserButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"></Button>
     </Grid>
 </Window>

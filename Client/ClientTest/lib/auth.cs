@@ -498,7 +498,7 @@ namespace ClientAuth
         /// </summary>
         public bool HeartRate
         {
-            get { return this.incrementor >= this.heartRate; }
+            get { return this.incrementor <= this.heartRate; }
         }
 
         /// <summary>

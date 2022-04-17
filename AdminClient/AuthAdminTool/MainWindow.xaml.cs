@@ -80,7 +80,30 @@ namespace AuthAdminTool
 
         private void GenerateButton_Click(object sender, RoutedEventArgs e)
         {
-            generateKeyTextBox.Text = "Debug";
+
+            if(int.TryParse(keyDayValueTextBox.Text, out int days))
+            {
+                string key = AdminApi.generateKey(days);
+                if (!key.Equals(string.Empty))
+                {
+                    generateKeyTextBox.Text = key;
+                }
+
+                else
+                {
+                    generateKeyTextBox.Text = "Key gen error.";
+                }
+            }
+
+            else
+            {
+                MessageBox.Show("You must enter the amount of days as an int!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void CreateUserButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

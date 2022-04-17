@@ -18,7 +18,7 @@ create table USER
 
 create table TIME_KEYS
 (
-	TIME_KEY varchar(29) primary key not null,
+	TIME_KEY varchar(23) primary key not null,
 	TIME_VALUE int null,
 	KEY_GEN_DATE datetime not null default now(),
 	CREATED_BY int references USER(USER_ID),
@@ -56,7 +56,7 @@ begin
 end
 $$
 
-create procedure addKey (IN `TIME_KEY` VARCHAR(29), IN `TIME_VALUE` INT, IN `USER_ID` INT)
+create procedure addKey (IN `TIME_KEY` VARCHAR(23), IN `TIME_VALUE` INT, IN `USER_ID` INT)
 begin
     IF((select u.IS_ADMIN from USER as u where u.USER_ID = USER_ID))
     THEN
@@ -65,8 +65,12 @@ begin
 end
 $$
 
-create procedure redeemKey (IN `TIME_KEY` VARCHAR(29), IN `USER_ID` INT)
+create procedure redeemKey (IN `TIME_KEY` VARCHAR(23), IN `USER_ID` INT)
 begin
+  IF((SELECT u.USER_ID
+        FROM USER as u
+        WHERE u.USER_ID = USER_ID) is not null)
+  THEN
     IF((SELECT tk.ACTIVE
         FROM TIME_KEYS as tk
         WHERE tk.TIME_KEY = TIME_KEY and tk.ACTIVE = true) is not null)
@@ -84,16 +88,15 @@ begin
 
         update TIME_KEYS as tk set tk.ACTIVE = false where tk.TIME_KEY = TIME_KEY;
     END IF;
+  END IF;
 end
 $$
 
 DELIMITER ; $$
 
 call addUser('test@mail.com', 'pastafarian', 'cheesetoast', '127.0.0.1', true);
-call addKey('00000-00000-00000-00000-00000', 7/*Days*/, 1);
-call redeemKey('00000-00000-00000-00000-00000', 1);
-call redeemKey('12345-12345-12345-12345-54321', 1);
-
+call addKey('00000-00000-00000-00000', 7/*Days*/, 1);
+call redeemKey('00000-00000-00000-00000', 1);
 
 /*Log attepmeted calls to our api*/
 create database API_NETWORK_INFO_DB;
@@ -109,7 +112,7 @@ create table API_NETWORK_HISTORY
 
 DELIMITER $$ ;
 
-create procedure logAnonIp (IN `IP` VARCHAR(29))
+create procedure logAnonIp (IN `IP` VARCHAR(15))
 begin
   insert into API_NETWORK_HISTORY (CONNECTION_IP) values (IP);
 end

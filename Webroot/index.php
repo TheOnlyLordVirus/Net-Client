@@ -96,19 +96,25 @@ class cheesey_api
 
                         // Admin commands
                         case 'add_user': // Adds a user to the cheat api
-                            //$eggnoodle = json_decode($parmesan, true);
-                            //echo $this->addUser($eggnoodle);
+                            $eggnoodle = json_decode($parmesan, true);
+                            $json = json_encode(['addres' => $this->addUser($eggnoodle)], true);
+                            echo $this->encryptString($json);
                             break;
 
                         case 'delete_user': // Delete a user from the cheat api
-                            //$eggnoodle = json_decode($parmesan, true);
-                            //echo $this->removeUser($eggnoodle);
+                            $eggnoodle = json_decode($parmesan, true);
+                            $json = json_encode(['delres' => $this->removeUser($eggnoodle)], true);
+                            echo $this->encryptString($json);
                             break;
 
                         case 'add_key':
-                            //$eggnoodle = json_decode($parmesan, true);
-                            //echo $this->addKey($eggnoodle);
+                            $eggnoodle = json_decode($parmesan, true);
+                            $key = $this->addKey($eggnoodle);
+                            $b = !($key == false);
+                            $json = json_encode(['key' => $key], true);
+                            echo $this->encryptString($json);
                             break;
+
                         default:
                             // Im a teapot, not a coffee maker.
                             http_response_code(418);
@@ -217,7 +223,7 @@ class cheesey_api
     {
         if($this->login())
         {
-            if($login_query = $this->connection->prepare('SELECT ADMIN FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+            if($login_query = $this->connection->prepare('SELECT IS_ADMIN FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
             {
                 $login_query->bind_param('ss', $this->user_account, $this->user_password);
                 $login_query->execute();
@@ -228,7 +234,7 @@ class cheesey_api
                     $login_query->bind_result($admin);
                     $login_query->fetch();
     
-                    return $admin;
+                    return boolval($admin);
                 }
             }
         }
