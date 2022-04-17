@@ -138,6 +138,7 @@ namespace ClientTest.lib
             return string.Empty;
         }
         */
+
         #endregion
 
 
@@ -211,7 +212,7 @@ namespace ClientTest.lib
         {
             if (ekey.Equals(string.Empty))
             {
-                var getEncryptionKey = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "cheese", "712b623bac9acc6c5956bcb629e1a8e0" } })));
+                var getEncryptionKey = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "cheese", "90kGPILHd22/yQ3bctAPwxzEPq+BEA4og3Wqh+hSRFQ=" } })));
                 getEncryptionKey.Wait();
                 this.ekey = getEncryptionKey.Result;
             }
@@ -222,7 +223,7 @@ namespace ClientTest.lib
         /// </summary>
         private bool GetDecryptionKey(string username, string password)
         {
-            if (dkey.Equals(string.Empty))
+            if (dkey.Equals(string.Empty) && !(ekey.Equals(string.Empty) || ekey.Equals("0") || !IsBase64String(ekey)))
             {
                 Dictionary<string, string> values = new Dictionary<string, string>
                 {

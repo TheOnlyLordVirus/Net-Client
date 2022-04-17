@@ -4,8 +4,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 date_default_timezone_set('UTC');
 
+// Get the encryption key
 if(isset($_POST['cheese'])) {
-    if($_POST['cheese'] == "712b623bac9acc6c5956bcb629e1a8e0")
+    if($_POST['cheese'] == "90kGPILHd22/yQ3bctAPwxzEPq+BEA4og3Wqh+hSRFQ=")
     {
         $dayinyear = date('z') + 1;
         $year = date("Y");
@@ -77,25 +78,10 @@ class cheesey_api
                             echo $this->encryptString($json);
                             break;
 
-                        case 'add_user': // Adds a user to the cheat api
-                            //$eggnoodle = json_decode($parmesan, true);
-                            //echo $this->addUser($eggnoodle);
-                            break;
-
-                        case 'delete_user': // Delete a user from the cheat api
-                            //$eggnoodle = json_decode($parmesan, true);
-                            //echo $this->removeUser($eggnoodle);
-                            break;
-
                         case 'time_check':
                             $eggnoodle = json_decode($parmesan, true);
                             $json = json_encode(['timeleft' => $this->checkTime($eggnoodle)], true);
                             echo $this->encryptString($json);
-                            break;
-
-                        case 'add_key':
-                            //$eggnoodle = json_decode($parmesan, true);
-                            //echo $this->addKey($eggnoodle);
                             break;
 
                         case 'get_dkey':
@@ -107,9 +93,26 @@ class cheesey_api
                             //echo $this->redeemKey($eggnoodle);
                             break;
 
+                        /* Admin commands
+                        case 'add_user': // Adds a user to the cheat api
+                            //$eggnoodle = json_decode($parmesan, true);
+                            //echo $this->addUser($eggnoodle);
+                            break;
+
+                        case 'delete_user': // Delete a user from the cheat api
+                            //$eggnoodle = json_decode($parmesan, true);
+                            //echo $this->removeUser($eggnoodle);
+                            break;
+
+                        case 'add_key':
+                            //$eggnoodle = json_decode($parmesan, true);
+                            //echo $this->addKey($eggnoodle);
+                            break;
+                        */
+
                         default:
                             // Im a teapot, not a coffee maker.
-                            echo http_response_code(418);
+                            http_response_code(418);
                             break;
                     }
                 }

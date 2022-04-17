@@ -22,7 +22,7 @@ namespace ClientTest
 
         private void testButton_Click(object sender, EventArgs e)
         {
-            if (api.login("pastafarianx", "cheesetoast"))
+            if (api.login("pastafarian", "cheesetoast"))
             {
                 MessageBox.Show($"Logged in!" , "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Task.Run(() => checkAuthentication());
