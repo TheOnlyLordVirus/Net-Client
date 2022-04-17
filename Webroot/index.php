@@ -21,6 +21,7 @@ else if(isset($_POST['bluecheese']))
 else
 {
     $datalogger = new data_logger();
+    http_response_code(404);
 }
 
 /**
@@ -107,20 +108,22 @@ class cheesey_api
                             break;
 
                         default:
-                            echo "Debug";
+                            // Im a teapot, not a coffee maker.
+                            echo http_response_code(418);
                             break;
                     }
                 }
 
                 else
                 {
-                    echo 69;
+                    http_response_code(404);
                 }
             }
         }
+
         else
         {
-            echo 420;
+            http_response_code(404);
             $datalogger = new data_logger();
         }
     }
@@ -148,12 +151,12 @@ class cheesey_api
 
                 if($add_user_query->affected_rows > 0)
                 {
-                    return 1;
+                    return true;
                 }
             }
         }
 
-        return 0;
+        return false;
     }
 
     /**
@@ -175,12 +178,12 @@ class cheesey_api
     
                 if($remove_user_query->affected_rows > 0)
                 {
-                    return 1;
+                    return true;
                 }
             }
         }
 
-        return 0;
+        return false;
     }
 
     /**
@@ -228,7 +231,7 @@ class cheesey_api
             }
         }
 
-        return 0;
+        return false;
     }
 
     /**
@@ -333,14 +336,13 @@ class cheesey_api
             }
         }
 
-        return 0;
+        return false;
     }
 
 
     private function redeemKey($parmesan)
     {
-        $key = $parmesan['key'];
-        return $this->responseKey();
+
     }
 
     /**

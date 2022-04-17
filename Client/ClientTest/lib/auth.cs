@@ -34,9 +34,9 @@ namespace ClientTest.lib
 
         private const int heartRate = 15;
 
-        private string dkey = "";
+        private string dkey = string.Empty;
 
-        private string ekey = "";
+        private string ekey = string.Empty;
 
         #endregion
 
@@ -70,7 +70,7 @@ namespace ClientTest.lib
         /// <returns></returns>
         public bool login(string user, string password)
         {
-            if(dkey.Equals(""))
+            if(dkey.Equals(string.Empty))
             {
                 this.username = user;
                 this.password = password;
@@ -81,11 +81,17 @@ namespace ClientTest.lib
             {
                 this.username = user;
                 this.password = password;
+                string commandResponse = sendCommand(user, password, "login", string.Empty);
 
-                LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(sendCommand(user, password, "login", ""));
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(commandResponse);
+                    this.authorized = loginResponse.loggedin;
+                    return loginResponse.loggedin;
+                }
 
-                this.authorized = loginResponse.loggedin;
-                return loginResponse.loggedin;
+                this.authorized = false;
+                return false;
             }
         }
 
@@ -102,8 +108,13 @@ namespace ClientTest.lib
 
             if (Authorized)
             {
-                TimeResponse timeResponse = JsonConvert.DeserializeObject<TimeResponse>(sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values)));
-                return timeResponse.timeleft;
+                string commandResponse = sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
+
+                if(!commandResponse.Equals(string.Empty))
+                {
+                    TimeResponse timeResponse = JsonConvert.DeserializeObject<TimeResponse>(commandResponse);
+                    return timeResponse.timeleft;
+                }
             }
 
             return 0;
@@ -138,13 +149,13 @@ namespace ClientTest.lib
         {
             while(this.login(this.Username, this.Password))
             {
-                Debugger.Log(1, "", "\nheart beat");
-                Debugger.Log(1, "", "\n" + incrementor);
+                Debugger.Log(1, string.Empty, "\nheart beat");
+                Debugger.Log(1, string.Empty, "\n" + incrementor);
                 incrementor = 0;
                 Thread.Sleep(5000);
             }
 
-            Debugger.Log(1, "", "heart failed");
+            Debugger.Log(1, string.Empty, "heart failed");
 
             return Task.CompletedTask;
         }
@@ -173,7 +184,7 @@ namespace ClientTest.lib
         /// <returns></returns>
         private string sendCommand(string username, string password, string command, string parameters)
         {
-            if (!(ekey.Equals("") || ekey.Equals("0")) && !(dkey.Equals("") || dkey.Equals("0")) && IsBase64String(ekey) && IsBase64String(dkey))
+            if (!(ekey.Equals(string.Empty) || ekey.Equals("0")) && !(dkey.Equals(string.Empty) || dkey.Equals("0")) && IsBase64String(ekey) && IsBase64String(dkey))
             {
                 Dictionary<string, string> values = new Dictionary<string, string>
                 {
@@ -184,13 +195,13 @@ namespace ClientTest.lib
                 };
 
                 string Json = JsonConvert.SerializeObject(values);
-                var runPostRequestTask = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptString(Json) } })));
+                Task<string> runPostRequestTask = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptString(Json) } })));
                 runPostRequestTask.Wait();
 
-                return DecryptString(runPostRequestTask.Result);
+                return !runPostRequestTask.Result.Equals(string.Empty) ? DecryptString(runPostRequestTask.Result) : string.Empty;
             }
 
-            return null;
+            return string.Empty;
         }
 
         /// <summary>
@@ -198,7 +209,7 @@ namespace ClientTest.lib
         /// </summary>
         private void GetEncryptionKey()
         {
-            if (ekey.Equals(""))
+            if (ekey.Equals(string.Empty))
             {
                 var getEncryptionKey = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "cheese", "712b623bac9acc6c5956bcb629e1a8e0" } })));
                 getEncryptionKey.Wait();
@@ -211,24 +222,24 @@ namespace ClientTest.lib
         /// </summary>
         private bool GetDecryptionKey(string username, string password)
         {
-            if (dkey.Equals(""))
+            if (dkey.Equals(string.Empty))
             {
                 Dictionary<string, string> values = new Dictionary<string, string>
                 {
                     { "username", username },
                     { "password", password },
                     { "cheese", "get_dkey" },
-                    { "parms", "" }
+                    { "parms", string.Empty }
                 };
 
                 string Json = JsonConvert.SerializeObject(values);
                 string EncryptedJson = EncryptString(Json);
 
-                var response = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptedJson } })));
+                Task<string> response = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptedJson } })));
                 response.Wait();
                 string temp_dKey = response.Result;
 
-                if (!(temp_dKey.Equals("") || temp_dKey.Equals("0")) && IsBase64String(temp_dKey))
+                if (!(temp_dKey.Equals(string.Empty) || temp_dKey.Equals("0")) && IsBase64String(temp_dKey))
                 {
                     this.dkey = temp_dKey;
                     Task.Run(() => heartbeat());
@@ -271,14 +282,19 @@ namespace ClientTest.lib
                     {
                         response = await result.Content.ReadAsStringAsync();
                     }
+
+                    else
+                    {
+                        response = string.Empty;
+                    }
                 }
                 return response;
             }
 
             catch (HttpRequestException e)
             {
-                Debugger.Log(1, "", "\nException Caught!");
-                Debugger.Log(1, "", "\nMessage : " + e.Message);
+                Debugger.Log(1, string.Empty, "\nException Caught!");
+                Debugger.Log(1, string.Empty, "\nMessage : " + e.Message);
                 return string.Empty;
             }
         }
