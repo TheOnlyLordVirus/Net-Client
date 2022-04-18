@@ -274,6 +274,7 @@ class cheesey_api
                                     'D',
                                     'E',
                                     'F',
+                                    '0',
                                     '1',
                                     '2',
                                     '3',
@@ -289,7 +290,7 @@ class cheesey_api
             
                             for($i = 0; $i <= 20;$i++)
                             {
-                                $r = rand(0, 14);
+                                $r = rand(0, 15);
             
                                 if($i == 1)
                                 {
