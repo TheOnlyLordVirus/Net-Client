@@ -56,20 +56,24 @@ namespace AuthAdminTool
 
         private void RedeemButton_Click(object sender, RoutedEventArgs e)
         {
-            if(AdminApi.redeemKey(redeemKeyTextBox.Text))
+            if(AdminApi.redeemKey(redeemKeyTextBox.Text, redeemKeyUserTextBox.Text))
             {
                 MessageBox.Show("Key Succeeded", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                MessageBox.Show
-                (
-                    $"Years Left: {AdminApi.YearsLeft}" +
-                    $"\nDays Left: {AdminApi.DaysLeft}" +
-                    $"\nHours Left: {AdminApi.HoursLeft}" +
-                    $"\nMinutes Left: {AdminApi.MinutesLeft}" +
-                    $"\nSeconds Left: {AdminApi.SecondsLeft}",
-                    "Time Left",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information
-                );
+                int seconds = AdminApi.getTimeLeft(redeemKeyUserTextBox.Text);
+                if (!seconds.Equals(0))
+                {
+                    MessageBox.Show
+                    (
+                        $"Years Left: {TimeSpan.FromSeconds(Convert.ToDouble(seconds)).Days / 365}" +
+                        $"\nDays Left: {TimeSpan.FromSeconds(Convert.ToDouble(seconds)).Days}" +
+                        $"\nHours Left: {TimeSpan.FromSeconds(Convert.ToDouble(seconds)).Hours}" +
+                        $"\nMinutes Left: {TimeSpan.FromSeconds(Convert.ToDouble(seconds)).Minutes}" +
+                        $"\nSeconds Left: {seconds}",
+                        "Time Left",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information
+                    );
+                }
             }
 
             else
@@ -103,7 +107,62 @@ namespace AuthAdminTool
 
         private void CreateUserButton_Click(object sender, RoutedEventArgs e)
         {
+            if(AdminApi.addUser(createEmailTextBox.Text, createUserTextBox.Text, createPassTextBox.Text, adminCheckBox.IsChecked.Equals(true) ? true : false ))
+            {
+                MessageBox.Show("Account created successufuly!", "Account Created!", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
 
+            else
+            {
+                MessageBox.Show("Account creation failed!", "Oh snap!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void DeleteUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (AdminApi.deleteUser(deleteUserTextBox.Text))
+            {
+                MessageBox.Show("Account deleted successufuly!", "Account Created!", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            else
+            {
+                MessageBox.Show("Account deletion failed!", "Oh snap!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void getUserTimeButton_Click(object sender, RoutedEventArgs e)
+        {
+            int seconds = AdminApi.getTimeLeft(getUserTimeTextBox.Text);
+            if (!seconds.Equals(0))
+            {
+                MessageBox.Show
+                (
+                    $"Years Left: {TimeSpan.FromSeconds(Convert.ToDouble(seconds)).Days / 365}" +
+                    $"\nDays Left: {TimeSpan.FromSeconds(Convert.ToDouble(seconds)).Days}" +
+                    $"\nHours Left: {TimeSpan.FromSeconds(Convert.ToDouble(seconds)).Hours}" +
+                    $"\nMinutes Left: {TimeSpan.FromSeconds(Convert.ToDouble(seconds)).Minutes}" +
+                    $"\nSeconds Left: {seconds}",
+                    "Time Left",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+            }
+
+            else
+            {
+                MessageBox.Show
+                (
+                    $"Years Left: 0" +
+                    $"\nDays Left: 0" +
+                    $"\nHours Left: 0" +
+                    $"\nMinutes Left: 0" +
+                    $"\nSeconds Left: 0",
+                    "Time Left",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+            }
         }
     }
 }

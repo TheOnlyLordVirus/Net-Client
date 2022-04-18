@@ -45,7 +45,16 @@ DELIMITER $$ ;
 
 create procedure addUser (IN `EMAIL` VARCHAR(25), IN `NAME` VARCHAR(25), IN `PASS` VARCHAR(25), IN `IP` VARCHAR(15), IN `ADMIN` BOOLEAN)
 begin
-  insert into USER (USER_EMAIL, USER_NAME, USER_PASS, REGISTRATION_IP, RECENT_IP, IS_ADMIN) values (EMAIL, NAME, PASS, IP, IP, ADMIN);
+  IF((SELECT u.USER_ID
+        FROM USER as u
+        WHERE u.USER_NAME = NAME) is null 
+        AND 
+    (SELECT u.USER_ID
+      FROM USER as u
+        WHERE u.USER_EMAIL = EMAIL) is null)
+  THEN
+    insert into USER (USER_EMAIL, USER_NAME, USER_PASS, REGISTRATION_IP, RECENT_IP, IS_ADMIN) values (EMAIL, NAME, PASS, IP, IP, ADMIN);
+  END IF;
 end
 $$
 

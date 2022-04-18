@@ -5,34 +5,50 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AuthAdminTool"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Admin Tool" Height="450" Width="1041">
 
     <Grid Background="Gray">
+        <!--Login-->
         <Label Content="Login: " x:Name="loginResultText" Margin="90,34,0,0" Width="146" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"></Label>
-        <Label Content="User:" Margin="42,64,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <TextBox x:Name="userTextBox" Margin="90,64,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <Label Content="User:" Margin="42,65,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="userTextBox" Margin="90,65,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
         <Label Content="Pass:" Margin="42,94,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <TextBox x:Name="passTextBox" Margin="90,94,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
-        <Button Margin="400,76,0,0" Content="Send to server" Click="LoginButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"></Button>
+        <Button Margin="400,77,0,0" Content="Send to server" Click="LoginButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"></Button>
 
-        <Label Content="Key: " Margin="42,158,0,0" Width="43" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <TextBox x:Name="redeemKeyTextBox" Margin="90,161,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
-        <Button Margin="400,161,0,0" Content="Redeem Key" Click="RedeemButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <!--Redeem Key-->
+        <Label Content="Redeem Key: " Margin="90,129,0,0" Width="146" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Label Content="User:" Margin="42,160,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="redeemKeyUserTextBox" Margin="90,160,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <Label Content="Key: " Margin="42,187,0,0" Width="43" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="redeemKeyTextBox" Margin="90,190,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <Button Margin="400,176,0,0" Content="Redeem Key" Click="RedeemButton_Click" Width="90" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-        <Label Content="Key: " Margin="42,217,0,0" Width="43" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <TextBox x:Name="generateKeyTextBox" MaxLength="500" IsReadOnly="True" Margin="90,217,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="217"/>
-        <Label Content="Days: " Margin="307,217,0,0" Width="40" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.946,0.575"/>
-        <TextBox x:Name="keyDayValueTextBox" MaxLength="4" Margin="347,217,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="35"/>
-        <Button Margin="400,217,0,0" Content="Generate Key" Click="GenerateButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <!--Generate Key-->
+        <Label Content="Key: " Margin="549,137,0,0" Width="42" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="generateKeyTextBox" MaxLength="500" IsReadOnly="True" Margin="597,137,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="216"/>
+        <Label Content="Days: " Margin="813,134,0,0" Width="40" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.946,0.575"/>
+        <TextBox x:Name="keyDayValueTextBox" MaxLength="4" Margin="853,137,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="48"/>
+        <Button Margin="906,137,0,0" Content="Generate Key" Click="GenerateButton_Click" Width="90" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-
+        <!--Create User-->
         <Label Content="Create User: " x:Name="createAccountResultText" Margin="90,253,0,0" Width="146" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"></Label>
         <Label Content="Email:" Margin="42,285,0,0" Width="44" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <TextBox x:Name="createEmailTextBox" Margin="90,315,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <TextBox x:Name="createEmailTextBox" Margin="90,284,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
         <Label Content="User:" Margin="42,315,0,0" Width="43" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.493,-0.651"/>
-        <TextBox x:Name="createUserTextBox" Margin="90,284,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <TextBox x:Name="createUserTextBox" Margin="90,315,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
         <Label Content="Pass:" Margin="42,345,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <TextBox x:Name="createPassTextBox" Margin="90,345,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
         <Button Margin="400,316,0,0" Content="Create User" Click="CreateUserButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"></Button>
+        <Label Content="Is Admin?:" Margin="18,370,0,0" Width="68" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <CheckBox x:Name="adminCheckBox" Margin="90,378,0,0" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" Width="29"></CheckBox>
+
+        <!--Delete User-->
+        <Label Content="User:" Margin="549,77,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="deleteUserTextBox" Margin="597,77,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="304"/>
+        <Button Margin="906,77,0,0" Content="Delete User" Click="DeleteUserButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Label Content="User:" Margin="549,107,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="getUserTimeTextBox" Margin="597,107,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="304"/>
+        <Button Margin="906,107,0,0" Content="Get User Time" Click="getUserTimeButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
     </Grid>
 </Window>

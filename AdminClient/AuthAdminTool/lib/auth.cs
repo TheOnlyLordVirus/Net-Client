@@ -67,6 +67,16 @@ namespace AdminAuth
             public string key;
         }
 
+        private struct AddUserResponse
+        {
+            public bool addres;
+        }
+
+        private struct DeleteUserResponse
+        {
+            public bool deleteres;
+        }
+
         #endregion
 
         #region Methods
@@ -136,9 +146,35 @@ namespace AdminAuth
         }
 
         /// <summary>
+        /// Get a users time left
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>The seconds left until auth end date.</returns>
+        public int getTimeLeft(string username)
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "username", username }
+            };
+
+            if (Authorized)
+            {
+                string commandResponse = sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
+
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    TimeResponse timeResponse = JsonConvert.DeserializeObject<TimeResponse>(commandResponse);
+                    return timeResponse.timeleft;
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
         /// Attempt to log in to the server.
         /// </summary>
-        /// <returns>The seconds left from the server as a string</returns>
+        /// <returns>The seconds left until auth end date.</returns>
         private int getTimeLeft()
         {
             Dictionary<string, string> values = new Dictionary<string, string>
@@ -198,12 +234,14 @@ namespace AdminAuth
         /// Attempt to redeem a key, return boolean result of attempt.
         /// </summary>
         /// <param name="timeKey"></param>
+        /// /// <param name="username"></param>
         /// <returns></returns>
-        public bool redeemKey(string timeKey)
+        public bool redeemKey(string timeKey, string username)
         {
             Dictionary<string, string> values = new Dictionary<string, string>
             {
-                { "key", timeKey }
+                { "key", timeKey },
+                { "username", username }
             };
 
             if (Authorized)
@@ -214,6 +252,91 @@ namespace AdminAuth
                 {
                     KeyResponse keyResponse = JsonConvert.DeserializeObject<KeyResponse>(commandResponse);
                     return keyResponse.keyres;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Attempt to redeem a key, return boolean result of attempt.
+        /// </summary>
+        /// <param name="timeKey"></param>
+        /// <returns></returns>
+        public bool redeemKey(string timeKey)
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "key", timeKey },
+                { "username", this.username }
+            };
+
+            if (Authorized)
+            {
+                string commandResponse = sendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
+
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    KeyResponse keyResponse = JsonConvert.DeserializeObject<KeyResponse>(commandResponse);
+                    return keyResponse.keyres;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Attempt to add a user.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="admin"></param>
+        /// <returns></returns>
+        public bool addUser(string email, string username, string password, bool admin)
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "email", email },
+                { "username", username },
+                { "password", password },
+                { "admin", admin ? "1" : "0" }
+            };
+
+            if (Authorized)
+            {
+                string commandResponse = sendCommand(this.username, this.password, "add_user", JsonConvert.SerializeObject(values));
+
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    AddUserResponse userResponse = JsonConvert.DeserializeObject<AddUserResponse>(commandResponse);
+                    return userResponse.addres;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Delete a user.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool deleteUser(string username)
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "username", username }
+            };
+
+            if (Authorized)
+            {
+                string commandResponse = sendCommand(this.username, this.password, "delete_user", JsonConvert.SerializeObject(values));
+
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    DeleteUserResponse delUserResponse = JsonConvert.DeserializeObject<DeleteUserResponse>(commandResponse);
+                    return delUserResponse.deleteres;
                 }
             }
 

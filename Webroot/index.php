@@ -103,7 +103,7 @@ class cheesey_api
 
                         case 'delete_user': // Delete a user from the cheat api
                             $eggnoodle = json_decode($parmesan, true);
-                            $json = json_encode(['delres' => $this->removeUser($eggnoodle)], true);
+                            $json = json_encode(['deleteres' => $this->removeUser($eggnoodle)], true);
                             echo $this->encryptString($json);
                             break;
 
@@ -143,7 +143,7 @@ class cheesey_api
      */
     private function addUser($parmesan)
     {
-        $email = $this->stripSomeSymbols($parmesan['email']);
+        $email = $parmesan['email'];
         $username = $this->stripAllSymbols($parmesan['username']);
         $password = $this->stripSomeSymbols($parmesan['password']);
         $admin = $this->stripAllSymbols($parmesan['admin']);
@@ -168,7 +168,7 @@ class cheesey_api
     }
 
     /**
-     * email, username, password
+     * username
      * @param $parmesan
      * @return bool
      */
@@ -180,7 +180,7 @@ class cheesey_api
         {
             if ($remove_user_query = $this->connection->prepare('DELETE FROM USER WHERE USER_NAME = ?'))
             {
-                $remove_user_query->bind_param('sss', $email, $username, $password);
+                $remove_user_query->bind_param('s', $username);
                 $remove_user_query->execute();
                 $remove_user_query->store_result();
     
@@ -355,13 +355,13 @@ class cheesey_api
     private function redeemKey($parmesan)
     {
         $key = $parmesan['key'];
+        $username = $this->stripAllSymbols($parmesan['username']);
 
-        if($uid_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+        if($uid_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ?'))
         {
-            $uid_query->bind_param('ss', $this->user_account, $this->user_password);
+            $uid_query->bind_param('s', $username);
             $uid_query->execute();
             $uid_query->store_result();
-            $uid_query->bind_result($id);
 
             if($uid_query->num_rows <= 0)
                 return false;
@@ -375,7 +375,7 @@ class cheesey_api
                 $key_query->execute();
                 $key_query->store_result();
 
-                if($key_query->affected_rows > 0)
+                if($key_query->affected_rows == 2)
                     return true;
             }
         }

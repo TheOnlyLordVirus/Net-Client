@@ -169,7 +169,8 @@ namespace ClientAuth
         {
             Dictionary<string, string> values = new Dictionary<string, string>
             {
-                { "key", timeKey }
+                { "key", timeKey },
+                { "username", this.username }
             };
 
             if (Authorized)
