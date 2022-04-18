@@ -17,7 +17,7 @@ yum update -y
 **Setup PMA (Optional)**
 ------------------------
 ```
-yum install phpmyadmin -y
+yum --enablerepo=remi install phpmyadmin
 
 nano /etc/httpd/conf.d/phpMyAdmin.conf
 ```
