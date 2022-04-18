@@ -178,6 +178,9 @@ mysql -uadmin -ppassword
 **Ddos port filtering**
 -----------------------
 ``nano /etc/sysctl.conf``
+
+**Inside sysctl.conf**
+----------------------
 ```
 kernel.printk = 4 4 1 7 
 kernel.panic = 10 
@@ -251,7 +254,11 @@ net.ipv4.conf.all.accept_redirects = 0
 net.ipv4.conf.all.send_redirects = 0 
 net.ipv4.conf.all.accept_source_route = 0 
 net.ipv4.conf.all.rp_filter = 1
+```
 
+**Then run this:**
+------------------
+```
 sysctl -p
 
 # Block invalid packets
@@ -283,3 +290,4 @@ iptables -t mangle -A PREROUTING -s 0.0.0.0/8 -j DROP
 iptables -t mangle -A PREROUTING -s 240.0.0.0/5 -j DROP 
 iptables -t mangle -A PREROUTING -s 127.0.0.0/8 ! -i lo -j DROP
 ```
+
