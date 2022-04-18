@@ -15,12 +15,14 @@ yum update -y
 ```
 
 **Setup PMA (Optional)**
+------------------------
 ```
 yum install phpmyadmin -y
 
 nano /etc/httpd/conf.d/phpMyAdmin.conf
 ```
 **Inside /etc/httpd/conf.d/phpMyAdmin.conf:**
+---------------------------------------------
 ```
 // Find this markup
 <Directory /usr/share/phpMyAdmin/>
@@ -54,6 +56,7 @@ nano /etc/httpd/conf.d/phpMyAdmin.conf
 ``nano /etc/yum.repos.d/MariaDB.repo``
 
 **Inside /etc/yum.repos.d/MariaDB.repo Add:**
+---------------------------------------------
 ```
 [mariadb]
 name = MariaDB
@@ -63,17 +66,20 @@ gpgcheck=1
 ```
 
 **Install MariaDB from newly added repo**
+-----------------------------------------
 ```
 yum install MariaDB-server MariaDB-client -y
 ```
 
 **Run these commands to start mysql, don't alow remote connections or anonymouse users, Set your root db password.**
+--------------------------------------------------------------------------------------------------------------------
 ```
 systemctl start mariadb
 mariadb-secure-installation
 ```
 
 **The secure installation output should look like this**
+--------------------------------------------------------
 ```
 [root@centos-s-1vcpu-1gb-intel-tor1-01 ~]# systemctl start mariadb
 [root@centos-s-1vcpu-1gb-intel-tor1-01 ~]# mariadb-secure-installation
@@ -144,11 +150,13 @@ installation should now be secure.
 ```
 
 **Login as root and Run Build_DB.sql querys on DB:**
+----------------------------------------------------
 ``
 mysql -pYOUR_PASS
 ``
 
 **Create a new account:**
+-------------------------
 ```
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'password' require ssl;
 GRANT ALL PRIVILEGES ON USER_INFO_DB.* TO 'admin'@'localhost';
@@ -158,19 +166,19 @@ EXIT;
 ```
 
 **Login to new account and verify it exists with DB access:**
+-------------------------------------------------------------
 ```
 mysql -uadmin -ppassword
 ```
 
 **Start Apache**
---------------------------
+----------------
 ``systemctl start httpd``
 
-**Ddos port filtering** (Work in progress)
+**Ddos port filtering**
 -----------------------
+``nano /etc/sysctl.conf``
 ```
-nano /etc/sysctl.conf
-
 kernel.printk = 4 4 1 7 
 kernel.panic = 10 
 kernel.sysrq = 0 
