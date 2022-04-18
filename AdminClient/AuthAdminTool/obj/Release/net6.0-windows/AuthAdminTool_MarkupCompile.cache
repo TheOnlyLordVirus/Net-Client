@@ -1,20 +1,20 @@
 ﻿AuthAdminTool
-1.0.0.0
+
 
 winexe
 C#
 .cs
-C:\Users\TheNe\Documents\GitHub\AuthApi\AdminClient\AuthAdminTool\obj\Debug\net6.0-windows\
+C:\Users\TheNe\Documents\GitHub\AuthApi\AdminClient\AuthAdminTool\obj\Release\net6.0-windows\
 AuthAdminTool
 none
 false
-TRACE;DEBUG;NET;NET6_0;NETCOREAPP
+TRACE;RELEASE;NET;NET6_0;NETCOREAPP
 C:\Users\TheNe\Documents\GitHub\AuthApi\AdminClient\AuthAdminTool\App.xaml
 11407045341
 
-61934907672
+41106871156
 195-944088902
 MainWindow.xaml;
 
-True
+False
 

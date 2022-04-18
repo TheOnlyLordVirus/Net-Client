@@ -115,6 +115,16 @@ class cheesey_api
                             echo $this->encryptString($json);
                             break;
 
+                        case 'add_key_bulk':
+                            /*
+                            $eggnoodle = json_decode($parmesan, true);
+                            $key = $this->addKey($eggnoodle);
+                            $b = !($key == false);
+                            $json = json_encode(['key' => $key], true);
+                            echo $this->encryptString($json);
+                            */
+                            break;
+
                         default:
                             // Im a teapot, not a coffee maker.
                             http_response_code(418);

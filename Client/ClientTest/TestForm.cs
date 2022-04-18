@@ -61,7 +61,7 @@ namespace ClientTest
         {
             if(api.Authorized)
             {
-                MessageBox.Show($"Key Redeemed: {api.redeemKey("12345-12345-12345-12345-54321")}", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Key Redeemed: {api.redeemKey("3E536-F6E3E-C8C65-941BA")}", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             else
