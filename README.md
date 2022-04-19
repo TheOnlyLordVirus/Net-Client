@@ -24,7 +24,6 @@ nano /etc/httpd/conf.d/phpMyAdmin.conf
 **Inside /etc/httpd/conf.d/phpMyAdmin.conf:**
 ---------------------------------------------
 ```
-
 # phpMyAdmin - Web based MySQL browser written in php
 #
 # Allows only localhost by default
