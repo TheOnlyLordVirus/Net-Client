@@ -93,7 +93,7 @@
             {
                 this.username = user;
                 this.password = password;
-                string commandResponse = sendCommand(user, password, "login", string.Empty);
+                string commandResponse = SendCommand(user, password, "login", string.Empty);
 
                 if (!commandResponse.Equals(string.Empty))
                 {
@@ -154,7 +154,7 @@
 
             if (Authorized)
             {
-                string commandResponse = sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
+                string commandResponse = SendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
 
                 if (!commandResponse.Equals(string.Empty))
                 {
@@ -181,7 +181,7 @@
 
             if (Authorized)
             {
-                string commandResponse = sendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
+                string commandResponse = SendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
 
                 if (!commandResponse.Equals(string.Empty))
                 {
@@ -201,7 +201,7 @@
         /// <param name="command"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        protected string sendCommand(string username, string password, string command, string parameters)
+        protected string SendCommand(string username, string password, string command, string parameters)
         {
             if (!(ekey.Equals(string.Empty) || ekey.Equals("0")) && !(dkey.Equals(string.Empty) || dkey.Equals("0")) && IsBase64String(ekey) && IsBase64String(dkey))
             {

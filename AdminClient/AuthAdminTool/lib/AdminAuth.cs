@@ -60,7 +60,7 @@
 
             if (Authorized)
             {
-                string commandResponse = sendCommand(this.username, this.password, "add_key_bulk", JsonConvert.SerializeObject(values));
+                string commandResponse = SendCommand(this.username, this.password, "add_key_bulk", JsonConvert.SerializeObject(values));
 
                 if (!commandResponse.Equals(string.Empty))
                 {
@@ -85,7 +85,7 @@
 
             if (Authorized)
             {
-                string commandResponse = sendCommand(this.username, this.password, "add_key", JsonConvert.SerializeObject(values));
+                string commandResponse = SendCommand(this.username, this.password, "add_key", JsonConvert.SerializeObject(values));
 
                 if (!commandResponse.Equals(string.Empty))
                 {
@@ -113,7 +113,7 @@
 
             if (Authorized)
             {
-                string commandResponse = sendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
+                string commandResponse = SendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
 
                 if (!commandResponse.Equals(string.Empty))
                 {
@@ -145,7 +145,7 @@
 
             if (Authorized)
             {
-                string commandResponse = sendCommand(this.username, this.password, "add_user", JsonConvert.SerializeObject(values));
+                string commandResponse = SendCommand(this.username, this.password, "add_user", JsonConvert.SerializeObject(values));
 
                 if (!commandResponse.Equals(string.Empty))
                 {
@@ -171,7 +171,7 @@
 
             if (Authorized)
             {
-                string commandResponse = sendCommand(this.username, this.password, "delete_user", JsonConvert.SerializeObject(values));
+                string commandResponse = SendCommand(this.username, this.password, "delete_user", JsonConvert.SerializeObject(values));
 
                 if (!commandResponse.Equals(string.Empty))
                 {
@@ -197,7 +197,7 @@
 
             if (Authorized)
             {
-                string commandResponse = sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
+                string commandResponse = SendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
 
                 if (!commandResponse.Equals(string.Empty))
                 {
