@@ -14,8 +14,7 @@ namespace ClientTest
 {
     public partial class TestForm : Form
     {
-        ClientAuth api = new ClientAuth();
-        bool loggedin = false;
+        ClientAuth AuthApi = new ClientAuth();
         public TestForm()
         {
             InitializeComponent();
@@ -23,7 +22,7 @@ namespace ClientTest
 
         private void testButton_Click(object sender, EventArgs e)
         {
-            ClientAuth.LoginState loginState = api.Login("pastafarian", "kush007");
+            ClientAuth.LoginState loginState = AuthApi.Login("pastafarian", "cheesetoast");
 
             if (loginState.Equals(ClientAuth.LoginState.Logged_In))
             {
@@ -54,15 +53,15 @@ namespace ClientTest
 
         private void testButton2_Click(object sender, EventArgs e)
         {
-            if(api.AuthorizedWithTimeLeft)
+            if(AuthApi.AuthorizedWithTimeLeft)
             {
                 MessageBox.Show
                 (
-                    $"Years Left: {api.YearsLeft}" +
-                    $"\nDays Left: {api.DaysLeft}" +
-                    $"\nHours Left: {api.HoursLeft}" +
-                    $"\nMinutes Left: {api.MinutesLeft}" +
-                    $"\nSeconds Left: {api.SecondsLeft}",
+                    $"Years Left: {AuthApi.YearsLeft}" +
+                    $"\nDays Left: {AuthApi.DaysLeft}" +
+                    $"\nHours Left: {AuthApi.HoursLeft}" +
+                    $"\nMinutes Left: {AuthApi.MinutesLeft}" +
+                    $"\nSeconds Left: {AuthApi.SecondsLeft}",
                     "Time Left",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information
@@ -77,9 +76,9 @@ namespace ClientTest
 
         private void testButton3_Click(object sender, EventArgs e)
         {
-            if(api.Authorized)
+            if(AuthApi.Authorized)
             {
-                MessageBox.Show($"Key Redeemed: {api.RedeemKey("3E536-F6E3E-C8C65-941BA")}", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Key Redeemed: {AuthApi.RedeemKey("3E536-F6E3E-C8C65-941BA")}", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             else
@@ -90,7 +89,7 @@ namespace ClientTest
 
         private Task checkAuthentication()
         {
-            while (api.Authorized && api.HeartRate);
+            while (AuthApi.Authorized);
 
             MessageBox.Show("Error", "Authentication to server failed.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return Task.CompletedTask;

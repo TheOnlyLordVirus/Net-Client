@@ -74,27 +74,27 @@ class cheesey_api
                 // First login / Get Decrytion key. 
                 if($decryptedInput->cheese == "get_dkey")
                 {
-                    if($this->checkCurrentIp() && $this->logIp())
+                    if($login_status == "Logged_In")
                     {
-                        if($login_status == "Logged_In")
+                        if($this->checkCurrentIp() && $this->logIp())
                         {
                             echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500], true);
                         }
 
-                        else if($login_status == "User_doesnt_Exist")
+                        else
                         {
-                            echo json_encode(['loggedin' => $login_status], true);
-                        }
-        
-                        else if ($login_status == "Password_Failure")
-                        {
-                            echo json_encode(['loggedin' => $login_status], true);
+                            echo json_encode(['loggedin' => "IP_Mismatch"], true); 
                         }
                     }
 
-                    else
+                    else if($login_status == "User_doesnt_Exist")
                     {
-                        echo json_encode(['loggedin' => "IP_Mismatch"], true); 
+                        echo json_encode(['loggedin' => $login_status], true);
+                    }
+    
+                    else if ($login_status == "Password_Failure")
+                    {
+                        echo json_encode(['loggedin' => $login_status], true);
                     }
                 }
 
