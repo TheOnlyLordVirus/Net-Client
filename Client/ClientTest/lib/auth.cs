@@ -1,63 +1,65 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Net.Http;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-
-namespace ClientAuth
+﻿namespace KeyAuthorization
 {
-    class Auth
+    using System;
+    using System.Text;
+    using System.Net.Http;
+    using Newtonsoft.Json;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Security.Cryptography;
+    using System.IO;
+    using System.Text.RegularExpressions;
+
+    class ClientAuth
     {
         #region Variables
 
         /// <summary>
         /// The http client we use to send commands to our server.
         /// </summary>
-        private static readonly HttpClient client = new HttpClient();
+        protected static readonly HttpClient client = new HttpClient();
 
-        private bool authorized = false;
+        protected bool authorized = false;
 
-        private string username = null;
+        protected string username = null;
 
-        private string password = null;
+        protected string password = null;
 
-        private int incrementor = 0;
+        protected int incrementor = 0;
 
-        private int heartRate = 0;
+        protected int heartRate = 0;
 
-        private string dkey = string.Empty;
+        protected string dkey = string.Empty;
 
-        private string ekey = string.Empty;
+        protected string ekey = string.Empty;
 
         #endregion
 
         #region Response Structs
 
-        private struct DkeyResponse
+        public enum LoginState
+        {
+            Logged_In,
+            Password_Failure,
+            IP_Mismatch,
+            User_doesnt_Exist,
+            Response_Error
+        }
+        protected struct LoginResponse
         {
             public string dkey;
             public int heartrate;
             public int heartrhythm;
-        }
-        private struct LoginResponse
-        {
-            public bool loggedin;
+            public string loggedin;
         }
 
-        private struct TimeResponse
+        protected struct TimeResponse
         {
             public int timeleft;
         }
 
-        private struct KeyResponse
+        protected struct KeyResponse
         {
             public bool keyres;
         }
@@ -69,7 +71,7 @@ namespace ClientAuth
         /// <summary>
         /// Class constructor
         /// </summary>
-        public Auth()
+        public ClientAuth()
         {
             GetEncryptionKey();
         }
@@ -78,7 +80,7 @@ namespace ClientAuth
         /// Attempt to log in to the server.
         /// </summary>
         /// <returns></returns>
-        public bool login(string user, string password)
+        public LoginState Login(string user, string password)
         {
             if(dkey.Equals(string.Empty))
             {
@@ -96,20 +98,54 @@ namespace ClientAuth
                 if (!commandResponse.Equals(string.Empty))
                 {
                     LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(commandResponse);
-                    this.authorized = loginResponse.loggedin;
-                    return loginResponse.loggedin;
+
+                    if(Enum.TryParse(loginResponse.loggedin, out LoginState myStatus) &&
+                        myStatus.Equals(LoginState.Logged_In))
+                            this.authorized = true;
+
+                    return myStatus;
                 }
 
                 this.authorized = false;
-                return false;
+                return LoginState.Response_Error;
             }
+        }
+
+        /// <summary>
+        /// Checks if the user is logged in every 5 seconds.
+        /// </summary>
+        /// <returns></returns>
+        protected Task Heartbeat()
+        {
+            while (this.Login(this.Username, this.Password).Equals(LoginState.Logged_In))
+            {
+                incrementor = 0;
+                Thread.Sleep(5000);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Increments a int to coenside with the heartbeat. Basic NOP crack protection.
+        /// </summary>
+        /// <param name="heartRhythm">Milliseconds to increment from between heart beats.</param>
+        /// <returns></returns>
+        protected Task Heartrate(int heartRhythm)
+        {
+            while (true)
+            {
+                incrementor++;
+                Thread.Sleep(heartRhythm);
+            }
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Attempt to log in to the server.
         /// </summary>
         /// <returns>The seconds left from the server as a string</returns>
-        private int getTimeLeft()
+        protected int GetTimeLeft()
         {
             Dictionary<string, string> values = new Dictionary<string, string>
             {
@@ -131,41 +167,11 @@ namespace ClientAuth
         }
 
         /// <summary>
-        /// Checks if the user is logged in every 5 seconds.
-        /// </summary>
-        /// <returns></returns>
-        private Task heartbeat()
-        {
-            while(this.login(this.Username, this.Password))
-            {
-                incrementor = 0;
-                Thread.Sleep(5000);
-            }
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Increments a int to coenside with the heartbeat.
-        /// </summary>
-        /// <param name="heartRhythm">Milliseconds to increment from between heart beats.</param>
-        /// <returns></returns>
-        private Task heartrate(int heartRhythm)
-        {
-            while (true)
-            {
-                incrementor++;
-                Thread.Sleep(heartRhythm);
-            }
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
         /// Attempt to redeem a key, return boolean result of attempt.
         /// </summary>
         /// <param name="timeKey"></param>
         /// <returns></returns>
-        public bool redeemKey(string timeKey)
+        public bool RedeemKey(string timeKey)
         {
             Dictionary<string, string> values = new Dictionary<string, string>
             {
@@ -195,7 +201,7 @@ namespace ClientAuth
         /// <param name="command"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        private string sendCommand(string username, string password, string command, string parameters)
+        protected string sendCommand(string username, string password, string command, string parameters)
         {
             if (!(ekey.Equals(string.Empty) || ekey.Equals("0")) && !(dkey.Equals(string.Empty) || dkey.Equals("0")) && IsBase64String(ekey) && IsBase64String(dkey))
             {
@@ -220,7 +226,7 @@ namespace ClientAuth
         /// <summary>
         /// Get the Encryption Key
         /// </summary>
-        private void GetEncryptionKey()
+        protected void GetEncryptionKey()
         {
             if (ekey.Equals(string.Empty))
             {
@@ -233,8 +239,9 @@ namespace ClientAuth
         /// <summary>
         /// Get the Decryption key
         /// </summary>
-        private bool GetDecryptionKey(string username, string password)
+        protected LoginState GetDecryptionKey(string username, string password)
         {
+            this.authorized = false;
             if (dkey.Equals(string.Empty) && !(ekey.Equals(string.Empty) || ekey.Equals("0") || !IsBase64String(ekey)))
             {
                 Dictionary<string, string> values = new Dictionary<string, string>
@@ -252,22 +259,25 @@ namespace ClientAuth
 
                 if(!response.Result.Equals(string.Empty))
                 {
-                    DkeyResponse dkeyResponse = JsonConvert.DeserializeObject<DkeyResponse>(response.Result);
+                    LoginResponse dkeyResponse = JsonConvert.DeserializeObject<LoginResponse>(response.Result);
 
-                    if (!(dkeyResponse.dkey.Equals(string.Empty) || dkeyResponse.dkey.Equals("0")) && IsBase64String(dkeyResponse.dkey))
+                    if (Enum.TryParse(dkeyResponse.loggedin, out LoginState state))
                     {
-                        this.heartRate = dkeyResponse.heartrate;
-                        this.dkey = dkeyResponse.dkey;
-                        Task.Run(() => heartbeat());
-                        Task.Run(() => heartrate(dkeyResponse.heartrhythm));
-                        this.authorized = true;
-                        return true;
+                        if(state.Equals(LoginState.Logged_In))
+                        {
+                            this.heartRate = dkeyResponse.heartrate;
+                            this.dkey = dkeyResponse.dkey;
+                            Task.Run(() => Heartbeat());
+                            Task.Run(() => Heartrate(dkeyResponse.heartrhythm));
+                            this.authorized = true;
+                        }
+
+                        return state;
                     }
                 }
             }
 
-            this.authorized = false;
-            return false;
+            return LoginState.Response_Error;
         }
 
         /// <summary>
@@ -275,7 +285,7 @@ namespace ClientAuth
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        private bool IsBase64String(string s)
+        protected bool IsBase64String(string s)
         {
             s = s.Trim();
             return (s.Length % 4 == 0) && Regex.IsMatch(s, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
@@ -287,7 +297,7 @@ namespace ClientAuth
         /// <param name="uri"></param>
         /// <param name="postContent"></param>
         /// <returns>http response body content</returns>
-        private static async Task<string> PostURI(Uri uri, HttpContent postContent)
+        protected static async Task<string> PostURI(Uri uri, HttpContent postContent)
         {
             try
             {
@@ -353,6 +363,11 @@ namespace ClientAuth
             return cipherText;
         }
 
+        /// <summary>
+        /// Decrypts a string.
+        /// </summary>
+        /// <param name="cipherText"></param>
+        /// <returns></returns>
         public string DecryptString(string cipherText)
         {
             string password = dkey;
@@ -391,10 +406,7 @@ namespace ClientAuth
                 plainText = Encoding.ASCII.GetString(plainBytes, 0, plainBytes.Length);
             }
 
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            catch (Exception ex) { }
 
             finally
             {
@@ -425,7 +437,7 @@ namespace ClientAuth
         /// </summary>
         public bool Authorized
         {
-            get { return authorized; }
+            get { return authorized && HeartRate; }
         }
 
         /// <summary>
@@ -435,7 +447,7 @@ namespace ClientAuth
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Days / 365;
+                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Days / 365;
             }
         }
 
@@ -446,7 +458,7 @@ namespace ClientAuth
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Days;
+                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Days;
             }
         }
 
@@ -457,7 +469,7 @@ namespace ClientAuth
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Hours;
+                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Hours;
             }
         }
 
@@ -468,7 +480,7 @@ namespace ClientAuth
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Minutes;
+                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Minutes;
             }
         }
 
@@ -479,7 +491,7 @@ namespace ClientAuth
         {
             get
             {
-                return getTimeLeft();
+                return GetTimeLeft();
             }
         }
 
@@ -490,7 +502,7 @@ namespace ClientAuth
         {
             get
             {
-                return !getTimeLeft().Equals(0);
+                return !GetTimeLeft().Equals(0);
             }
         }
 

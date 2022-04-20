@@ -1,80 +1,67 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Net.Http;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Security.Cryptography;
-using System.IO;
-using System.Text.RegularExpressions;
-
-namespace AdminAuth
+﻿namespace KeyAuthorization
 {
-    class AdminApi
+    using System;
+    using System.Text;
+    using System.Net.Http;
+    using Newtonsoft.Json;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Security.Cryptography;
+    using System.IO;
+    using System.Text.RegularExpressions;
+
+    class ClientAuth
     {
         #region Variables
 
         /// <summary>
         /// The http client we use to send commands to our server.
         /// </summary>
-        private static readonly HttpClient client = new HttpClient();
+        protected static readonly HttpClient client = new HttpClient();
 
-        private bool authorized = false;
+        protected bool authorized = false;
 
-        private string username = null;
+        protected string username = null;
 
-        private string password = null;
+        protected string password = null;
 
-        private int incrementor = 0;
+        protected int incrementor = 0;
 
-        private int heartRate = 0;
+        protected int heartRate = 0;
 
-        private string dkey = string.Empty;
+        protected string dkey = string.Empty;
 
-        private string ekey = string.Empty;
+        protected string ekey = string.Empty;
 
         #endregion
 
         #region Response Structs
 
-        private struct DkeyResponse
+        public enum LoginState
+        {
+            Logged_In,
+            Password_Failure,
+            IP_Mismatch,
+            User_doesnt_Exist,
+            Response_Error
+        }
+        protected struct LoginResponse
         {
             public string dkey;
             public int heartrate;
             public int heartrhythm;
-        }
-        private struct LoginResponse
-        {
-            public bool loggedin;
+            public string loggedin;
         }
 
-        private struct TimeResponse
+        protected struct TimeResponse
         {
             public int timeleft;
         }
 
-        private struct KeyResponse
+        protected struct KeyResponse
         {
             public bool keyres;
-        }
-
-        private struct GenKeyResponse
-        {
-            public string key;
-        }
-
-        private struct AddUserResponse
-        {
-            public bool addres;
-        }
-
-        private struct DeleteUserResponse
-        {
-            public bool deleteres;
         }
 
         #endregion
@@ -84,7 +71,7 @@ namespace AdminAuth
         /// <summary>
         /// Class constructor
         /// </summary>
-        public AdminApi()
+        public ClientAuth()
         {
             GetEncryptionKey();
         }
@@ -93,9 +80,9 @@ namespace AdminAuth
         /// Attempt to log in to the server.
         /// </summary>
         /// <returns></returns>
-        public bool login(string user, string password)
+        public LoginState Login(string user, string password)
         {
-            if(dkey.Equals(string.Empty))
+            if (dkey.Equals(string.Empty))
             {
                 this.username = user;
                 this.password = password;
@@ -111,143 +98,40 @@ namespace AdminAuth
                 if (!commandResponse.Equals(string.Empty))
                 {
                     LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(commandResponse);
-                    this.authorized = loginResponse.loggedin;
-                    return loginResponse.loggedin;
+
+                    if (Enum.TryParse(loginResponse.loggedin, out LoginState myStatus) &&
+                        myStatus.Equals(LoginState.Logged_In))
+                        this.authorized = true;
+
+                    return myStatus;
                 }
 
                 this.authorized = false;
-                return false;
+                return LoginState.Response_Error;
             }
-        }
-
-
-        /// <summary>
-        /// Generates a key if the user is logged in and is an admin.
-        /// </summary>
-        /// <returns></returns>
-        public string generateKey(int dayValue, int keyAmount)
-        {
-            Dictionary<string, int> values = new Dictionary<string, int>
-            {
-                { "time_value", dayValue },
-                { "key_amount", keyAmount }
-            };
-
-            if (Authorized)
-            {
-                string commandResponse = sendCommand(this.username, this.password, "add_key_bulk", JsonConvert.SerializeObject(values));
-
-                if (!commandResponse.Equals(string.Empty))
-                {
-                    GenKeyResponse KeyResponse = JsonConvert.DeserializeObject<GenKeyResponse>(commandResponse);
-
-                    return KeyResponse.key;
-                }
-            }
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// Generates a key if the user is logged in and is an admin.
-        /// </summary>
-        /// <returns></returns>
-        public string generateKey(int dayValue)
-        {
-            Dictionary<string, int> values = new Dictionary<string, int>
-            {
-                { "time_value", dayValue }
-            };
-
-            if (Authorized)
-            {
-                string commandResponse = sendCommand(this.username, this.password, "add_key", JsonConvert.SerializeObject(values));
-
-                if (!commandResponse.Equals(string.Empty))
-                {
-                    GenKeyResponse KeyResponse = JsonConvert.DeserializeObject<GenKeyResponse>(commandResponse);
-
-                    return KeyResponse.key;
-                }
-            }
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// Get a users time left
-        /// </summary>
-        /// <param name="username"></param>
-        /// <returns>The seconds left until auth end date.</returns>
-        public int getTimeLeft(string username)
-        {
-            Dictionary<string, string> values = new Dictionary<string, string>
-            {
-                { "username", username }
-            };
-
-            if (Authorized)
-            {
-                string commandResponse = sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
-
-                if (!commandResponse.Equals(string.Empty))
-                {
-                    TimeResponse timeResponse = JsonConvert.DeserializeObject<TimeResponse>(commandResponse);
-                    return timeResponse.timeleft;
-                }
-            }
-
-            return 0;
-        }
-
-        /// <summary>
-        /// Attempt to log in to the server.
-        /// </summary>
-        /// <returns>The seconds left until auth end date.</returns>
-        private int getTimeLeft()
-        {
-            Dictionary<string, string> values = new Dictionary<string, string>
-            {
-                { "username", this.username }
-            };
-
-            if (Authorized)
-            {
-                string commandResponse = sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
-
-                if(!commandResponse.Equals(string.Empty))
-                {
-                    TimeResponse timeResponse = JsonConvert.DeserializeObject<TimeResponse>(commandResponse);
-                    return timeResponse.timeleft;
-                }
-            }
-
-            return 0;
         }
 
         /// <summary>
         /// Checks if the user is logged in every 5 seconds.
         /// </summary>
         /// <returns></returns>
-        private Task heartbeat()
+        protected Task Heartbeat()
         {
-            while(this.login(this.Username, this.Password))
+            while (this.Login(this.Username, this.Password).Equals(LoginState.Logged_In))
             {
-                Debugger.Log(1, string.Empty, "\nheart beat");
-                Debugger.Log(1, string.Empty, "\n" + incrementor);
                 incrementor = 0;
                 Thread.Sleep(5000);
             }
-
-            Debugger.Log(1, string.Empty, "heart failed");
 
             return Task.CompletedTask;
         }
 
         /// <summary>
-        /// Increments a int to coenside with the heartbeat.
+        /// Increments a int to coenside with the heartbeat. Basic NOP crack protection.
         /// </summary>
         /// <param name="heartRhythm">Milliseconds to increment from between heart beats.</param>
         /// <returns></returns>
-        private Task heartrate(int heartRhythm)
+        protected Task Heartrate(int heartRhythm)
         {
             while (true)
             {
@@ -258,31 +142,28 @@ namespace AdminAuth
         }
 
         /// <summary>
-        /// Attempt to redeem a key, return boolean result of attempt.
+        /// Get a users time left
         /// </summary>
-        /// <param name="timeKey"></param>
-        /// /// <param name="username"></param>
-        /// <returns></returns>
-        public bool redeemKey(string timeKey, string username)
+        /// <returns>The seconds left until auth end date.</returns>
+        public int GetTimeLeft()
         {
             Dictionary<string, string> values = new Dictionary<string, string>
             {
-                { "key", timeKey },
-                { "username", username }
+                { "username", this.username }
             };
 
             if (Authorized)
             {
-                string commandResponse = sendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
+                string commandResponse = sendCommand(this.username, this.password, "time_check", JsonConvert.SerializeObject(values));
 
                 if (!commandResponse.Equals(string.Empty))
                 {
-                    KeyResponse keyResponse = JsonConvert.DeserializeObject<KeyResponse>(commandResponse);
-                    return keyResponse.keyres;
+                    TimeResponse timeResponse = JsonConvert.DeserializeObject<TimeResponse>(commandResponse);
+                    return timeResponse.timeleft;
                 }
             }
 
-            return false;
+            return 0;
         }
 
         /// <summary>
@@ -290,7 +171,7 @@ namespace AdminAuth
         /// </summary>
         /// <param name="timeKey"></param>
         /// <returns></returns>
-        public bool redeemKey(string timeKey)
+        public bool RedeemKey(string timeKey)
         {
             Dictionary<string, string> values = new Dictionary<string, string>
             {
@@ -306,64 +187,6 @@ namespace AdminAuth
                 {
                     KeyResponse keyResponse = JsonConvert.DeserializeObject<KeyResponse>(commandResponse);
                     return keyResponse.keyres;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Attempt to add a user.
-        /// </summary>
-        /// <param name="email"></param>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <param name="admin"></param>
-        /// <returns></returns>
-        public bool addUser(string email, string username, string password, bool admin)
-        {
-            Dictionary<string, string> values = new Dictionary<string, string>
-            {
-                { "email", email },
-                { "username", username },
-                { "password", password },
-                { "admin", admin ? "1" : "0" }
-            };
-
-            if (Authorized)
-            {
-                string commandResponse = sendCommand(this.username, this.password, "add_user", JsonConvert.SerializeObject(values));
-
-                if (!commandResponse.Equals(string.Empty))
-                {
-                    AddUserResponse userResponse = JsonConvert.DeserializeObject<AddUserResponse>(commandResponse);
-                    return userResponse.addres;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Delete a user.
-        /// </summary>
-        /// <param name="username"></param>
-        /// <returns></returns>
-        public bool deleteUser(string username)
-        {
-            Dictionary<string, string> values = new Dictionary<string, string>
-            {
-                { "username", username }
-            };
-
-            if (Authorized)
-            {
-                string commandResponse = sendCommand(this.username, this.password, "delete_user", JsonConvert.SerializeObject(values));
-
-                if (!commandResponse.Equals(string.Empty))
-                {
-                    DeleteUserResponse delUserResponse = JsonConvert.DeserializeObject<DeleteUserResponse>(commandResponse);
-                    return delUserResponse.deleteres;
                 }
             }
 
@@ -378,7 +201,7 @@ namespace AdminAuth
         /// <param name="command"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        private string sendCommand(string username, string password, string command, string parameters)
+        protected string sendCommand(string username, string password, string command, string parameters)
         {
             if (!(ekey.Equals(string.Empty) || ekey.Equals("0")) && !(dkey.Equals(string.Empty) || dkey.Equals("0")) && IsBase64String(ekey) && IsBase64String(dkey))
             {
@@ -403,7 +226,7 @@ namespace AdminAuth
         /// <summary>
         /// Get the Encryption Key
         /// </summary>
-        private void GetEncryptionKey()
+        protected void GetEncryptionKey()
         {
             if (ekey.Equals(string.Empty))
             {
@@ -416,8 +239,9 @@ namespace AdminAuth
         /// <summary>
         /// Get the Decryption key
         /// </summary>
-        private bool GetDecryptionKey(string username, string password)
+        protected LoginState GetDecryptionKey(string username, string password)
         {
+            this.authorized = false;
             if (dkey.Equals(string.Empty) && !(ekey.Equals(string.Empty) || ekey.Equals("0") || !IsBase64String(ekey)))
             {
                 Dictionary<string, string> values = new Dictionary<string, string>
@@ -435,22 +259,25 @@ namespace AdminAuth
 
                 if (!response.Result.Equals(string.Empty))
                 {
-                    DkeyResponse dkeyResponse = JsonConvert.DeserializeObject<DkeyResponse>(response.Result);
+                    LoginResponse dkeyResponse = JsonConvert.DeserializeObject<LoginResponse>(response.Result);
 
-                    if (!(dkeyResponse.dkey.Equals(string.Empty) || dkeyResponse.dkey.Equals("0")) && IsBase64String(dkeyResponse.dkey))
+                    if (Enum.TryParse(dkeyResponse.loggedin, out LoginState state))
                     {
-                        this.heartRate = dkeyResponse.heartrate;
-                        this.dkey = dkeyResponse.dkey;
-                        Task.Run(() => heartbeat());
-                        Task.Run(() => heartrate(dkeyResponse.heartrhythm));
-                        this.authorized = true;
-                        return true;
+                        if (state.Equals(LoginState.Logged_In))
+                        {
+                            this.heartRate = dkeyResponse.heartrate;
+                            this.dkey = dkeyResponse.dkey;
+                            Task.Run(() => Heartbeat());
+                            Task.Run(() => Heartrate(dkeyResponse.heartrhythm));
+                            this.authorized = true;
+                        }
+
+                        return state;
                     }
                 }
             }
 
-            this.authorized = false;
-            return false;
+            return LoginState.Response_Error;
         }
 
         /// <summary>
@@ -458,7 +285,7 @@ namespace AdminAuth
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        private bool IsBase64String(string s)
+        protected bool IsBase64String(string s)
         {
             s = s.Trim();
             return (s.Length % 4 == 0) && Regex.IsMatch(s, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
@@ -470,7 +297,7 @@ namespace AdminAuth
         /// <param name="uri"></param>
         /// <param name="postContent"></param>
         /// <returns>http response body content</returns>
-        private static async Task<string> PostURI(Uri uri, HttpContent postContent)
+        protected static async Task<string> PostURI(Uri uri, HttpContent postContent)
         {
             try
             {
@@ -493,8 +320,6 @@ namespace AdminAuth
 
             catch (HttpRequestException e)
             {
-                Debugger.Log(1, string.Empty, "\nException Caught!");
-                Debugger.Log(1, string.Empty, "\nMessage : " + e.Message);
                 return string.Empty;
             }
         }
@@ -581,10 +406,7 @@ namespace AdminAuth
                 plainText = Encoding.ASCII.GetString(plainBytes, 0, plainBytes.Length);
             }
 
-            catch (Exception ex)
-            {
-                //MessageBox.Show(ex.Message);
-            }
+            catch (Exception ex) { }
 
             finally
             {
@@ -615,7 +437,7 @@ namespace AdminAuth
         /// </summary>
         public bool Authorized
         {
-            get { return authorized; }
+            get { return authorized && HeartRate; }
         }
 
         /// <summary>
@@ -625,7 +447,7 @@ namespace AdminAuth
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Days / 365;
+                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Days / 365;
             }
         }
 
@@ -636,7 +458,7 @@ namespace AdminAuth
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Days;
+                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Days;
             }
         }
 
@@ -647,7 +469,7 @@ namespace AdminAuth
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Hours;
+                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Hours;
             }
         }
 
@@ -658,7 +480,7 @@ namespace AdminAuth
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(getTimeLeft())).Minutes;
+                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Minutes;
             }
         }
 
@@ -669,7 +491,7 @@ namespace AdminAuth
         {
             get
             {
-                return getTimeLeft();
+                return GetTimeLeft();
             }
         }
 
@@ -680,7 +502,7 @@ namespace AdminAuth
         {
             get
             {
-                return !getTimeLeft().Equals(0);
+                return !GetTimeLeft().Equals(0);
             }
         }
 
@@ -697,7 +519,7 @@ namespace AdminAuth
         /// </summary>
         public string Username
         {
-            get 
+            get
             {
                 if (this.Authorized)
                     return username;
@@ -711,7 +533,7 @@ namespace AdminAuth
         /// </summary>
         public string Password
         {
-            get 
+            get
             {
                 if (this.Authorized)
                     return password;

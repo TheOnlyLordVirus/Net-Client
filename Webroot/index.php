@@ -1,7 +1,9 @@
 <?php
+/*
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+*/
 date_default_timezone_set('UTC');
 
 // Get the encryption key
@@ -67,79 +69,120 @@ class cheesey_api
 
             else
             {
-                if ($this->login() && $this->logIp())
+                $login_status = $this->login();
+
+                // First login / Get Decrytion key. 
+                if($decryptedInput->cheese == "get_dkey")
                 {
-                    $parmesan = $decryptedInput->parms;
-
-                    switch ($decryptedInput->cheese)
+                    if($this->checkCurrentIp() && $this->logIp())
                     {
-                        case 'get_dkey':
-                            echo json_encode(['dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500], true);
-                            break;
+                        if($login_status == "Logged_In")
+                        {
+                            echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500], true);
+                        }
 
-                        case 'login':
-                            $json = json_encode(['loggedin' => true], true);
-                            echo $this->encryptString($json);
-                            break;
+                        else if($login_status == "User_doesnt_Exist")
+                        {
+                            echo json_encode(['loggedin' => $login_status], true);
+                        }
+        
+                        else if ($login_status == "Password_Failure")
+                        {
+                            echo json_encode(['loggedin' => $login_status], true);
+                        }
+                    }
 
-                        case 'time_check':
-                            $eggnoodle = json_decode($parmesan, true);
-                            $json = json_encode(['timeleft' => $this->checkTime($eggnoodle)], true);
-                            echo $this->encryptString($json);
-                            break;
-
-                        case 'redeem_key':
-                            $eggnoodle = json_decode($parmesan, true);
-                            $json = json_encode(['keyres' => $this->redeemKey($eggnoodle)], true);
-                            echo $this->encryptString($json);
-                            break;
-
-                        // Admin commands
-                        case 'add_user': // Adds a user to the cheat api
-                            $eggnoodle = json_decode($parmesan, true);
-                            $json = json_encode(['addres' => $this->addUser($eggnoodle)], true);
-                            echo $this->encryptString($json);
-                            break;
-
-                        case 'delete_user': // Delete a user from the cheat api
-                            $eggnoodle = json_decode($parmesan, true);
-                            $json = json_encode(['deleteres' => $this->removeUser($eggnoodle)], true);
-                            echo $this->encryptString($json);
-                            break;
-
-                        case 'add_key':
-                            $eggnoodle = json_decode($parmesan, true);
-                            $key = $this->addKey($eggnoodle);
-                            $b = !($key == false);
-                            $json = json_encode(['key' => $key], true);
-                            echo $this->encryptString($json);
-                            break;
-
-                        case 'add_key_bulk':
-                            $eggnoodle = json_decode($parmesan, true);
-                            $keyAmount = $eggnoodle['key_amount'];
-                            $keyTokenList = '';
-
-                            for($i = 0; $i < $keyAmount; $i++)
-                            {
-                                $key = $this->addKey($eggnoodle);
-                                $keyTokenList .= $key . '|';
-                            }
-                            
-                            $json = json_encode(['key' => $keyTokenList], true);
-                            echo $this->encryptString($json);
-                            break;
-
-                        default:
-                            // Im a teapot, not a coffee maker.
-                            http_response_code(418);
-                            break;
+                    else
+                    {
+                        echo json_encode(['loggedin' => "IP_Mismatch"], true); 
                     }
                 }
 
-                else
+                else if ($login_status == "Logged_In")
                 {
-                    http_response_code(404);
+                    if($this->checkCurrentIp() && $this->logIp())
+                    {
+                        $parmesan = $decryptedInput->parms;
+
+                        switch ($decryptedInput->cheese)
+                        {
+                            case 'login':
+                                $json = json_encode(['loggedin' => "Logged_In"], true);
+                                echo $this->encryptString($json);
+                                break;
+    
+                            case 'time_check':
+                                $eggnoodle = json_decode($parmesan, true);
+                                $json = json_encode(['timeleft' => $this->checkTime($eggnoodle)], true);
+                                echo $this->encryptString($json);
+                                break;
+    
+                            case 'redeem_key':
+                                $eggnoodle = json_decode($parmesan, true);
+                                $json = json_encode(['keyres' => $this->redeemKey($eggnoodle)], true);
+                                echo $this->encryptString($json);
+                                break;
+    
+                            // Admin commands
+                            case 'add_user': // Adds a user to the cheat api
+                                $eggnoodle = json_decode($parmesan, true);
+                                $json = json_encode(['addres' => $this->addUser($eggnoodle)], true);
+                                echo $this->encryptString($json);
+                                break;
+    
+                            case 'delete_user': // Delete a user from the cheat api
+                                $eggnoodle = json_decode($parmesan, true);
+                                $json = json_encode(['deleteres' => $this->removeUser($eggnoodle)], true);
+                                echo $this->encryptString($json);
+                                break;
+    
+                            case 'add_key':
+                                $eggnoodle = json_decode($parmesan, true);
+                                $key = $this->addKey($eggnoodle);
+                                $b = !($key == false);
+                                $json = json_encode(['key' => $key], true);
+                                echo $this->encryptString($json);
+                                break;
+    
+                            case 'add_key_bulk':
+                                $eggnoodle = json_decode($parmesan, true);
+                                $keyAmount = $eggnoodle['key_amount'];
+                                $keyTokenList = '';
+    
+                                for($i = 0; $i < $keyAmount; $i++)
+                                {
+                                    $key = $this->addKey($eggnoodle);
+                                    $keyTokenList .= $key . '|';
+                                }
+                                
+                                $json = json_encode(['key' => $keyTokenList], true);
+                                echo $this->encryptString($json);
+                                break;
+    
+                            default:
+                                // Im a teapot, not a coffee maker.
+                                http_response_code(418);
+                                break;
+                        }
+                    }
+    
+                    else
+                    {
+                        $json = json_encode(['loggedin' => "IP_Mismatch"], true);
+                        echo $this->encryptString($json);
+                    }
+                }
+
+                else if($login_status == "User_doesnt_Exist")
+                {
+                    $json = json_encode(['loggedin' => $login_status], true);
+                    echo $this->encryptString($json);
+                }
+
+                else if ($login_status == "Password_Failure")
+                {
+                    $json = json_encode(['loggedin' => $login_status], true);
+                    echo $this->encryptString($json);
                 }
             }
         }
@@ -256,17 +299,60 @@ class cheesey_api
 
     /**
      * User authentication check.
-     * @return bool
+     * @return string
      */
     private function login()
     {
-        if ($login_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+        if ($user_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ?'))
         {
-            $login_query->bind_param('ss', $this->user_account, $this->user_password);
-            $login_query->execute();
-            $login_query->store_result();
+            $user_query->bind_param('s', $this->user_account);
+            $user_query->execute();
+            $user_query->store_result();
 
-            if($login_query->num_rows > 0)
+            if($user_query->num_rows > 0)
+            {
+                if ($login_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+                {
+                    $login_query->bind_param('ss', $this->user_account, $this->user_password);
+                    $login_query->execute();
+                    $login_query->store_result();
+        
+                    if($login_query->num_rows > 0)
+                    {
+                        return "Logged_In";
+                    }
+
+                    else
+                    {
+                        return "Password_Failure";
+                    }
+                }
+            }
+
+            else
+            {
+                return "User_doesnt_Exist";
+            }
+        }
+
+        return "Response_Error";
+    }
+
+    /**
+     * Ip authentication check.
+     * @return bool
+     */
+    private function checkCurrentIp()
+    {
+        if ($ip_query = $this->connection->prepare('SELECT REGISTRATION_IP FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+        {
+            $ip_query->bind_param('ss', $this->user_account, $this->user_password);
+            $ip_query->execute();
+            $ip_query->store_result();
+            $ip_query->bind_result($ip);
+            $ip_query->fetch();
+
+            if($ip_query->num_rows > 0 && $ip == data_logger::getIPAddress())
             {
                 return true;
             }

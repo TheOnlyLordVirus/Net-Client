@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using AdminAuth;
+using KeyAuthorization;
 
 namespace AuthAdminTool
 {
@@ -30,7 +30,7 @@ namespace AuthAdminTool
 
         private Task checkAuthentication()
         {
-            while (AdminApi.Authorized && AdminApi.HeartRate) ;
+            while (AdminApi.Authorized) ;
 
             MessageBox.Show("Auth Failed", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
@@ -40,7 +40,9 @@ namespace AuthAdminTool
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            if (AdminApi.login(userTextBox.Text, passTextBox.Text))
+            ClientAuth.LoginState LoginState = AdminApi.Login(userTextBox.Text, passTextBox.Text);
+
+            if (LoginState.Equals(ClientAuth.LoginState.Logged_In))
             {
                 MessageBox.Show("Login Succeeded", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 loginResultText.Content = "Login: Success";
@@ -49,17 +51,17 @@ namespace AuthAdminTool
 
             else
             {
-                MessageBox.Show("Login Failed", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(LoginState.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 loginResultText.Content = "Login: Failure";
             }
         }
 
         private void RedeemButton_Click(object sender, RoutedEventArgs e)
         {
-            if(AdminApi.redeemKey(redeemKeyTextBox.Text, redeemKeyUserTextBox.Text))
+            if(AdminApi.RedeemKey(redeemKeyTextBox.Text, redeemKeyUserTextBox.Text))
             {
                 MessageBox.Show("Key Succeeded", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                int seconds = AdminApi.getTimeLeft(redeemKeyUserTextBox.Text);
+                int seconds = AdminApi.GetTimeLeft(redeemKeyUserTextBox.Text);
                 if (!seconds.Equals(0))
                 {
                     MessageBox.Show
@@ -87,7 +89,7 @@ namespace AuthAdminTool
 
             if(int.TryParse(keyDayValueTextBox.Text, out int days))
             {
-                string key = AdminApi.generateKey(days);
+                string key = AdminApi.GenerateKey(days);
                 if (!key.Equals(string.Empty))
                 {
                     generateKeyTextBox.Text = key;
@@ -107,7 +109,7 @@ namespace AuthAdminTool
 
         private void CreateUserButton_Click(object sender, RoutedEventArgs e)
         {
-            if(AdminApi.addUser(createEmailTextBox.Text, createUserTextBox.Text, createPassTextBox.Text, adminCheckBox.IsChecked.Equals(true) ? true : false ))
+            if(AdminApi.AddUser(createEmailTextBox.Text, createUserTextBox.Text, createPassTextBox.Text, adminCheckBox.IsChecked.Equals(true) ? true : false ))
             {
                 MessageBox.Show("Account created successufuly!", "Account Created!", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -120,7 +122,7 @@ namespace AuthAdminTool
 
         private void DeleteUserButton_Click(object sender, RoutedEventArgs e)
         {
-            if (AdminApi.deleteUser(deleteUserTextBox.Text))
+            if (AdminApi.DeleteUser(deleteUserTextBox.Text))
             {
                 MessageBox.Show("Account deleted successufuly!", "Account Created!", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -133,7 +135,7 @@ namespace AuthAdminTool
 
         private void getUserTimeButton_Click(object sender, RoutedEventArgs e)
         {
-            int seconds = AdminApi.getTimeLeft(getUserTimeTextBox.Text);
+            int seconds = AdminApi.GetTimeLeft(getUserTimeTextBox.Text);
             if (!seconds.Equals(0))
             {
                 MessageBox.Show
@@ -170,7 +172,7 @@ namespace AuthAdminTool
             if (int.TryParse(keyDayValueBulkTextBox.Text, out int days) &&
                 int.TryParse(keyBulkAmountTextBox.Text, out int amount))
             {
-                string keys = AdminApi.generateKey(days, amount);
+                string keys = AdminApi.GenerateKey(days, amount);
                 if (!keys.Equals(string.Empty))
                 {
                     string[] keyArray = keys.Split('|');
