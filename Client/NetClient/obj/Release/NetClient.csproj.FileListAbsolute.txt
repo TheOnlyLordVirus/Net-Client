@@ -1,0 +1,15 @@
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\Release\NetClient.exe.config
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\Release\NetClient.exe
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\Release\NetClient.pdb
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\Release\DevExpress.BonusSkins.v20.2.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\Release\Newtonsoft.Json.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\Release\Newtonsoft.Json.xml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\Release\NetClient.csproj.AssemblyReference.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\Release\NetClient.MainForm.resources
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\Release\NetClient.Properties.Resources.resources
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\Release\NetClient.csproj.GenerateResource.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\Release\NetClient.exe.licenses
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\Release\NetClient.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\Release\NetClient.csproj.CopyComplete
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\Release\NetClient.exe
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\Release\NetClient.pdb

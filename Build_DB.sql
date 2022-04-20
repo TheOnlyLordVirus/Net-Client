@@ -32,13 +32,6 @@ create table IP_HISTORY
   LOGGIN_DATE datetime not null default now()
 );
 
-create table GAME_DATA
-(
-	GAME_ID int primary key auto_increment,
-	GAME_NAME varchar(40) not null,
-	GAME_CHEAT_VERSION decimal(3,1)
-);
-
 create view STORED_IP as select u.USER_NAME, h.LOGGED_IP, h.LOGGIN_DATE from IP_HISTORY h inner join USER u on h.USER_ID = u.USER_ID;
 
 DELIMITER $$ ;

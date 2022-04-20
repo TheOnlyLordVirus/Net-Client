@@ -451,6 +451,18 @@
             }
         }
 
+
+        /// <summary>
+        /// Gets the months this person has authed left.
+        /// </summary>
+        public int MonthsLeft
+        {
+            get
+            {
+                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Days / 30;
+            }
+        }
+
         /// <summary>
         /// Gets the Days this person has authed left.
         /// </summary>

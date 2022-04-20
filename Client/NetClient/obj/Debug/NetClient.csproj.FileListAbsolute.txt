@@ -1,0 +1,15 @@
+C:\Users\TheNe\source\repos\NetClient\NetClient\bin\Debug\NetClient.exe.config
+C:\Users\TheNe\source\repos\NetClient\NetClient\bin\Debug\NetClient.exe
+C:\Users\TheNe\source\repos\NetClient\NetClient\bin\Debug\NetClient.pdb
+C:\Users\TheNe\source\repos\NetClient\NetClient\obj\Debug\NetClient.csproj.AssemblyReference.cache
+C:\Users\TheNe\source\repos\NetClient\NetClient\obj\Debug\NetClient.Properties.Resources.resources
+C:\Users\TheNe\source\repos\NetClient\NetClient\obj\Debug\NetClient.csproj.GenerateResource.cache
+C:\Users\TheNe\source\repos\NetClient\NetClient\obj\Debug\NetClient.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\source\repos\NetClient\NetClient\obj\Debug\NetClient.exe
+C:\Users\TheNe\source\repos\NetClient\NetClient\obj\Debug\NetClient.pdb
+C:\Users\TheNe\source\repos\NetClient\NetClient\bin\Debug\DevExpress.BonusSkins.v20.2.dll
+C:\Users\TheNe\source\repos\NetClient\NetClient\obj\Debug\NetClient.csproj.CopyComplete
+C:\Users\TheNe\source\repos\NetClient\NetClient\obj\Debug\NetClient.MainForm.resources
+C:\Users\TheNe\source\repos\NetClient\NetClient\obj\Debug\NetClient.exe.licenses
+C:\Users\TheNe\source\repos\NetClient\NetClient\bin\Debug\Newtonsoft.Json.dll
+C:\Users\TheNe\source\repos\NetClient\NetClient\bin\Debug\Newtonsoft.Json.xml
