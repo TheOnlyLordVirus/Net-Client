@@ -36,8 +36,6 @@
 
         #endregion
 
-        #region Response Structs
-
         public enum LoginState
         {
             Logged_In,
@@ -46,6 +44,8 @@
             User_doesnt_Exist,
             Response_Error
         }
+
+        #region Response Structs
         protected struct LoginResponse
         {
             public string dkey;
