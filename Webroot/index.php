@@ -116,13 +116,18 @@ class cheesey_api
                             break;
 
                         case 'add_key_bulk':
-                            /*
                             $eggnoodle = json_decode($parmesan, true);
-                            $key = $this->addKey($eggnoodle);
-                            $b = !($key == false);
-                            $json = json_encode(['key' => $key], true);
+                            $keyAmount = $eggnoodle['key_amount'];
+                            $keyTokenList = '';
+
+                            for($i = 0; $i < $keyAmount; $i++)
+                            {
+                                $key = $this->addKey($eggnoodle);
+                                $keyTokenList .= $key . '|';
+                            }
+                            
+                            $json = json_encode(['key' => $keyTokenList], true);
                             echo $this->encryptString($json);
-                            */
                             break;
 
                         default:
@@ -143,6 +148,51 @@ class cheesey_api
         {
             http_response_code(404);
             $datalogger = new data_logger();
+        }
+    }
+
+
+    /**
+     * Game name = folder name
+     */
+    private function downloadCheat($gamename)
+    {
+        $filename = "../cheats/" . $gamename . "/cheat.dll";
+        if(file_exists($filename))
+        {
+            header("Cache-Control: public");
+            header("Content-Description: File Transfer");
+            header("Content-Disposition: attachment; filename=poopy.dll");
+            header("Content-Type: application/zip");
+            header("Content-Transfer-Encoding: binary");
+            return base64_encode(file_get_contents($filename));
+        }
+        
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Game name = foldername
+     */
+    private function downloadJson($gamename)
+    {
+        $filename = "../cheats/" . $gamename . "/cheat.json";
+        if(file_exists($filename))
+        {
+            header("Cache-Control: public");
+            header("Content-Description: File Transfer");
+            header("Content-Disposition: attachment; filename=poopy.json");
+            header("Content-Type: application/zip");
+            header("Content-Transfer-Encoding: binary");
+            return base64_encode(file_get_contents($filename));
+        }
+        
+        else
+        {
+            return false;
         }
     }
 

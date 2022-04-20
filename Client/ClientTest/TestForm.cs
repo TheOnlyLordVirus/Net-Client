@@ -15,6 +15,7 @@ namespace ClientTest
     public partial class TestForm : Form
     {
         Auth api = new Auth();
+        bool loggedin = false;
         public TestForm()
         {
             InitializeComponent();
@@ -26,6 +27,7 @@ namespace ClientTest
             {
                 MessageBox.Show($"Logged in!" , "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Task.Run(() => checkAuthentication());
+                loggedin = true;
             }
 
             else
@@ -36,7 +38,7 @@ namespace ClientTest
 
         private void testButton2_Click(object sender, EventArgs e)
         {
-            if(api.AuthorizedWithTimeLeft)
+            if(api.AuthorizedWithTimeLeft & loggedin)
             {
                 MessageBox.Show
                 (
@@ -59,7 +61,7 @@ namespace ClientTest
 
         private void testButton3_Click(object sender, EventArgs e)
         {
-            if(api.Authorized)
+            if(api.Authorized && loggedin)
             {
                 MessageBox.Show($"Key Redeemed: {api.redeemKey("3E536-F6E3E-C8C65-941BA")}", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -75,6 +77,7 @@ namespace ClientTest
             while (api.Authorized && api.HeartRate);
 
             MessageBox.Show("Error", "Authentication to server failed.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            loggedin = false;
             return Task.CompletedTask;
         }
     }

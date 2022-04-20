@@ -164,5 +164,33 @@ namespace AuthAdminTool
                 );
             }
         }
+
+        private void GenerateBulkButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (int.TryParse(keyDayValueBulkTextBox.Text, out int days) &&
+                int.TryParse(keyBulkAmountTextBox.Text, out int amount))
+            {
+                string keys = AdminApi.generateKey(days, amount);
+                if (!keys.Equals(string.Empty))
+                {
+                    string[] keyArray = keys.Split('|');
+                    for (int iKey = 0;iKey < keyArray.Length;iKey++)
+                    {
+                        bulkKeyGenRichTextBox.AppendText($"{keyArray[iKey]}\n");
+                    }
+                    System.IO.File.WriteAllText($"{AppDomain.CurrentDomain.BaseDirectory}\\bulk_keys.txt", bulkKeyGenRichTextBox.Text);
+                }
+
+                else
+                {
+                    bulkKeyGenRichTextBox.AppendText("Key gen error.");
+                }
+            }
+
+            else
+            {
+                MessageBox.Show("You must enter the amount of days as an int!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }

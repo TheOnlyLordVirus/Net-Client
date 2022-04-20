@@ -120,6 +120,33 @@ namespace AdminAuth
             }
         }
 
+
+        /// <summary>
+        /// Generates a key if the user is logged in and is an admin.
+        /// </summary>
+        /// <returns></returns>
+        public string generateKey(int dayValue, int keyAmount)
+        {
+            Dictionary<string, int> values = new Dictionary<string, int>
+            {
+                { "time_value", dayValue },
+                { "key_amount", keyAmount }
+            };
+
+            if (Authorized)
+            {
+                string commandResponse = sendCommand(this.username, this.password, "add_key_bulk", JsonConvert.SerializeObject(values));
+
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    GenKeyResponse KeyResponse = JsonConvert.DeserializeObject<GenKeyResponse>(commandResponse);
+
+                    return KeyResponse.key;
+                }
+            }
+            return string.Empty;
+        }
+
         /// <summary>
         /// Generates a key if the user is logged in and is an admin.
         /// </summary>

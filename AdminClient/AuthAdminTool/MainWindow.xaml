@@ -11,9 +11,9 @@
         <!--Login-->
         <Label Content="Login: " x:Name="loginResultText" Margin="90,34,0,0" Width="146" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"></Label>
         <Label Content="User:" Margin="42,65,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <TextBox x:Name="userTextBox" Margin="90,65,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <TextBox x:Name="userTextBox" Margin="90,65,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292" Text="pastafarian"/>
         <Label Content="Pass:" Margin="42,94,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <TextBox x:Name="passTextBox" Margin="90,94,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292"/>
+        <TextBox x:Name="passTextBox" Margin="90,94,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292" Text="cheesetoast"/>
         <Button Margin="400,77,0,0" Content="Send to server" Click="LoginButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"></Button>
 
         <!--Redeem Key-->
@@ -50,5 +50,13 @@
         <Label Content="User:" Margin="549,107,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <TextBox x:Name="getUserTimeTextBox" Margin="597,107,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="304"/>
         <Button Margin="906,107,0,0" Content="Get User Time" Click="getUserTimeButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+        <!--Bulk Key Generate-->
+        <Label Content="Amount: " Margin="705,163,0,0" Width="60" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.946,0.575"/>
+        <TextBox x:Name="keyBulkAmountTextBox" MaxLength="4" Margin="765,163,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="48"/>
+        <Label Content="Days: " Margin="813,163,0,0" Width="40" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.946,0.575"/>
+        <TextBox x:Name="keyDayValueBulkTextBox" MaxLength="4" Margin="853,164,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="48"/>
+        <Button Margin="906,163,0,0" Content="Generate Keys" Click="GenerateBulkButton_Click" Width="90" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox x:Name="bulkKeyGenRichTextBox" IsReadOnly="True" Margin="597,192,45,26" Height="216" Width="399"/>
     </Grid>
 </Window>
