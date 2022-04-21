@@ -39,6 +39,7 @@
         public enum LoginState
         {
             Logged_In,
+            Logged_In_Without_Time,
             Password_Failure,
             IP_Mismatch,
             User_doesnt_Exist,
@@ -52,6 +53,7 @@
             public int heartrate;
             public int heartrhythm;
             public string loggedin;
+            public UInt64 meatball;
         }
 
         protected struct TimeResponse
@@ -64,82 +66,15 @@
             public bool keyres;
         }
 
+        protected struct DownloadFileResponse
+        {
+            public string file;
+            public string error;
+        }
+
         #endregion
 
-        #region Methods
-
-        /// <summary>
-        /// Class constructor
-        /// </summary>
-        public ClientAuth()
-        {
-            GetEncryptionKey();
-        }
-
-        /// <summary>
-        /// Attempt to log in to the server.
-        /// </summary>
-        /// <returns></returns>
-        public LoginState Login(string user, string password)
-        {
-            if (dkey.Equals(string.Empty))
-            {
-                this.username = user;
-                this.password = password;
-                return GetDecryptionKey(user, password);
-            }
-
-            else
-            {
-                this.username = user;
-                this.password = password;
-                string commandResponse = SendCommand(user, password, "login", string.Empty);
-
-                if (!commandResponse.Equals(string.Empty))
-                {
-                    LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(commandResponse);
-
-                    if (Enum.TryParse(loginResponse.loggedin, out LoginState myStatus) &&
-                        myStatus.Equals(LoginState.Logged_In))
-                        this.authorized = true;
-
-                    return myStatus;
-                }
-
-                this.authorized = false;
-                return LoginState.Response_Error;
-            }
-        }
-
-        /// <summary>
-        /// Checks if the user is logged in every 5 seconds.
-        /// </summary>
-        /// <returns></returns>
-        protected Task Heartbeat()
-        {
-            while (this.Login(this.Username, this.Password).Equals(LoginState.Logged_In))
-            {
-                incrementor = 0;
-                Thread.Sleep(5000);
-            }
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Increments a int to coenside with the heartbeat. Basic NOP crack protection.
-        /// </summary>
-        /// <param name="heartRhythm">Milliseconds to increment from between heart beats.</param>
-        /// <returns></returns>
-        protected Task Heartrate(int heartRhythm)
-        {
-            while (true)
-            {
-                incrementor++;
-                Thread.Sleep(heartRhythm);
-            }
-            return Task.CompletedTask;
-        }
+        #region Public Methods
 
         /// <summary>
         /// Get a users time left
@@ -164,6 +99,37 @@
             }
 
             return 0;
+        }
+
+
+        /// <summary>
+        /// Attempt to redeem a key, return boolean result of attempt.
+        /// </summary>
+        /// <param name="timeKey"></param>
+        /// <returns></returns>
+        public bool DownloadCheat(string gameName)
+        {
+            return false;
+            /*
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "key", timeKey },
+                { "username", this.username }
+            };
+
+            if (Authorized)
+            {
+                string commandResponse = SendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
+
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    KeyResponse keyResponse = JsonConvert.DeserializeObject<KeyResponse>(commandResponse);
+                    return keyResponse.keyres;
+                }
+            }
+
+            return false;
+            */
         }
 
         /// <summary>
@@ -194,33 +160,54 @@
         }
 
         /// <summary>
-        /// Send a command to our server.
+        /// Attempt to log in to the server.
         /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <param name="command"></param>
-        /// <param name="parameters"></param>
         /// <returns></returns>
-        protected string SendCommand(string username, string password, string command, string parameters)
+        public LoginState Login(string user, string password)
         {
-            if (!(ekey.Equals(string.Empty) || ekey.Equals("0")) && !(dkey.Equals(string.Empty) || dkey.Equals("0")) && IsBase64String(ekey) && IsBase64String(dkey))
+            if (dkey.Equals(string.Empty))
             {
-                Dictionary<string, string> values = new Dictionary<string, string>
-                {
-                    { "username", username },
-                    { "password", password },
-                    { "cheese", command },
-                    { "parms", parameters }
-                };
-
-                string Json = JsonConvert.SerializeObject(values);
-                Task<string> runPostRequestTask = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptString(Json) } })));
-                runPostRequestTask.Wait();
-
-                return !runPostRequestTask.Result.Equals(string.Empty) ? DecryptString(runPostRequestTask.Result) : string.Empty;
+                this.username = user;
+                this.password = password;
+                return GetDecryptionKey(user, password);
             }
 
-            return string.Empty;
+            else
+            {
+                this.username = user;
+                this.password = password;
+                string commandResponse = SendCommand(user, password, "login", string.Empty);
+
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(commandResponse);
+
+                    if (CheckTimeStamp(loginResponse.meatball) &&
+                        Enum.TryParse(loginResponse.loggedin, out LoginState myStatus))
+                    {
+                        if (myStatus.Equals(LoginState.Logged_In) || myStatus.Equals(LoginState.Logged_In_Without_Time))
+                        {
+                            this.authorized = true;
+                            return myStatus;
+                        }
+                    }
+                }
+
+                this.authorized = false;
+                return LoginState.Response_Error;
+            }
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        public ClientAuth()
+        {
+            GetEncryptionKey();
         }
 
         /// <summary>
@@ -263,7 +250,7 @@
 
                     if (Enum.TryParse(dkeyResponse.loggedin, out LoginState state))
                     {
-                        if (state.Equals(LoginState.Logged_In))
+                        if (state.Equals(LoginState.Logged_In) || state.Equals(LoginState.Logged_In_Without_Time))
                         {
                             this.heartRate = dkeyResponse.heartrate;
                             this.dkey = dkeyResponse.dkey;
@@ -278,6 +265,95 @@
             }
 
             return LoginState.Response_Error;
+        }
+
+        /// <summary>
+        /// Check to make sure we can login twice within the 800000000 nano second window
+        /// </summary>
+        /// <returns></returns>
+        protected bool CheckTimeStamp(UInt64 unixTimeStamp)
+        {
+            string commandResponse = SendCommand(this.username, this.password, "login", string.Empty);
+
+            if (!commandResponse.Equals(string.Empty))
+            {
+                LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(commandResponse);
+
+                if (Enum.TryParse(loginResponse.loggedin, out LoginState myStatus) &&
+                    myStatus.Equals(LoginState.Logged_In) || myStatus.Equals(LoginState.Logged_In_Without_Time))
+                    this.authorized = true;
+
+                UInt64 unixTimeStamp2 = loginResponse.meatball;
+                if ((unixTimeStamp2 - unixTimeStamp) < 800000000)
+                {
+                    return true;
+                }
+            }
+
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the user is logged in every 5 seconds.
+        /// </summary>
+        /// <returns></returns>
+        protected Task Heartbeat()
+        {
+            LoginState State = this.Login(this.Username, this.Password);
+            while (State.Equals(LoginState.Logged_In) || State.Equals(LoginState.Logged_In_Without_Time))
+            {
+                State = this.Login(this.Username, this.Password);
+                incrementor = 0;
+                Thread.Sleep(5000);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Increments a int to coenside with the heartbeat. Basic NOP crack protection.
+        /// </summary>
+        /// <param name="heartRhythm">Milliseconds to increment from between heart beats.</param>
+        /// <returns></returns>
+        protected Task Heartrate(int heartRhythm)
+        {
+            while (true)
+            {
+                incrementor++;
+                Thread.Sleep(heartRhythm);
+            }
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Send a command to our server.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="command"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        protected string SendCommand(string username, string password, string command, string parameters)
+        {
+            if (!(ekey.Equals(string.Empty) || ekey.Equals("0")) && !(dkey.Equals(string.Empty) || dkey.Equals("0")) && IsBase64String(ekey) && IsBase64String(dkey))
+            {
+                Dictionary<string, string> values = new Dictionary<string, string>
+                {
+                    { "username", username },
+                    { "password", password },
+                    { "cheese", command },
+                    { "parms", parameters }
+                };
+
+                string Json = JsonConvert.SerializeObject(values);
+                Task<string> runPostRequestTask = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptString(Json) } })));
+                runPostRequestTask.Wait();
+
+                return !runPostRequestTask.Result.Equals(string.Empty) ? DecryptString(runPostRequestTask.Result) : string.Empty;
+            }
+
+            return string.Empty;
         }
 
         /// <summary>
@@ -329,7 +405,7 @@
         /// </summary>
         /// <param name="plainText"></param>
         /// <returns></returns>
-        public string EncryptString(string plainText)
+        protected string EncryptString(string plainText)
         {
             string password = ekey;
 
@@ -368,7 +444,7 @@
         /// </summary>
         /// <param name="cipherText"></param>
         /// <returns></returns>
-        public string DecryptString(string cipherText)
+        protected string DecryptString(string cipherText)
         {
             string password = dkey;
 
@@ -447,10 +523,9 @@
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Days / 365;
+                return (int)Math.Floor((decimal)((GetTimeLeft() / 31556952)));
             }
         }
-
 
         /// <summary>
         /// Gets the months this person has authed left.
@@ -459,7 +534,7 @@
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Days / 30;
+                return (int)Math.Floor((decimal)((GetTimeLeft() % 31556952) / 2592000));
             }
         }
 
@@ -470,7 +545,7 @@
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Days;
+                return (int)Math.Floor((decimal)((GetTimeLeft() % 2592000) / 86400));
             }
         }
 
@@ -481,7 +556,7 @@
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Hours;
+                return (int)Math.Floor((decimal)((GetTimeLeft() % 86400) / 3600));
             }
         }
 
@@ -492,7 +567,7 @@
         {
             get
             {
-                return TimeSpan.FromSeconds(Convert.ToDouble(GetTimeLeft())).Minutes;
+                return (int)Math.Floor((decimal)((GetTimeLeft() % 3600) / 60));
             }
         }
 
@@ -503,7 +578,7 @@
         {
             get
             {
-                return GetTimeLeft();
+                return GetTimeLeft() % 60;
             }
         }
 

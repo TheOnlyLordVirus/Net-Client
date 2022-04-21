@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using KeyAuthorization;
 using FileConfig;
-using System.IO;
 
 namespace NetClient
 {
@@ -20,7 +13,8 @@ namespace NetClient
         private bool timeUpdates = false;
         private ProjectConfig ConfigFile;
         private ClientAuth ClientAuthenticator;
-        private ClientAuth.LoginState loginState;
+        private ClientAuth.LoginState LoginState;
+
         public MainForm()
         {
             InitializeComponent();
@@ -137,9 +131,9 @@ namespace NetClient
         /// <param name="e"></param>
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            loginState = ClientAuthenticator.Login(UsernameTextbox.Text, PasswordTextbox.Text);
+            LoginState = ClientAuthenticator.Login(UsernameTextbox.Text, PasswordTextbox.Text);
 
-            if (loginState.Equals(ClientAuth.LoginState.Logged_In))
+            if (LoginState.Equals(ClientAuth.LoginState.Logged_In))
             {
                 ConfigFile["auth"] = "1";
                 ConfigFile["user"] = UsernameTextbox.Text;
@@ -155,7 +149,7 @@ namespace NetClient
                 MessageBox.Show($"Logged in!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            else if(loginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
+            else if(LoginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
             {
                 ConfigFile["auth"] = "1";
                 ConfigFile["user"] = UsernameTextbox.Text;
@@ -167,22 +161,22 @@ namespace NetClient
                 MessageBox.Show($"Logged in!\nYour out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            else if (loginState.Equals(ClientAuth.LoginState.Password_Failure))
+            else if (LoginState.Equals(ClientAuth.LoginState.Password_Failure))
             {
                 MessageBox.Show("Password Mismatch failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            else if (loginState.Equals(ClientAuth.LoginState.IP_Mismatch))
+            else if (LoginState.Equals(ClientAuth.LoginState.IP_Mismatch))
             {
                 MessageBox.Show("User IP Address Mismatch failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            else if (loginState.Equals(ClientAuth.LoginState.User_doesnt_Exist))
+            else if (LoginState.Equals(ClientAuth.LoginState.User_doesnt_Exist))
             {
                 MessageBox.Show("User doesnt exist!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            else if (loginState.Equals(ClientAuth.LoginState.Response_Error))
+            else if (LoginState.Equals(ClientAuth.LoginState.Response_Error))
             {
                 MessageBox.Show("Server Response failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -197,9 +191,9 @@ namespace NetClient
         {
             if (ClientAuthenticator.Authorized && ClientAuthenticator.RedeemKey($"{RedeemKeyTextbox1.Text}-{RedeemKeyTextbox2.Text}-{RedeemKeyTextbox3.Text}-{RedeemKeyTextbox4.Text}"))
             {
-                if(loginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
+                if(LoginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
                 {
-                    loginState = ClientAuth.LoginState.Logged_In;
+                    LoginState = ClientAuth.LoginState.Logged_In;
                     Task.Run(() => checkAuthTime());
                 }
                 MessageBox.Show("Key Redeemed Sucessfully!", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);

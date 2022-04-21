@@ -10,7 +10,6 @@
     using System.Security.Cryptography;
     using System.IO;
     using System.Text.RegularExpressions;
-    using System.Diagnostics;
 
     class ClientAuth
     {

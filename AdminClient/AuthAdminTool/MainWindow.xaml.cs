@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using KeyAuthorization;
+using FileConfig;
 
 namespace AuthAdminTool
 {
@@ -21,11 +11,19 @@ namespace AuthAdminTool
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ProjectConfig ConfigFile;
         private AdminApi AdminApi = null;
         public MainWindow()
         {
             InitializeComponent();
             AdminApi = new AdminApi();
+            ConfigFile = new ProjectConfig("cheatconfig", "userconfig", new string[] { "auth", "user", "pass" });
+
+            if (ConfigFile["auth"].Equals("1"))
+            {
+                userTextBox.Text = ConfigFile["user"];
+                passTextBox.Text = ConfigFile["pass"];
+            }
         }
 
         private Task checkAuthentication()
@@ -42,10 +40,15 @@ namespace AuthAdminTool
         {
             ClientAuth.LoginState LoginState = AdminApi.Login(userTextBox.Text, passTextBox.Text);
 
-            if (LoginState.Equals(ClientAuth.LoginState.Logged_In))
+            if (LoginState.Equals(ClientAuth.LoginState.Logged_In) || LoginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
             {
                 MessageBox.Show("Login Succeeded", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 loginResultText.Content = "Login: Success";
+
+                ConfigFile["auth"] = "1";
+                ConfigFile["user"] = userTextBox.Text;
+                ConfigFile["pass"] = passTextBox.Text;
+
                 Task.Run(() => checkAuthentication());
             }
 

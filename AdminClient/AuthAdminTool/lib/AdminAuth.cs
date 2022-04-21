@@ -1,15 +1,7 @@
 ﻿namespace KeyAuthorization
 {
-    using System;
-    using System.Text;
-    using System.Net.Http;
     using Newtonsoft.Json;
     using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Security.Cryptography;
-    using System.IO;
-    using System.Text.RegularExpressions;
      
     class AdminApi : ClientAuth
     {
