@@ -111,6 +111,19 @@ namespace FileConfig
             get { return settingValues; }
         }
 
+        /// <summary>
+        /// Get the file path.
+        /// </summary>
+        public string FilePath
+        {
+            get { return $"{Path.GetTempPath()}\\..\\{tempFolderFilePath}\\{fileName}.ini"; }
+        }
+
+        public string FolderPath
+        {
+            get { return $"{Path.GetTempPath()}\\..\\{tempFolderFilePath}"; }
+        }
+
         #endregion
 
 
@@ -206,7 +219,7 @@ namespace FileConfig
         /// </summary>
         /// <param name="index"></param>
         /// <returns>The config values by string index.</returns>
-        public string this[string index]
+        public string this [string index]
         {
             get
             {

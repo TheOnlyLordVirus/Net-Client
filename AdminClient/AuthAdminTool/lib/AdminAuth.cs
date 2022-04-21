@@ -17,11 +17,6 @@
             public string key;
         }
 
-        private struct AddUserResponse
-        {
-            public bool addres;
-        }
-
         private struct DeleteUserResponse
         {
             public bool deleteres;

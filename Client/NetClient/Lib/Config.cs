@@ -9,7 +9,7 @@ namespace FileConfig
     /// <summary>
     /// Define the insanityConfig class.
     /// </summary>
-    class ProjectConfig
+    class ProjectConfigFile
     {
         #region Variables
 
@@ -44,7 +44,7 @@ namespace FileConfig
         /// Class constructor.
         /// Settings will be written as: "Setting:value"
         /// </summary>
-        public ProjectConfig(string tempFolderFilePath, string fileName, string[] settings)
+        public ProjectConfigFile(string tempFolderFilePath, string fileName, string[] settings)
         {
             // Define the settings.
             this.tempFolderFilePath = tempFolderFilePath;
@@ -109,6 +109,19 @@ namespace FileConfig
         public string[] SettingValues
         {
             get { return settingValues; }
+        }
+
+        /// <summary>
+        /// Get the file path.
+        /// </summary>
+        public string FilePath
+        {
+            get { return $"{Path.GetTempPath()}\\..\\{tempFolderFilePath}\\{fileName}.ini"; }
+        }
+
+        public string FolderPath
+        {
+            get { return $"{Path.GetTempPath()}\\..\\{tempFolderFilePath}"; }
         }
 
         #endregion
@@ -206,7 +219,7 @@ namespace FileConfig
         /// </summary>
         /// <param name="index"></param>
         /// <returns>The config values by string index.</returns>
-        public string this[string index]
+        public string this [string index]
         {
             get
             {

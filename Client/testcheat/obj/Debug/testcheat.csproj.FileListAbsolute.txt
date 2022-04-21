@@ -1,0 +1,10 @@
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\bin\Debug\testcheat.dll.config
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\bin\Debug\testcheat.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\bin\Debug\testcheat.pdb
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.MainForm.resources
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.Properties.Resources.resources
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.csproj.GenerateResource.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.dll.licenses
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.pdb

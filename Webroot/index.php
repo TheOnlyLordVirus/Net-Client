@@ -1,9 +1,9 @@
 <?php
-/*
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-*/
+
 date_default_timezone_set('UTC');
 
 // Get the encryption key
@@ -78,7 +78,7 @@ class cheesey_api
                     {
                         if($this->checkCurrentIp() && $this->logIp())
                         {
-                            echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true))], true);
+                            echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats("x64")], true);
                         }
 
                         else
@@ -96,6 +96,11 @@ class cheesey_api
                     {
                         echo json_encode(['loggedin' => $login_status], true);
                     }
+                }
+
+                else if ($decryptedInput->cheese == "register_user")
+                {
+                    echo json_encode(['addres' => $this->registerUser(json_decode($decryptedInput->parms, true)), "dkey" => $this->eKey], true);
                 }
 
                 else if ($login_status == "Logged_In" || $login_status == "Logged_In_Without_Time")
@@ -127,17 +132,13 @@ class cheesey_api
                                 if($this->checkTime(['username' => $this->user_account]))
                                 {
                                     $eggnoodle = json_decode($parmesan, true);
-
-                                    if($file = $this->downloadCheat($eggnoodle['game']))
-                                    {
-                                        $json = json_encode(['file' => $file], true);
-                                        echo $this->encryptString($json);
-                                    }
+                                    $json = json_encode(['file' => $this->downloadCheat($eggnoodle['game'])], true);
+                                    echo $this->encryptString($json);
                                 }
 
                                 else
                                 {
-                                    $json = json_encode(['error' => false], true);
+                                    $json = json_encode(['error' => true], true);
                                     echo $this->encryptString($json);
                                 }
                                 break;
@@ -146,17 +147,13 @@ class cheesey_api
                                 if($this->checkTime(['username' => $this->user_account]))
                                 {
                                     $eggnoodle = json_decode($parmesan, true);
-
-                                    if($file = $this->downloadJson($eggnoodle['game']))
-                                    {
-                                        $json = json_encode(['file' => $file], true);
-                                        echo $this->encryptString($json);
-                                    }
+                                    $json = json_encode(['file' => $this->downloadJson($eggnoodle['game'])], true);
+                                    echo $this->encryptString($json);
                                 }
 
                                 else
                                 {
-                                    $json = json_encode(['error' => false], true);
+                                    $json = json_encode(['error' => true], true);
                                     echo $this->encryptString($json);
                                 }
                                 break;
@@ -232,18 +229,42 @@ class cheesey_api
         }
     }
 
+    /**
+     * Game name = folder name
+     */
+    private function getGameCheats($type)
+    {
+        if($type != "x64" && $type != "x86")
+            return false;
+
+        $filename = "../cheats/". $type . "games.json";
+        if(file_exists($filename))
+        {
+            header("Cache-Control: public");
+            header("Content-Description: File Transfer");
+            header("Content-Disposition: attachment; filename=cheat.dll");
+            header("Content-Type: application/zip");
+            header("Content-Transfer-Encoding: binary");
+            return base64_encode(file_get_contents($filename));
+        }
+        
+        else
+        {
+            return false;
+        }
+    }
 
     /**
      * Game name = folder name
      */
     private function downloadCheat($gamename)
     {
-        $filename = "../cheats/" . $gamename . "/cheat.dll";
+        $filename = "../cheats/" . $gamename . "/" . $gamename . ".dll";
         if(file_exists($filename))
         {
             header("Cache-Control: public");
             header("Content-Description: File Transfer");
-            header("Content-Disposition: attachment; filename=poopy.dll");
+            header("Content-Disposition: attachment; filename=cheat.dll");
             header("Content-Type: application/zip");
             header("Content-Transfer-Encoding: binary");
             return base64_encode(file_get_contents($filename));
@@ -265,7 +286,7 @@ class cheesey_api
         {
             header("Cache-Control: public");
             header("Content-Description: File Transfer");
-            header("Content-Disposition: attachment; filename=poopy.json");
+            header("Content-Disposition: attachment; filename=cheat.json");
             header("Content-Type: application/zip");
             header("Content-Transfer-Encoding: binary");
             return base64_encode(file_get_contents($filename));
@@ -275,6 +296,34 @@ class cheesey_api
         {
             return false;
         }
+    }
+
+    /**
+     * email, username, password, lifetime, hardwareid
+     * @param $parmesan
+     * @return bool
+     */
+    private function registerUser($parmesan)
+    {
+        $email = $parmesan['email'];
+        $username = $this->stripAllSymbols($parmesan['username']);
+        $password = $this->stripSomeSymbols($parmesan['password']);
+        $admin = 0;
+        $ip = data_logger::getIPAddress();
+
+        if ($add_user_query = $this->connection->prepare('call addUser(?, ?, ?, ?, ?)'))
+        {
+            $add_user_query->bind_param('ssssi', $email, $username, $password, $ip, $admin);
+            $add_user_query->execute();
+            $add_user_query->store_result();
+
+            if($add_user_query->affected_rows > 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -10,7 +10,8 @@
     using System.Security.Cryptography;
     using System.IO;
     using System.Text.RegularExpressions;
-
+    using System.Diagnostics;
+    using System.Runtime.InteropServices;
     class ClientAuth
     {
         #region Variables
@@ -34,6 +35,8 @@
 
         protected string ekey = string.Empty;
 
+        protected byte[] gameCheats;
+
         #endregion
 
         public enum LoginState
@@ -43,10 +46,18 @@
             Password_Failure,
             IP_Mismatch,
             User_doesnt_Exist,
-            Response_Error
+            Response_Error,
+            Not_logged_In
         }
 
-        #region Response Structs
+        #region Structs
+        public struct CheatItems
+        {
+            public string shortname;
+            public string cheatname;
+            public string description;
+        }
+
         protected struct LoginResponse
         {
             public string dkey;
@@ -54,6 +65,7 @@
             public int heartrhythm;
             public string loggedin;
             public UInt64 meatball;
+            public string gamesjson;
         }
 
         protected struct TimeResponse
@@ -70,6 +82,11 @@
         {
             public string file;
             public string error;
+        }
+        private struct RegisterUserResponse
+        {
+            public string dkey;
+            public bool addres;
         }
 
         #endregion
@@ -107,29 +124,36 @@
         /// </summary>
         /// <param name="timeKey"></param>
         /// <returns></returns>
-        public bool DownloadCheat(string gameName)
+        public byte[] DownloadCheat(string gameName)
         {
-            return false;
-            /*
             Dictionary<string, string> values = new Dictionary<string, string>
             {
-                { "key", timeKey },
-                { "username", this.username }
+                { "game", gameName }
             };
 
-            if (Authorized)
+            if (false || Authorized)
             {
-                string commandResponse = SendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
+                byte[] dllfile, jsonfile;
+                string dllResponse = SendCommand(this.username, this.password, "download_cheat", JsonConvert.SerializeObject(values));
+                string jsonResponse = SendCommand(this.username, this.password, "download_json", JsonConvert.SerializeObject(values));
 
-                if (!commandResponse.Equals(string.Empty))
+                if (!dllResponse.Equals(string.Empty) && !jsonResponse.Equals(string.Empty))
                 {
-                    KeyResponse keyResponse = JsonConvert.DeserializeObject<KeyResponse>(commandResponse);
-                    return keyResponse.keyres;
+                    DownloadFileResponse dllFileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
+                    DownloadFileResponse jsonFileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
+
+
+                    if (IsBase64String(dllFileResponse.file) && IsBase64String(jsonFileResponse.file))
+                    {
+                        //jsonfile = Convert.FromBase64String(jsonFileResponse.file);
+                        return dllfile = Convert.FromBase64String(dllFileResponse.file);
+                    }
+
+                    return null;
                 }
             }
 
-            return false;
-            */
+            return null;
         }
 
         /// <summary>
@@ -165,6 +189,7 @@
         /// <returns></returns>
         public LoginState Login(string user, string password)
         {
+            IsSafe();
             if (dkey.Equals(string.Empty))
             {
                 this.username = user;
@@ -196,6 +221,48 @@
                 this.authorized = false;
                 return LoginState.Response_Error;
             }
+        }
+
+        /// <summary>
+        /// Attempt to register a user.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public bool RegisterUser(string email, string username, string password)
+        {
+            if (dkey.Equals(string.Empty) && !(ekey.Equals(string.Empty) || ekey.Equals("0") || !IsBase64String(ekey)))
+            {
+                Dictionary<string, string> parms = new Dictionary<string, string>
+                {
+                    { "email", email },
+                    { "username", username },
+                    { "password", password }
+                };
+
+                Dictionary<string, string> values = new Dictionary<string, string>
+                {
+                    { "username", string.Empty },
+                    { "password", string.Empty },
+                    { "cheese", "register_user" },
+                    { "parms", JsonConvert.SerializeObject(parms) }
+                };
+
+                string Json = JsonConvert.SerializeObject(values);
+                string EncryptedJson = EncryptString(Json);
+                Task<string> response = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptedJson } })));
+                response.Wait();
+
+                if (!response.Result.Equals(string.Empty))
+                {
+                    RegisterUserResponse registerUserResponse = JsonConvert.DeserializeObject<RegisterUserResponse>(response.Result);
+                    this.dkey = registerUserResponse.dkey;
+                    return registerUserResponse.addres;
+                }
+            }
+
+            return false;
         }
 
         #endregion
@@ -254,6 +321,7 @@
                         {
                             this.heartRate = dkeyResponse.heartrate;
                             this.dkey = dkeyResponse.dkey;
+                            this.gameCheats = Convert.FromBase64String(dkeyResponse.gamesjson);
                             Task.Run(() => Heartbeat());
                             Task.Run(() => Heartrate(dkeyResponse.heartrhythm));
                             this.authorized = true;
@@ -495,6 +563,68 @@
             return plainText;
         }
 
+        private bool IsSafe()
+        {
+            try
+            {
+                IntPtr send = GetProcAddress(GetModuleHandleA("Ws2_32.dll"), "send");
+                IntPtr recv = GetProcAddress(GetModuleHandleA("Ws2_32.dll"), "recv");
+                uint test;
+
+                uint send_default_protection;
+                uint recv_default_protection;
+
+                Console.Write($"{send:X}\n");
+
+                if (VirtualProtectEx(GetCurrentProcess(), send, 10, 0x40, out send_default_protection) && VirtualProtectEx(GetCurrentProcess(), recv, 10, 0x40, out recv_default_protection))
+                {
+                    byte[] send_bytes = new byte[10];
+                    byte[] recv_bytes = new byte[10];
+                    ReadProcessMemory(GetCurrentProcess(), send, out send_bytes, 10, out test);
+                    ReadProcessMemory(GetCurrentProcess(), recv, out recv_bytes, 10, out test);
+
+                    VirtualProtectEx(GetCurrentProcess(), send, 10, send_default_protection, out send_default_protection);
+                    VirtualProtectEx(GetCurrentProcess(), recv, 10, recv_default_protection, out recv_default_protection);
+
+                    Debugger.Log(1, "", "send ");
+                    for (int iByte = 0; iByte < send_bytes.Length; iByte++)
+                    {
+                        Debugger.Log(1, "", $"{send_bytes[iByte]:X} ");
+                    }
+                    Debugger.Log(1, "", "\nrecv ");
+                    for (int iByte = 0; iByte < recv_bytes.Length; iByte++)
+                    {
+                        Debugger.Log(1, "", $"{recv_bytes[iByte]:X} ");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            
+            return false;
+        }
+
+        #endregion
+
+        #region Import Dll functions
+
+        [DllImport("kernelbase.dll")]
+        private static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
+
+        [DllImport("kernelbase.dll")]
+        private static extern IntPtr GetModuleHandleA(string lpModuleName);
+
+        [DllImport("kernelbase.dll")]
+        private static extern IntPtr GetCurrentProcess();
+
+        [DllImport("kernelbase.dll")]
+        private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, out byte[] lpBuffer, uint nSize, out uint lpNumberOfBytesRead);
+
+        [DllImport("kernelbase.dll")]
+        private static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flNewProtect, out uint lpflOldProtect);
+
         #endregion
 
         #region Propertys
@@ -514,6 +644,14 @@
         public bool Authorized
         {
             get { return authorized && HeartRate; }
+        }
+
+        /// <summary>
+        /// Get the game cheat json.
+        /// </summary>
+        public List<CheatItems> GameCheats
+        {
+            get { return JsonConvert.DeserializeObject<List<CheatItems>>(Encoding.UTF8.GetString(gameCheats)); }
         }
 
         /// <summary>
@@ -628,6 +766,8 @@
                     return null;
             }
         }
+
+
 
         #endregion
     }
