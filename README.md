@@ -250,10 +250,9 @@ EXIT;
 mysql -uadmin -ppassword
 ```
 
-# Start Apache
---------------
+**Start Apache**
+----------------
 ``systemctl start httpd``
-
 
 # Ddos port filtering
 
