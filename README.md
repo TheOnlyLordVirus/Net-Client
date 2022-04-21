@@ -1,3 +1,5 @@
+# Server side
+
 **CentOS 7 LAMP stack install**
 -------------------------------
 ```
@@ -14,8 +16,7 @@ yum-config-manager --enable remi-php74
 yum update -y
 ```
 
-**Setup PMA (Optional)**
-------------------------
+# Setup PMA (Optional)
 ```
 yum --enablerepo=remi install phpmyadmin -y
 
@@ -127,9 +128,10 @@ Alias /phpmyadmin /usr/share/phpMyAdmin
 
 ```
 
-**Setup DB**
-------------
+# Setup DB
 
+**Run:**
+--------
 ``nano /etc/yum.repos.d/MariaDB.repo``
 
 **Inside /etc/yum.repos.d/MariaDB.repo Add:**
@@ -252,8 +254,10 @@ mysql -uadmin -ppassword
 ----------------
 ``systemctl start httpd``
 
-**Ddos port filtering**
------------------------
+# Ddos port filtering
+
+**Edit /etc/sysctl.conf:**
+--------------------------
 ``nano /etc/sysctl.conf``
 
 **Inside sysctl.conf**
