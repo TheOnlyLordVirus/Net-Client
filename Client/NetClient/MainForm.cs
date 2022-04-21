@@ -10,17 +10,28 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using KeyAuthorization;
+using FileConfig;
+using System.IO;
 
 namespace NetClient
 {
     public partial class MainForm : XtraForm
     {
         private bool timeUpdates = false;
+        private ProjectConfig ConfigFile;
         private ClientAuth ClientAuthenticator;
+        private ClientAuth.LoginState loginState;
         public MainForm()
         {
             InitializeComponent();
             ClientAuthenticator = new ClientAuth();
+            ConfigFile = new ProjectConfig("cheatconfig", "userconfig", new string[] { "auth", "user", "pass" });
+
+            if (ConfigFile["auth"].Equals("1"))
+            {
+                UsernameTextbox.Text = ConfigFile["user"];
+                PasswordTextbox.Text = ConfigFile["pass"];
+            }
         }
 
         /// <summary>
@@ -30,9 +41,41 @@ namespace NetClient
         private Task checkAuthentication()
         {
             while (ClientAuthenticator.Authorized) ;
+
+            this.Invoke(new MethodInvoker(delegate
+            {
+                TimeTab.PageEnabled = false;
+                RedeemKeyTab.PageEnabled = false;
+                GameCheatTab.PageEnabled = false;
+            }));
+
             MessageBox.Show("Error", "Authentication to server failed.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            TimeTab.PageEnabled = false;
-            RedeemKeyTab.PageEnabled = false;
+            return Task.CompletedTask;
+        }
+
+
+        /// <summary>
+        /// If the client is not authorized with time left, disable the Time Tab and Game Tab
+        /// </summary>
+        /// <returns></returns>
+        private Task checkAuthTime()
+        {
+            while(ClientAuthenticator.Authorized)
+            {
+                if(!ClientAuthenticator.AuthorizedWithTimeLeft)
+                {
+                    this.Invoke(new MethodInvoker(delegate
+                    {
+                        MainTab.SelectedTabPage = LoginTab;
+                        TimeTab.PageEnabled = false;
+                        GameCheatTab.PageEnabled = false;
+                    }));
+
+                    MessageBox.Show("Your out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    break;
+                }
+            }
             return Task.CompletedTask;
         }
 
@@ -94,14 +137,34 @@ namespace NetClient
         /// <param name="e"></param>
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            ClientAuth.LoginState loginState = ClientAuthenticator.Login(UsernameTextbox.Text, PasswordTextbox.Text);
+            loginState = ClientAuthenticator.Login(UsernameTextbox.Text, PasswordTextbox.Text);
 
             if (loginState.Equals(ClientAuth.LoginState.Logged_In))
             {
-                MessageBox.Show($"Logged in!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Task.Run(() => checkAuthentication());
+                ConfigFile["auth"] = "1";
+                ConfigFile["user"] = UsernameTextbox.Text;
+                ConfigFile["pass"] = PasswordTextbox.Text;
+
                 TimeTab.PageEnabled = true;
                 RedeemKeyTab.PageEnabled = true;
+                GameCheatTab.PageEnabled = true;
+
+                Task.Run(() => checkAuthentication());
+                Task.Run(() => checkAuthTime());
+
+                MessageBox.Show($"Logged in!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            else if(loginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
+            {
+                ConfigFile["auth"] = "1";
+                ConfigFile["user"] = UsernameTextbox.Text;
+                ConfigFile["pass"] = PasswordTextbox.Text;
+
+                RedeemKeyTab.PageEnabled = true;
+                Task.Run(() => checkAuthentication());
+
+                MessageBox.Show($"Logged in!\nYour out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             else if (loginState.Equals(ClientAuth.LoginState.Password_Failure))
@@ -134,6 +197,11 @@ namespace NetClient
         {
             if (ClientAuthenticator.Authorized && ClientAuthenticator.RedeemKey($"{RedeemKeyTextbox1.Text}-{RedeemKeyTextbox2.Text}-{RedeemKeyTextbox3.Text}-{RedeemKeyTextbox4.Text}"))
             {
+                if(loginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
+                {
+                    loginState = ClientAuth.LoginState.Logged_In;
+                    Task.Run(() => checkAuthTime());
+                }
                 MessageBox.Show("Key Redeemed Sucessfully!", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 

@@ -56,6 +56,7 @@ namespace NetClient
             this.DayLabel = new DevExpress.XtraEditors.LabelControl();
             this.MonthLabel = new DevExpress.XtraEditors.LabelControl();
             this.YearLabel = new DevExpress.XtraEditors.LabelControl();
+            this.GameCheatTab = new DevExpress.XtraTab.XtraTabPage();
             ((System.ComponentModel.ISupportInitialize)(this.MainTab)).BeginInit();
             this.MainTab.SuspendLayout();
             this.LoginTab.SuspendLayout();
@@ -83,7 +84,8 @@ namespace NetClient
             this.MainTab.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.LoginTab,
             this.RedeemKeyTab,
-            this.TimeTab});
+            this.TimeTab,
+            this.GameCheatTab});
             this.MainTab.SelectedPageChanged += new DevExpress.XtraTab.TabPageChangedEventHandler(this.MainTab_SelectedPageChanged);
             // 
             // LoginTab
@@ -211,6 +213,7 @@ namespace NetClient
             this.RedeemKeyTextbox4.Location = new System.Drawing.Point(718, 261);
             this.RedeemKeyTextbox4.Margin = new System.Windows.Forms.Padding(24);
             this.RedeemKeyTextbox4.Name = "RedeemKeyTextbox4";
+            this.RedeemKeyTextbox4.Properties.MaxLength = 5;
             this.RedeemKeyTextbox4.Size = new System.Drawing.Size(138, 40);
             this.RedeemKeyTextbox4.TabIndex = 15;
             // 
@@ -219,6 +222,7 @@ namespace NetClient
             this.RedeemKeyTextbox3.Location = new System.Drawing.Point(527, 261);
             this.RedeemKeyTextbox3.Margin = new System.Windows.Forms.Padding(24);
             this.RedeemKeyTextbox3.Name = "RedeemKeyTextbox3";
+            this.RedeemKeyTextbox3.Properties.MaxLength = 5;
             this.RedeemKeyTextbox3.Size = new System.Drawing.Size(138, 40);
             this.RedeemKeyTextbox3.TabIndex = 14;
             // 
@@ -227,6 +231,7 @@ namespace NetClient
             this.RedeemKeyTextbox2.Location = new System.Drawing.Point(336, 261);
             this.RedeemKeyTextbox2.Margin = new System.Windows.Forms.Padding(24);
             this.RedeemKeyTextbox2.Name = "RedeemKeyTextbox2";
+            this.RedeemKeyTextbox2.Properties.MaxLength = 5;
             this.RedeemKeyTextbox2.Size = new System.Drawing.Size(138, 40);
             this.RedeemKeyTextbox2.TabIndex = 13;
             // 
@@ -257,6 +262,7 @@ namespace NetClient
             this.RedeemKeyTextbox1.Location = new System.Drawing.Point(145, 261);
             this.RedeemKeyTextbox1.Margin = new System.Windows.Forms.Padding(12);
             this.RedeemKeyTextbox1.Name = "RedeemKeyTextbox1";
+            this.RedeemKeyTextbox1.Properties.MaxLength = 5;
             this.RedeemKeyTextbox1.Size = new System.Drawing.Size(138, 40);
             this.RedeemKeyTextbox1.TabIndex = 0;
             // 
@@ -353,6 +359,13 @@ namespace NetClient
             this.YearLabel.TabIndex = 1;
             this.YearLabel.Text = "Years: ";
             // 
+            // GameCheatTab
+            // 
+            this.GameCheatTab.Name = "GameCheatTab";
+            this.GameCheatTab.PageEnabled = false;
+            this.GameCheatTab.Size = new System.Drawing.Size(999, 628);
+            this.GameCheatTab.Text = "Cheats";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 25F);
@@ -408,6 +421,7 @@ namespace NetClient
         private DevExpress.XtraEditors.TextEdit RedeemKeyTextbox4;
         private DevExpress.XtraEditors.TextEdit RedeemKeyTextbox3;
         private DevExpress.XtraEditors.TextEdit RedeemKeyTextbox2;
+        private DevExpress.XtraTab.XtraTabPage GameCheatTab;
     }
 }
 

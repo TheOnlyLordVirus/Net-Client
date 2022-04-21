@@ -74,11 +74,11 @@ class cheesey_api
                 // First login / Get Decrytion key. 
                 if($decryptedInput->cheese == "get_dkey")
                 {
-                    if($login_status == "Logged_In")
+                    if($login_status == "Logged_In" || $login_status == "Logged_In_Without_Time")
                     {
                         if($this->checkCurrentIp() && $this->logIp())
                         {
-                            echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500], true);
+                            echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true))], true);
                         }
 
                         else
@@ -98,7 +98,7 @@ class cheesey_api
                     }
                 }
 
-                else if ($login_status == "Logged_In")
+                else if ($login_status == "Logged_In" || $login_status == "Logged_In_Without_Time")
                 {
                     if($this->checkCurrentIp() && $this->logIp())
                     {
@@ -107,10 +107,10 @@ class cheesey_api
                         switch ($decryptedInput->cheese)
                         {
                             case 'login':
-                                $json = json_encode(['loggedin' => "Logged_In"], true);
+                                $json = json_encode(['loggedin' => $login_status, "meatball" => intval(hrtime(true))], true);
                                 echo $this->encryptString($json);
                                 break;
-    
+
                             case 'time_check':
                                 $eggnoodle = json_decode($parmesan, true);
                                 $json = json_encode(['timeleft' => $this->checkTime($eggnoodle)], true);
@@ -123,6 +123,44 @@ class cheesey_api
                                 echo $this->encryptString($json);
                                 break;
     
+                            case 'download_cheat':
+                                if($this->checkTime(['username' => $this->user_account]))
+                                {
+                                    $eggnoodle = json_decode($parmesan, true);
+
+                                    if($file = $this->downloadCheat($eggnoodle['game']))
+                                    {
+                                        $json = json_encode(['file' => $file], true);
+                                        echo $this->encryptString($json);
+                                    }
+                                }
+
+                                else
+                                {
+                                    $json = json_encode(['error' => false], true);
+                                    echo $this->encryptString($json);
+                                }
+                                break;
+    
+                            case 'download_json':
+                                if($this->checkTime(['username' => $this->user_account]))
+                                {
+                                    $eggnoodle = json_decode($parmesan, true);
+
+                                    if($file = $this->downloadJson($eggnoodle['game']))
+                                    {
+                                        $json = json_encode(['file' => $file], true);
+                                        echo $this->encryptString($json);
+                                    }
+                                }
+
+                                else
+                                {
+                                    $json = json_encode(['error' => false], true);
+                                    echo $this->encryptString($json);
+                                }
+                                break;
+
                             // Admin commands
                             case 'add_user': // Adds a user to the cheat api
                                 $eggnoodle = json_decode($parmesan, true);
@@ -319,7 +357,15 @@ class cheesey_api
         
                     if($login_query->num_rows > 0)
                     {
-                        return "Logged_In";
+                        if($this->checkTime(['username' => $this->user_account]))
+                        {
+                            return "Logged_In";
+                        }
+
+                        else
+                        {
+                            return "Logged_In_Without_Time";
+                        }
                     }
 
                     else
