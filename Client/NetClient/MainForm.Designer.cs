@@ -91,7 +91,7 @@ namespace NetClient
             // 
             this.GameCheatTab.Controls.Add(this.CheatTiles);
             this.GameCheatTab.Controls.Add(this.Btn_ReloadCheats);
-            this.GameCheatTab.Margin = new System.Windows.Forms.Padding(48, 48, 48, 48);
+            this.GameCheatTab.Margin = new System.Windows.Forms.Padding(48);
             this.GameCheatTab.Name = "GameCheatTab";
             this.GameCheatTab.PageEnabled = false;
             this.GameCheatTab.Size = new System.Drawing.Size(928, 628);
@@ -102,7 +102,7 @@ namespace NetClient
             this.CheatTiles.Groups.Add(this.CheatGroup);
             this.CheatTiles.ItemPadding = new System.Windows.Forms.Padding(10);
             this.CheatTiles.Location = new System.Drawing.Point(11, 112);
-            this.CheatTiles.Margin = new System.Windows.Forms.Padding(48, 48, 48, 48);
+            this.CheatTiles.Margin = new System.Windows.Forms.Padding(48);
             this.CheatTiles.Name = "CheatTiles";
             this.CheatTiles.Padding = new System.Windows.Forms.Padding(0);
             this.CheatTiles.Size = new System.Drawing.Size(902, 500);
@@ -115,7 +115,7 @@ namespace NetClient
             // Btn_ReloadCheats
             // 
             this.Btn_ReloadCheats.Location = new System.Drawing.Point(323, 33);
-            this.Btn_ReloadCheats.Margin = new System.Windows.Forms.Padding(48, 48, 48, 48);
+            this.Btn_ReloadCheats.Margin = new System.Windows.Forms.Padding(48);
             this.Btn_ReloadCheats.Name = "Btn_ReloadCheats";
             this.Btn_ReloadCheats.Size = new System.Drawing.Size(280, 60);
             this.Btn_ReloadCheats.TabIndex = 1;
@@ -131,7 +131,7 @@ namespace NetClient
             this.TimeTab.Controls.Add(this.DayLabel);
             this.TimeTab.Controls.Add(this.MonthLabel);
             this.TimeTab.Controls.Add(this.YearLabel);
-            this.TimeTab.Margin = new System.Windows.Forms.Padding(96, 96, 96, 96);
+            this.TimeTab.Margin = new System.Windows.Forms.Padding(96);
             this.TimeTab.Name = "TimeTab";
             this.TimeTab.PageEnabled = false;
             this.TimeTab.Size = new System.Drawing.Size(928, 628);
@@ -226,7 +226,7 @@ namespace NetClient
             this.RedeemKeyTab.Controls.Add(this.RedeemKeyLabel);
             this.RedeemKeyTab.Controls.Add(this.RedeemKeyButton);
             this.RedeemKeyTab.Controls.Add(this.RedeemKeyTextbox1);
-            this.RedeemKeyTab.Margin = new System.Windows.Forms.Padding(96, 96, 96, 96);
+            this.RedeemKeyTab.Margin = new System.Windows.Forms.Padding(96);
             this.RedeemKeyTab.Name = "RedeemKeyTab";
             this.RedeemKeyTab.PageEnabled = false;
             this.RedeemKeyTab.Size = new System.Drawing.Size(928, 628);
@@ -328,7 +328,7 @@ namespace NetClient
             this.LoginTab.Controls.Add(this.UsernameTextbox);
             this.LoginTab.Controls.Add(this.PasswordTextbox);
             this.LoginTab.Controls.Add(this.LoginButton);
-            this.LoginTab.Margin = new System.Windows.Forms.Padding(96, 96, 96, 96);
+            this.LoginTab.Margin = new System.Windows.Forms.Padding(96);
             this.LoginTab.Name = "LoginTab";
             this.LoginTab.Size = new System.Drawing.Size(928, 628);
             this.LoginTab.Text = "Login";
@@ -403,7 +403,7 @@ namespace NetClient
             this.RegisterTab.Controls.Add(this.RegisterUsernameTextbox);
             this.RegisterTab.Controls.Add(this.RegisterPasswordTextbox);
             this.RegisterTab.Controls.Add(this.RegisterButton);
-            this.RegisterTab.Margin = new System.Windows.Forms.Padding(48, 48, 48, 48);
+            this.RegisterTab.Margin = new System.Windows.Forms.Padding(48);
             this.RegisterTab.Name = "RegisterTab";
             this.RegisterTab.Size = new System.Drawing.Size(928, 628);
             this.RegisterTab.Text = "Register";

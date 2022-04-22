@@ -30,3 +30,4 @@ C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Debug\NetClient
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Debug\NetClient.csproj.CopyComplete
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Debug\NetClient.exe
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Debug\NetClient.pdb
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Debug\NetClient.csproj.AssemblyReference.cache

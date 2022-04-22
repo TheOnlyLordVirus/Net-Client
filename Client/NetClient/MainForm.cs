@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using KeyAuthorization;
 using FileConfig;
+using System.IO;
+using System.Diagnostics;
 using Newtonsoft.Json;
 
 namespace NetClient
@@ -34,6 +36,10 @@ namespace NetClient
         private List<TileItem> TileItems;
         public MainForm()
         {
+            if (Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\dnSpy\\") || Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\dnSpy\\"))
+            {
+                Process.GetCurrentProcess().Kill();
+            }
             InitializeComponent();
             ClientAuthenticator = new ClientAuth();
             ConfigFile = new ProjectConfigFile("cheatconfig", "userconfig", new string[] { "auth", "user", "pass" });
