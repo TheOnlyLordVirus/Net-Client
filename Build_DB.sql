@@ -36,7 +36,7 @@ create table COMMAND_HISTORY
   DATE_RECEVED datetime not null default now()
 );
 
-create view STORED_HISTORY as select u.USER_NAME, h.COMMAND, h.LOGGED_IP, h.DATE_RECEVED from COMMAND_HISTORY h inner join USER u on h.USER_ID = u.USER_ID;
+create view STORED_HISTORY as select u.USER_NAME, h.COMMAND, h.PARAMETERS, h.LOGGED_IP, h.DATE_RECEVED from COMMAND_HISTORY h inner join USER u on h.USER_ID = u.USER_ID;
 
 DELIMITER $$ ;
 
