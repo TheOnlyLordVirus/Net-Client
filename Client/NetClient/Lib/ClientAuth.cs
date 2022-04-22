@@ -563,52 +563,83 @@
             return plainText;
         }
 
+        bool IsSafeProcess(string procname)
+        {
+            string proc = procname.ToLower();
+            if (proc == "services") return false;
+            if (proc == "registry") return false;
+            if (proc == "csrss") return false;
+            if (proc == "svchost") return false;
+            if (proc == "sgrmbroker") return false;
+            if (proc == "msmpeng") return false;
+            if (proc == "smss") return false;
+            if (proc == "system") return false;
+            if (proc == "idle") return false;
+            if (proc == "dllhost") return false;
+            if (proc == "securityhealthservice") return false;
+            if (proc == "wininit") return false;
+            if (proc == "nissrv") return false;
+            if (proc == "memory compression") return false;
+            return true;
+        }
+
+        bool BadProcesses(string procname)
+        {
+            string proc = procname.ToLower();
+
+            if (proc == "idaq") return true;
+            if (proc == "idaq64") return true;
+            if (proc == "ida") return true;
+            if (proc == "ida64") return true;
+            if (proc == "wireshark") return true;
+
+            return false;
+        }
+
+        bool BadWindowNames(string windowname)
+        {
+            string winname = windowname.ToLower();
+            if (winname.Contains("fiddler")) return true;
+            if (winname.Contains("the wireshark network analyzer")) return true;
+            if (winname.Contains("ida - ") && winname.Contains(".idb")) return true;
+            if (winname.Contains("ida - ") && winname.Contains(".i64")) return true;
+            if (winname.Contains("ida v")) return true;
+            return false;
+        }
+
         private bool IsSafe()
         {
             try
             {
-                IntPtr send = GetProcAddress(GetModuleHandleA("Ws2_32.dll"), "send");
-                IntPtr recv = GetProcAddress(GetModuleHandleA("Ws2_32.dll"), "recv");
-                uint test;
-
-                uint send_default_protection;
-                uint recv_default_protection;
-
-                Console.Write($"{send:X}\n");
-
-                if (VirtualProtectEx(GetCurrentProcess(), send, 10, 0x40, out send_default_protection) && VirtualProtectEx(GetCurrentProcess(), recv, 10, 0x40, out recv_default_protection))
+                Process[] procList = Process.GetProcesses();
+                if (Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\dnSpy\\") || Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\dnSpy\\"))
                 {
-                    byte[] send_bytes = new byte[10];
-                    byte[] recv_bytes = new byte[10];
-                    ReadProcessMemory(GetCurrentProcess(), send, out send_bytes, 10, out test);
-                    ReadProcessMemory(GetCurrentProcess(), recv, out recv_bytes, 10, out test);
-
-                    VirtualProtectEx(GetCurrentProcess(), send, 10, send_default_protection, out send_default_protection);
-                    VirtualProtectEx(GetCurrentProcess(), recv, 10, recv_default_protection, out recv_default_protection);
-
-                    Debugger.Log(1, "", "send ");
-                    for (int iByte = 0; iByte < send_bytes.Length; iByte++)
+                    Process.GetCurrentProcess().Kill();
+                }
+                foreach (Process proc in procList)
+                {
+                    if (IsSafeProcess(proc.ProcessName))
                     {
-                        Debugger.Log(1, "", $"{send_bytes[iByte]:X} ");
-                    }
-                    Debugger.Log(1, "", "\nrecv ");
-                    for (int iByte = 0; iByte < recv_bytes.Length; iByte++)
-                    {
-                        Debugger.Log(1, "", $"{recv_bytes[iByte]:X} ");
+                        if (BadProcesses(proc.ProcessName) || BadWindowNames(proc.MainWindowTitle))
+                        {
+                            Console.WriteLine($"{proc.ProcessName} - {proc.MainWindowTitle}");
+                            //proc.Kill();
+                        }
                     }
                 }
+
             }
             catch (Exception ex)
             {
-                
+
             }
-            
+
             return false;
         }
 
         #endregion
 
-        #region Import Dll functions
+        /*#region Import Dll functions
 
         [DllImport("kernelbase.dll")]
         private static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
@@ -619,13 +650,14 @@
         [DllImport("kernelbase.dll")]
         private static extern IntPtr GetCurrentProcess();
 
+
         [DllImport("kernelbase.dll")]
         private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, out byte[] lpBuffer, uint nSize, out uint lpNumberOfBytesRead);
 
         [DllImport("kernelbase.dll")]
         private static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flNewProtect, out uint lpflOldProtect);
 
-        #endregion
+        #endregion*/
 
         #region Propertys
 
