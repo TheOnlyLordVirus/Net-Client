@@ -14,6 +14,9 @@ namespace NetClient
 {
     public partial class MainForm : XtraForm
     {
+        /// <summary>
+        /// Keep running background time check?
+        /// </summary>
         private bool timeUpdates = false;
 
         /// <summary>
@@ -31,8 +34,14 @@ namespace NetClient
         /// </summary>
         private ClientAuth.LoginState LoginState = ClientAuth.LoginState.Not_logged_In;
 
-
+        /// <summary>
+        /// Games we have cheats for.
+        /// </summary>
         private List<ClientAuth.CheatItems> cheats;
+
+        /// <summary>
+        /// Buttons for games.
+        /// </summary>
         private List<TileItem> TileItems;
         public MainForm()
         {
@@ -40,7 +49,10 @@ namespace NetClient
             {
                 Process.GetCurrentProcess().Kill();
             }
+
             InitializeComponent();
+
+            TileItems = new List<TileItem>();
             ClientAuthenticator = new ClientAuth();
             ConfigFile = new ProjectConfigFile("cheatconfig", "userconfig", new string[] { "auth", "user", "pass" });
 
@@ -49,7 +61,11 @@ namespace NetClient
                 UsernameTextbox.Text = ConfigFile["user"];
                 PasswordTextbox.Text = ConfigFile["pass"];
             }
-            TileItems = new List<TileItem>();
+
+            else
+            {
+                MainTab.SelectedTabPage = RegisterTab;
+            }
         }
 
         /// <summary>
@@ -138,12 +154,12 @@ namespace NetClient
                 TimeTab.PageEnabled = true;
                 RedeemKeyTab.PageEnabled = true;
                 GameCheatTab.PageEnabled = true;
+                LoginButton.Enabled = false;
+                MainTab.SelectedTabPage = GameCheatTab;
 
                 Task.Run(() => checkAuthentication());
-
-                MessageBox.Show($"Logged in!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                 LoadCheats();
+                MessageBox.Show($"Logged in!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             else if(LoginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
@@ -153,6 +169,9 @@ namespace NetClient
                 ConfigFile["pass"] = PasswordTextbox.Text;
 
                 RedeemKeyTab.PageEnabled = true;
+                LoginButton.Enabled = false;
+                MainTab.SelectedTabPage = RedeemKeyTab;
+
                 Task.Run(() => checkAuthentication());
 
                 MessageBox.Show($"Logged in!\nYour out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -177,6 +196,11 @@ namespace NetClient
             {
                 MessageBox.Show("Server Response failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            else if (LoginState.Equals(ClientAuth.LoginState.User_Banned))
+            {
+                MessageBox.Show("We don't like you, go away.", "Banned", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -186,14 +210,26 @@ namespace NetClient
         /// <param name="e"></param>
         private void RedeemKeyButton_Click(object sender, EventArgs e)
         {
-            if (ClientAuthenticator.Authorized && ClientAuthenticator.RedeemKey($"{RedeemKeyTextbox1.Text}-{RedeemKeyTextbox2.Text}-{RedeemKeyTextbox3.Text}-{RedeemKeyTextbox4.Text}"))
+            if (ClientAuthenticator.Authorized)
             {
-                if(LoginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
+                if(ClientAuthenticator.RedeemKey($"{RedeemKeyTextbox1.Text}-{RedeemKeyTextbox2.Text}-{RedeemKeyTextbox3.Text}-{RedeemKeyTextbox4.Text}"))
                 {
                     LoginState = ClientAuth.LoginState.Logged_In;
                     Task.Run(() => checkAuthTime());
+
+                    TimeTab.PageEnabled = true;
+                    RedeemKeyTab.PageEnabled = true;
+                    GameCheatTab.PageEnabled = true;
+                    LoginButton.Enabled = false;
+                    MainTab.SelectedTabPage = GameCheatTab;
+
+                    MessageBox.Show("Key Redeemed Sucessfully!", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                MessageBox.Show("Key Redeemed Sucessfully!", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                else
+                {
+                    MessageBox.Show("Failed to Redeem key.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
 
             else
@@ -230,6 +266,12 @@ namespace NetClient
         {
             if(ClientAuthenticator.RegisterUser(RegisterEmailTextbox.Text, RegisterUsernameTextbox.Text, RegisterPasswordTextbox.Text))
             {
+                ConfigFile["auth"] = "1";
+                ConfigFile["user"] = RegisterUsernameTextbox.Text;
+                ConfigFile["pass"] = RegisterPasswordTextbox.Text;
+
+                MainTab.SelectedTabPage = RedeemKeyTab;
+
                 MessageBox.Show("User Registered!", "Register User", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
@@ -238,18 +280,6 @@ namespace NetClient
                 MessageBox.Show("User Registy failed!", "Register User", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
-        /// <summary>
-        /// Loads the cheats from the x64 or x86 json.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Btn_ReloadCheats_Click(object sender, EventArgs e)
-        {
-            LoadCheats();
-        }
-
 
         /// <summary>
         /// Loads the cheats to the tile controll
@@ -272,7 +302,7 @@ namespace NetClient
                 item.Name = cheats[iItem].shortname;
 
                 item.AllowAnimation = true;
-
+                item.TextAlignment = TileItemContentAlignment.MiddleCenter;
                 item.ItemClick += TileHandler;
                 TileItems.Add(item);
 
@@ -291,11 +321,19 @@ namespace NetClient
             TileItem item = (TileItem)sender;
             byte[] array = ClientAuthenticator.DownloadCheat($"{ResolveName(item.Text)}");
 
-            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(array);
-            Type type = assembly.GetType($"{e.Item.Name}.MainForm");
-            object obj = Activator.CreateInstance(type);
-            XtraForm form = obj as XtraForm;
-            form.Show();
+            try
+            {
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(array);
+                Type type = assembly.GetType($"{e.Item.Name}.MainForm");
+                object obj = Activator.CreateInstance(type);
+                XtraForm form = obj as XtraForm;
+                form.Show();
+            }
+
+            catch (Exception Ex)
+            {
+                MessageBox.Show("Failed to load cheat!", e.Item.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>

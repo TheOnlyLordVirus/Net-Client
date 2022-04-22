@@ -9,11 +9,12 @@ create table USER
 	USER_EMAIL varchar(30) not null,
 	USER_NAME varchar(30) not null,
 	USER_PASS varchar(30) not null,
-	IS_ADMIN boolean not null default FALSE,
+	IS_ADMIN boolean not null default false,
 	REGISTRATION_IP varchar(15),
 	RECENT_IP varchar(15),
 	CREATION_DATE datetime not null default now(),
-	AUTH_END_DATE datetime default null
+	AUTH_END_DATE datetime default null,
+	ACTIVE boolean not null default TRUE
 );
 
 create table TIME_KEYS
@@ -28,11 +29,12 @@ create table TIME_KEYS
 create table IP_HISTORY
 (
   USER_ID int references USER(USER_ID),
+  COMMAND varchar(255) default null,
   LOGGED_IP varchar(15) not null,
   LOGGIN_DATE datetime not null default now()
 );
 
-create view STORED_IP as select u.USER_NAME, h.LOGGED_IP, h.LOGGIN_DATE from IP_HISTORY h inner join USER u on h.USER_ID = u.USER_ID;
+create view STORED_IP as select u.USER_NAME, h.COMMAND, h.LOGGED_IP, h.LOGGIN_DATE from IP_HISTORY h inner join USER u on h.USER_ID = u.USER_ID;
 
 DELIMITER $$ ;
 
@@ -51,10 +53,23 @@ begin
 end
 $$
 
-create procedure logIP (in ID int, in IP varchar(15))
+create procedure disableUser (IN `NAME` VARCHAR(25))
+begin
+    SET @UID = (SELECT ux.USER_ID
+                        FROM USER as ux
+                        WHERE ux.USER_NAME = NAME);
+
+    IF((select u.IS_ADMIN from USER as u where u.USER_ID = @UID) and @UID is not null)
+    THEN
+        update USER as u set u.ACTIVE = false where u.USER_ID = @UID;
+    END IF;
+end
+$$
+
+create procedure logIP (in ID int, in IP varchar(15), in COMM varchar(255))
 begin
   update USER set RECENT_IP = IP where USER_ID = ID;
-  insert into IP_HISTORY (USER_ID, LOGGED_IP) values (ID, IP);
+  insert into IP_HISTORY (USER_ID, LOGGED_IP, COMMAND) values (ID, IP, COMM);
 end
 $$
 

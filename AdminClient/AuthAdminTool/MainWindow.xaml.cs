@@ -50,6 +50,10 @@ namespace AuthAdminTool
                 ConfigFile["pass"] = passTextBox.Text;
 
                 Task.Run(() => checkAuthentication());
+
+                userTextBox.IsEnabled = false;
+                passTextBox.IsEnabled = false;
+                loginButton.IsEnabled = false;
             }
 
             else
@@ -123,9 +127,9 @@ namespace AuthAdminTool
             }
         }
 
-        private void DeleteUserButton_Click(object sender, RoutedEventArgs e)
+        private void BanUserButton_Click(object sender, RoutedEventArgs e)
         {
-            if (AdminApi.DeleteUser(deleteUserTextBox.Text))
+            if (AdminApi.BanUser(deleteUserTextBox.Text))
             {
                 MessageBox.Show("Account deleted successufuly!", "Account Created!", MessageBoxButton.OK, MessageBoxImage.Information);
             }

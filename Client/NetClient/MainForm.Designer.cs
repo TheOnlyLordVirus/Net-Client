@@ -33,10 +33,8 @@ namespace NetClient
             this.GameCheatTab = new DevExpress.XtraTab.XtraTabPage();
             this.CheatTiles = new DevExpress.XtraEditors.TileControl();
             this.CheatGroup = new DevExpress.XtraEditors.TileGroup();
-            this.Btn_ReloadCheats = new DevExpress.XtraEditors.SimpleButton();
             this.TimeTab = new DevExpress.XtraTab.XtraTabPage();
             this.TimeLabel = new System.Windows.Forms.Label();
-            this.SecondsLabel = new DevExpress.XtraEditors.LabelControl();
             this.MinuteLabel = new DevExpress.XtraEditors.LabelControl();
             this.HourLabel = new DevExpress.XtraEditors.LabelControl();
             this.DayLabel = new DevExpress.XtraEditors.LabelControl();
@@ -90,7 +88,6 @@ namespace NetClient
             // GameCheatTab
             // 
             this.GameCheatTab.Controls.Add(this.CheatTiles);
-            this.GameCheatTab.Controls.Add(this.Btn_ReloadCheats);
             this.GameCheatTab.Margin = new System.Windows.Forms.Padding(48);
             this.GameCheatTab.Name = "GameCheatTab";
             this.GameCheatTab.PageEnabled = false;
@@ -101,31 +98,20 @@ namespace NetClient
             // 
             this.CheatTiles.Groups.Add(this.CheatGroup);
             this.CheatTiles.ItemPadding = new System.Windows.Forms.Padding(10);
-            this.CheatTiles.Location = new System.Drawing.Point(11, 112);
+            this.CheatTiles.Location = new System.Drawing.Point(0, 0);
             this.CheatTiles.Margin = new System.Windows.Forms.Padding(48);
             this.CheatTiles.Name = "CheatTiles";
             this.CheatTiles.Padding = new System.Windows.Forms.Padding(0);
-            this.CheatTiles.Size = new System.Drawing.Size(902, 500);
+            this.CheatTiles.Size = new System.Drawing.Size(928, 628);
             this.CheatTiles.TabIndex = 2;
             // 
             // CheatGroup
             // 
             this.CheatGroup.Name = "CheatGroup";
             // 
-            // Btn_ReloadCheats
-            // 
-            this.Btn_ReloadCheats.Location = new System.Drawing.Point(323, 33);
-            this.Btn_ReloadCheats.Margin = new System.Windows.Forms.Padding(48);
-            this.Btn_ReloadCheats.Name = "Btn_ReloadCheats";
-            this.Btn_ReloadCheats.Size = new System.Drawing.Size(280, 60);
-            this.Btn_ReloadCheats.TabIndex = 1;
-            this.Btn_ReloadCheats.Text = "Reload Cheats (Debug)";
-            this.Btn_ReloadCheats.Click += new System.EventHandler(this.Btn_ReloadCheats_Click);
-            // 
             // TimeTab
             // 
             this.TimeTab.Controls.Add(this.TimeLabel);
-            this.TimeTab.Controls.Add(this.SecondsLabel);
             this.TimeTab.Controls.Add(this.MinuteLabel);
             this.TimeTab.Controls.Add(this.HourLabel);
             this.TimeTab.Controls.Add(this.DayLabel);
@@ -148,17 +134,6 @@ namespace NetClient
             this.TimeLabel.Size = new System.Drawing.Size(372, 78);
             this.TimeLabel.TabIndex = 13;
             this.TimeLabel.Text = "Time Left";
-            // 
-            // SecondsLabel
-            // 
-            this.SecondsLabel.Appearance.Font = new System.Drawing.Font("Verdana", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SecondsLabel.Appearance.Options.UseFont = true;
-            this.SecondsLabel.Location = new System.Drawing.Point(234, 490);
-            this.SecondsLabel.Margin = new System.Windows.Forms.Padding(352, 384, 352, 384);
-            this.SecondsLabel.Name = "SecondsLabel";
-            this.SecondsLabel.Size = new System.Drawing.Size(199, 52);
-            this.SecondsLabel.TabIndex = 6;
-            this.SecondsLabel.Text = "Seconds:";
             // 
             // MinuteLabel
             // 
@@ -511,6 +486,7 @@ namespace NetClient
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1074, 632);
             this.Controls.Add(this.MainTab);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.IconOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("MainForm.IconOptions.SvgImage")));
             this.Name = "MainForm";
             this.Text = "Client Login";
@@ -543,7 +519,6 @@ namespace NetClient
         private DevExpress.XtraTab.XtraTabPage GameCheatTab;
         private DevExpress.XtraTab.XtraTabPage TimeTab;
         private System.Windows.Forms.Label TimeLabel;
-        private DevExpress.XtraEditors.LabelControl SecondsLabel;
         private DevExpress.XtraEditors.LabelControl MinuteLabel;
         private DevExpress.XtraEditors.LabelControl HourLabel;
         private DevExpress.XtraEditors.LabelControl DayLabel;
@@ -576,7 +551,6 @@ namespace NetClient
         private DevExpress.XtraTab.XtraTabControl MainTab;
         private System.Windows.Forms.Label label4;
         private DevExpress.XtraEditors.TextEdit RegisterEmailTextbox;
-        private DevExpress.XtraEditors.SimpleButton Btn_ReloadCheats;
         private DevExpress.XtraEditors.TileControl CheatTiles;
         private DevExpress.XtraEditors.TileGroup CheatGroup;
     }

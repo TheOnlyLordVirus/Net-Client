@@ -10,7 +10,8 @@
     using System.Security.Cryptography;
     using System.IO;
     using System.Text.RegularExpressions;
-
+    using System.Diagnostics;
+    using System.Runtime.InteropServices;
     class ClientAuth
     {
         #region Variables
@@ -34,6 +35,8 @@
 
         protected string ekey = string.Empty;
 
+        protected byte[] gameCheats;
+
         #endregion
 
         public enum LoginState
@@ -43,10 +46,19 @@
             Password_Failure,
             IP_Mismatch,
             User_doesnt_Exist,
-            Response_Error
+            Response_Error,
+            Not_logged_In,
+            User_Banned
         }
 
-        #region Response Structs
+        #region Structs
+        public struct CheatItems
+        {
+            public string shortname;
+            public string cheatname;
+            public string description;
+        }
+
         protected struct LoginResponse
         {
             public string dkey;
@@ -54,6 +66,7 @@
             public int heartrhythm;
             public string loggedin;
             public UInt64 meatball;
+            public string gamesjson;
         }
 
         protected struct TimeResponse
@@ -70,6 +83,11 @@
         {
             public string file;
             public string error;
+        }
+        private struct RegisterUserResponse
+        {
+            public string dkey;
+            public bool addres;
         }
 
         #endregion
@@ -107,29 +125,35 @@
         /// </summary>
         /// <param name="timeKey"></param>
         /// <returns></returns>
-        public bool DownloadCheat(string gameName)
+        public byte[] DownloadCheat(string gameName)
         {
-            return false;
-            /*
             Dictionary<string, string> values = new Dictionary<string, string>
             {
-                { "key", timeKey },
-                { "username", this.username }
+                { "game", gameName }
             };
 
-            if (Authorized)
+            if (false || Authorized)
             {
-                string commandResponse = SendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
+                byte[] dllfile, jsonfile;
+                string dllResponse = SendCommand(this.username, this.password, "download_cheat", JsonConvert.SerializeObject(values));
+                string jsonResponse = SendCommand(this.username, this.password, "download_json", JsonConvert.SerializeObject(values));
 
-                if (!commandResponse.Equals(string.Empty))
+                if (!dllResponse.Equals(string.Empty) && !jsonResponse.Equals(string.Empty))
                 {
-                    KeyResponse keyResponse = JsonConvert.DeserializeObject<KeyResponse>(commandResponse);
-                    return keyResponse.keyres;
+                    DownloadFileResponse dllFileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
+                    DownloadFileResponse jsonFileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
+
+                    if (IsBase64String(dllFileResponse.file) && IsBase64String(jsonFileResponse.file))
+                    {
+                        //jsonfile = Convert.FromBase64String(jsonFileResponse.file);
+                        return dllfile = Convert.FromBase64String(dllFileResponse.file);
+                    }
+
+                    return null;
                 }
             }
 
-            return false;
-            */
+            return null;
         }
 
         /// <summary>
@@ -165,6 +189,7 @@
         /// <returns></returns>
         public LoginState Login(string user, string password)
         {
+            IsSafe();
             if (dkey.Equals(string.Empty))
             {
                 this.username = user;
@@ -196,6 +221,48 @@
                 this.authorized = false;
                 return LoginState.Response_Error;
             }
+        }
+
+        /// <summary>
+        /// Attempt to register a user.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public bool RegisterUser(string email, string username, string password)
+        {
+            if (dkey.Equals(string.Empty) && !(ekey.Equals(string.Empty) || ekey.Equals("0") || !IsBase64String(ekey)))
+            {
+                Dictionary<string, string> parms = new Dictionary<string, string>
+                {
+                    { "email", email },
+                    { "username", username },
+                    { "password", password }
+                };
+
+                Dictionary<string, string> values = new Dictionary<string, string>
+                {
+                    { "username", string.Empty },
+                    { "password", string.Empty },
+                    { "cheese", "register_user" },
+                    { "parms", JsonConvert.SerializeObject(parms) }
+                };
+
+                string Json = JsonConvert.SerializeObject(values);
+                string EncryptedJson = EncryptString(Json);
+                Task<string> response = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "bluecheese", EncryptedJson } })));
+                response.Wait();
+
+                if (!response.Result.Equals(string.Empty))
+                {
+                    RegisterUserResponse registerUserResponse = JsonConvert.DeserializeObject<RegisterUserResponse>(response.Result);
+                    this.dkey = registerUserResponse.dkey;
+                    return registerUserResponse.addres;
+                }
+            }
+
+            return false;
         }
 
         #endregion
@@ -254,6 +321,7 @@
                         {
                             this.heartRate = dkeyResponse.heartrate;
                             this.dkey = dkeyResponse.dkey;
+                            this.gameCheats = Convert.FromBase64String(dkeyResponse.gamesjson);
                             Task.Run(() => Heartbeat());
                             Task.Run(() => Heartrate(dkeyResponse.heartrhythm));
                             this.authorized = true;
@@ -495,6 +563,95 @@
             return plainText;
         }
 
+        /// <summary>
+        /// Is this a safe process?
+        /// </summary>
+        /// <param name="procname"></param>
+        /// <returns></returns>
+        protected bool IsSafeProcess(string procname)
+        {
+            string proc = procname.ToLower();
+            if (proc == "services") return false;
+            if (proc == "registry") return false;
+            if (proc == "csrss") return false;
+            if (proc == "svchost") return false;
+            if (proc == "sgrmbroker") return false;
+            if (proc == "msmpeng") return false;
+            if (proc == "smss") return false;
+            if (proc == "system") return false;
+            if (proc == "idle") return false;
+            if (proc == "dllhost") return false;
+            if (proc == "securityhealthservice") return false;
+            if (proc == "wininit") return false;
+            if (proc == "nissrv") return false;
+            if (proc == "memory compression") return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Does anyone have any bad processes open?
+        /// </summary>
+        /// <param name="procname"></param>
+        /// <returns></returns>
+        protected bool BadProcesses(string procname)
+        {
+            string proc = procname.ToLower();
+
+            if (proc == "idaq") return true;
+            if (proc == "idaq64") return true;
+            if (proc == "ida") return true;
+            if (proc == "ida64") return true;
+            if (proc == "wireshark") return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Does the user have any bad programms open?
+        /// </summary>
+        /// <param name="windowname"></param>
+        /// <returns></returns>
+        protected bool BadWindowNames(string windowname)
+        {
+            string winname = windowname.ToLower();
+            if (winname.Contains("fiddler")) return true;
+            if (winname.Contains("the wireshark network analyzer")) return true;
+            if (winname.Contains("ida - ") && winname.Contains(".idb")) return true;
+            if (winname.Contains("ida - ") && winname.Contains(".i64")) return true;
+            if (winname.Contains("ida v")) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Is our program instance safe?
+        /// </summary>
+        /// <returns></returns>
+        protected bool IsSafe()
+        {
+            try
+            {
+                Process[] procList = Process.GetProcesses();
+                if (Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\dnSpy\\") || Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\dnSpy\\"))
+                {
+                    Process.GetCurrentProcess().Kill();
+                }
+                foreach (Process proc in procList)
+                {
+                    if (IsSafeProcess(proc.ProcessName))
+                    {
+                        if (BadProcesses(proc.ProcessName) || BadWindowNames(proc.MainWindowTitle))
+                        {
+                            proc.Kill();
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex){}
+
+            return false;
+        }
+
         #endregion
 
         #region Propertys
@@ -514,6 +671,14 @@
         public bool Authorized
         {
             get { return authorized && HeartRate; }
+        }
+
+        /// <summary>
+        /// Get the game cheat json.
+        /// </summary>
+        public List<CheatItems> GameCheats
+        {
+            get { return JsonConvert.DeserializeObject<List<CheatItems>>(Encoding.UTF8.GetString(gameCheats)); }
         }
 
         /// <summary>
@@ -628,6 +793,8 @@
                     return null;
             }
         }
+
+
 
         #endregion
     }

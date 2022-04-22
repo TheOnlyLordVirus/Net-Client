@@ -71,12 +71,17 @@ class cheesey_api
             {
                 $login_status = $this->login();
 
-                // First login / Get Decrytion key. 
-                if($decryptedInput->cheese == "get_dkey")
+                // Register new user, return unencrypted response.
+                if ($decryptedInput->cheese == "register_user")
+                {
+                    echo json_encode(['addres' => $this->registerUser(json_decode($decryptedInput->parms, true)), "dkey" => $this->eKey], true);
+                }
+
+                else if($decryptedInput->cheese == "get_dkey") // First login, get decryption key
                 {
                     if($login_status == "Logged_In" || $login_status == "Logged_In_Without_Time")
                     {
-                        if($this->checkCurrentIp() && $this->logIp())
+                        if($this->checkCurrentIp() && $this->logIp($decryptedInput->cheese))
                         {
                             echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats("x64")], true);
                         }
@@ -87,25 +92,15 @@ class cheesey_api
                         }
                     }
 
-                    else if($login_status == "User_doesnt_Exist")
+                    else
                     {
                         echo json_encode(['loggedin' => $login_status], true);
                     }
-    
-                    else if ($login_status == "Password_Failure")
-                    {
-                        echo json_encode(['loggedin' => $login_status], true);
-                    }
-                }
-
-                else if ($decryptedInput->cheese == "register_user")
-                {
-                    echo json_encode(['addres' => $this->registerUser(json_decode($decryptedInput->parms, true)), "dkey" => $this->eKey], true);
                 }
 
                 else if ($login_status == "Logged_In" || $login_status == "Logged_In_Without_Time")
                 {
-                    if($this->checkCurrentIp() && $this->logIp())
+                    if($this->checkCurrentIp() && $this->logIp($decryptedInput->cheese))
                     {
                         $parmesan = $decryptedInput->parms;
 
@@ -165,9 +160,9 @@ class cheesey_api
                                 echo $this->encryptString($json);
                                 break;
     
-                            case 'delete_user': // Delete a user from the cheat api
+                            case 'ban_user': // Delete a user from the cheat api
                                 $eggnoodle = json_decode($parmesan, true);
-                                $json = json_encode(['deleteres' => $this->removeUser($eggnoodle)], true);
+                                $json = json_encode(['banres' => $this->removeUser($eggnoodle)], true);
                                 echo $this->encryptString($json);
                                 break;
     
@@ -281,7 +276,7 @@ class cheesey_api
      */
     private function downloadJson($gamename)
     {
-        $filename = "../cheats/" . $gamename . "/cheat.json";
+        $filename = "../cheats/" . $gamename . "/" . $gamename . ".json";
         if(file_exists($filename))
         {
             header("Cache-Control: public");
@@ -368,7 +363,7 @@ class cheesey_api
 
         if($this->isAdmin())
         {
-            if ($remove_user_query = $this->connection->prepare('DELETE FROM USER WHERE USER_NAME = ?'))
+            if ($remove_user_query = $this->connection->prepare('call disableUser(?)'))
             {
                 $remove_user_query->bind_param('s', $username);
                 $remove_user_query->execute();
@@ -398,22 +393,33 @@ class cheesey_api
 
             if($user_query->num_rows > 0)
             {
-                if ($login_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+                if ($login_query = $this->connection->prepare('SELECT ACTIVE FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
                 {
                     $login_query->bind_param('ss', $this->user_account, $this->user_password);
                     $login_query->execute();
                     $login_query->store_result();
-        
+                    
                     if($login_query->num_rows > 0)
                     {
-                        if($this->checkTime(['username' => $this->user_account]))
+                        $login_query->bind_result($active);
+                        $login_query->fetch();
+
+                        if($active)
                         {
-                            return "Logged_In";
+                            if($this->checkTime(['username' => $this->user_account]))
+                            {
+                                return "Logged_In";
+                            }
+    
+                            else
+                            {
+                                return "Logged_In_Without_Time";
+                            }
                         }
 
                         else
                         {
-                            return "Logged_In_Without_Time";
+                            return "User_Banned";
                         }
                     }
 
@@ -664,11 +670,11 @@ class cheesey_api
      * @param $parm
      * @return bool
      */
-    private function logIp()
+    private function logIp($command)
     {
-        if($login_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+        if($login_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ?'))
         {
-            $login_query->bind_param('ss', $this->user_account, $this->user_password);
+            $login_query->bind_param('s', $this->user_account);
             $login_query->execute();
             $login_query->store_result();
 
@@ -677,10 +683,10 @@ class cheesey_api
                 $login_query->bind_result($id);
                 $login_query->fetch();
 
-                if ($ip_query = $this->connection->prepare('call logIP(?, ?)'))
+                if ($ip_query = $this->connection->prepare('call logIP(?, ?, ?)'))
                 {
                     $IPAddress = data_logger::getIPAddress();
-                    $ip_query->bind_param('is', $id, $IPAddress);
+                    $ip_query->bind_param('iss', $id, $IPAddress, $command);
            
                     if($ip_query->execute())
                     {

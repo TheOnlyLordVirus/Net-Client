@@ -14,7 +14,7 @@
         <TextBox x:Name="userTextBox" Margin="90,65,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292" Text="pastafarian"/>
         <Label Content="Pass:" Margin="42,94,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <TextBox x:Name="passTextBox" Margin="90,94,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292" Text="cheesetoast"/>
-        <Button Margin="400,77,0,0" Content="Send to server" Click="LoginButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"></Button>
+        <Button x:Name="loginButton" Margin="400,77,0,0" Content="Send to server" Click="LoginButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"></Button>
 
         <!--Redeem Key-->
         <Label Content="Redeem Key: " Margin="90,129,0,0" Width="146" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
@@ -46,7 +46,7 @@
         <!--Delete User-->
         <Label Content="User:" Margin="43,352,0,0" Width="43" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <TextBox x:Name="deleteUserTextBox" Margin="91,352,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="304"/>
-        <Button Margin="400,352,0,0" Content="Delete User" Click="DeleteUserButton_Click" Width="90" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Button Margin="400,352,0,0" Content="Ban User" Click="BanUserButton_Click" Width="90" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <Label Content="User:" Margin="43,383,0,0" Width="43" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <TextBox x:Name="getUserTimeTextBox" Margin="91,383,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="304"/>
         <Button Margin="400,383,0,0" Content="Get User Time" Click="getUserTimeButton_Click" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>

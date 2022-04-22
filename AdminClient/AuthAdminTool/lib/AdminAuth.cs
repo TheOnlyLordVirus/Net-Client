@@ -17,9 +17,14 @@
             public string key;
         }
 
-        private struct DeleteUserResponse
+        private struct AddUserResponse
         {
-            public bool deleteres;
+            public bool addres;
+        }
+
+        private struct BanUserResponse
+        {
+            public bool banres;
         }
 
         #endregion
@@ -150,7 +155,7 @@
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        public bool DeleteUser(string username)
+        public bool BanUser(string username)
         {
             Dictionary<string, string> values = new Dictionary<string, string>
             {
@@ -159,12 +164,12 @@
 
             if (Authorized)
             {
-                string commandResponse = SendCommand(this.username, this.password, "delete_user", JsonConvert.SerializeObject(values));
+                string commandResponse = SendCommand(this.username, this.password, "ban_user", JsonConvert.SerializeObject(values));
 
                 if (!commandResponse.Equals(string.Empty))
                 {
-                    DeleteUserResponse delUserResponse = JsonConvert.DeserializeObject<DeleteUserResponse>(commandResponse);
-                    return delUserResponse.deleteres;
+                    BanUserResponse delUserResponse = JsonConvert.DeserializeObject<BanUserResponse>(commandResponse);
+                    return delUserResponse.banres;
                 }
             }
 

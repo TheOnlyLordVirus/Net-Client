@@ -47,7 +47,8 @@
             IP_Mismatch,
             User_doesnt_Exist,
             Response_Error,
-            Not_logged_In
+            Not_logged_In,
+            User_Banned
         }
 
         #region Structs
@@ -141,7 +142,6 @@
                 {
                     DownloadFileResponse dllFileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
                     DownloadFileResponse jsonFileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
-
 
                     if (IsBase64String(dllFileResponse.file) && IsBase64String(jsonFileResponse.file))
                     {
@@ -623,7 +623,7 @@
         }
 
         /// <summary>
-        /// Is our program safe?
+        /// Is our program instance safe?
         /// </summary>
         /// <returns></returns>
         protected bool IsSafe()
@@ -652,26 +652,6 @@
             return false;
         }
 
-        #endregion
-
-        #region Import Dll functions
-        /*
-        [DllImport("kernelbase.dll")]
-        private static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
-
-        [DllImport("kernelbase.dll")]
-        private static extern IntPtr GetModuleHandleA(string lpModuleName);
-
-        [DllImport("kernelbase.dll")]
-        private static extern IntPtr GetCurrentProcess();
-
-
-        [DllImport("kernelbase.dll")]
-        private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, out byte[] lpBuffer, uint nSize, out uint lpNumberOfBytesRead);
-
-        [DllImport("kernelbase.dll")]
-        private static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flNewProtect, out uint lpflOldProtect);
-        */
         #endregion
 
         #region Propertys
