@@ -53,7 +53,6 @@ namespace NetClient
             InitializeComponent();
 
             TileItems = new List<TileItem>();
-            ClientAuthenticator = new ClientAuth();
             ConfigFile = new ProjectConfigFile("cheatconfig", "userconfig", new string[] { "auth", "user", "pass" });
 
             if (ConfigFile["auth"].Equals("1"))
@@ -81,12 +80,13 @@ namespace NetClient
                 TimeTab.PageEnabled = false;
                 RedeemKeyTab.PageEnabled = false;
                 GameCheatTab.PageEnabled = false;
+                RegisterTab.PageEnabled = true;
+                LoginButton.Enabled = true;
             }));
 
-            MessageBox.Show("Error", "Authentication to server failed.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Authentication to server failed!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return Task.CompletedTask;
         }
-
 
         /// <summary>
         /// If the client is not authorized with time left, disable the Time Tab and Game Tab
@@ -94,9 +94,9 @@ namespace NetClient
         /// <returns></returns>
         private Task checkAuthTime()
         {
-            while(ClientAuthenticator.Authorized)
+            while (ClientAuthenticator.Authorized)
             {
-                if(!ClientAuthenticator.AuthorizedWithTimeLeft)
+                if (ClientAuthenticator.Authorized && !ClientAuthenticator.AuthorizedWithTimeLeft)
                 {
                     this.Invoke(new MethodInvoker(delegate
                     {
@@ -114,26 +114,29 @@ namespace NetClient
         }
 
         /// <summary>
-        /// Update the time every minute.
+        /// Register a new user
         /// </summary>
-        /// <returns></returns>
-        private Task updateTimesEveryHalfMinute()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RegisterButton_Click(object sender, EventArgs e)
         {
-            while (ClientAuthenticator.Authorized && timeUpdates)
-            {
-                this.Invoke(new MethodInvoker(delegate 
-                {
-                    YearLabel.Text = "Years: " + ClientAuthenticator.YearsLeft.ToString();
-                    MonthLabel.Text = "Months: " + ClientAuthenticator.MonthsLeft.ToString();
-                    DayLabel.Text = "Days: " + ClientAuthenticator.DaysLeft.ToString();
-                    HourLabel.Text = "Hours: " + ClientAuthenticator.HoursLeft.ToString();
-                    MinuteLabel.Text = "Minutes: " + ClientAuthenticator.MinutesLeft.ToString();
-                }));
+            ClientAuthenticator = new ClientAuth();
 
-                Thread.Sleep(30000);
+            if (ClientAuthenticator.RegisterUser(RegisterEmailTextbox.Text, RegisterUsernameTextbox.Text, RegisterPasswordTextbox.Text))
+            {
+                ConfigFile["auth"] = "1";
+                ConfigFile["user"] = RegisterUsernameTextbox.Text;
+                ConfigFile["pass"] = RegisterPasswordTextbox.Text;
+
+                MainTab.SelectedTabPage = RedeemKeyTab;
+
+                MessageBox.Show("User Registered!", "Register User", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            
-            return Task.CompletedTask;
+
+            else
+            {
+                MessageBox.Show("User Registy failed!", "Register User", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -143,6 +146,7 @@ namespace NetClient
         /// <param name="e"></param>
         private void LoginButton_Click(object sender, EventArgs e)
         {
+            ClientAuthenticator = new ClientAuth();
             LoginState = ClientAuthenticator.Login(UsernameTextbox.Text, PasswordTextbox.Text);
 
             if (LoginState.Equals(ClientAuth.LoginState.Logged_In))
@@ -155,10 +159,14 @@ namespace NetClient
                 RedeemKeyTab.PageEnabled = true;
                 GameCheatTab.PageEnabled = true;
                 LoginButton.Enabled = false;
+                RegisterTab.PageEnabled = false;
                 MainTab.SelectedTabPage = GameCheatTab;
 
-                Task.Run(() => checkAuthentication());
+                Task.Run(() => checkAuthentication()); // General Auth Check.
+                Task.Run(() => checkAuthTime()); // Check that the user is authorized with time left.
+
                 LoadCheats();
+
                 MessageBox.Show($"Logged in!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
@@ -169,12 +177,13 @@ namespace NetClient
                 ConfigFile["pass"] = PasswordTextbox.Text;
 
                 RedeemKeyTab.PageEnabled = true;
+                RegisterTab.PageEnabled = false;
                 LoginButton.Enabled = false;
                 MainTab.SelectedTabPage = RedeemKeyTab;
 
                 Task.Run(() => checkAuthentication());
 
-                MessageBox.Show($"Logged in!\nYour out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Logged in!\nNotice: You're out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             else if (LoginState.Equals(ClientAuth.LoginState.Password_Failure))
@@ -258,27 +267,26 @@ namespace NetClient
         }
 
         /// <summary>
-        /// Register a new user
+        /// Update the time every minute.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RegisterButton_Click(object sender, EventArgs e)
+        /// <returns></returns>
+        private Task updateTimesEveryHalfMinute()
         {
-            if(ClientAuthenticator.RegisterUser(RegisterEmailTextbox.Text, RegisterUsernameTextbox.Text, RegisterPasswordTextbox.Text))
+            while (ClientAuthenticator.Authorized && timeUpdates)
             {
-                ConfigFile["auth"] = "1";
-                ConfigFile["user"] = RegisterUsernameTextbox.Text;
-                ConfigFile["pass"] = RegisterPasswordTextbox.Text;
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    YearLabel.Text = "Years: " + ClientAuthenticator.YearsLeft.ToString();
+                    MonthLabel.Text = "Months: " + ClientAuthenticator.MonthsLeft.ToString();
+                    DayLabel.Text = "Days: " + ClientAuthenticator.DaysLeft.ToString();
+                    HourLabel.Text = "Hours: " + ClientAuthenticator.HoursLeft.ToString();
+                    MinuteLabel.Text = "Minutes: " + ClientAuthenticator.MinutesLeft.ToString();
+                }));
 
-                MainTab.SelectedTabPage = RedeemKeyTab;
-
-                MessageBox.Show("User Registered!", "Register User", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Thread.Sleep(30000);
             }
 
-            else
-            {
-                MessageBox.Show("User Registy failed!", "Register User", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            return Task.CompletedTask;
         }
 
         /// <summary>

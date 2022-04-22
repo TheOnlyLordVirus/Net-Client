@@ -14,7 +14,7 @@ create table USER
 	RECENT_IP varchar(15),
 	CREATION_DATE datetime not null default now(),
 	AUTH_END_DATE datetime default null,
-	ACTIVE boolean not null default TRUE
+	ACTIVE boolean not null default true
 );
 
 create table TIME_KEYS
@@ -23,18 +23,20 @@ create table TIME_KEYS
 	TIME_VALUE int null,
 	KEY_GEN_DATE datetime not null default now(),
 	CREATED_BY int references USER(USER_ID),
-	ACTIVE boolean not null default TRUE
+	ACTIVE boolean not null default true
 );
 
-create table IP_HISTORY
+create table COMMAND_HISTORY
 (
+  ID int primary key auto_increment,
   USER_ID int references USER(USER_ID),
   COMMAND varchar(255) default null,
+  PARAMETERS varchar(255) default null,
   LOGGED_IP varchar(15) not null,
-  LOGGIN_DATE datetime not null default now()
+  DATE_RECEVED datetime not null default now()
 );
 
-create view STORED_IP as select u.USER_NAME, h.COMMAND, h.LOGGED_IP, h.LOGGIN_DATE from IP_HISTORY h inner join USER u on h.USER_ID = u.USER_ID;
+create view STORED_HISTORY as select u.USER_NAME, h.COMMAND, h.LOGGED_IP, h.DATE_RECEVED from COMMAND_HISTORY h inner join USER u on h.USER_ID = u.USER_ID;
 
 DELIMITER $$ ;
 
@@ -66,10 +68,10 @@ begin
 end
 $$
 
-create procedure logIP (in ID int, in IP varchar(15), in COMM varchar(255))
+create procedure logCommand (in ID int, in IP varchar(15), in COMM varchar(255), in PARAMS varchar(255))
 begin
   update USER set RECENT_IP = IP where USER_ID = ID;
-  insert into IP_HISTORY (USER_ID, LOGGED_IP, COMMAND) values (ID, IP, COMM);
+  insert into COMMAND_HISTORY (USER_ID, LOGGED_IP, COMMAND, PARAMETERS) values (ID, IP, COMM, PARAMS);
 end
 $$
 

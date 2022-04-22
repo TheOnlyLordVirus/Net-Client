@@ -81,7 +81,7 @@ class cheesey_api
                 {
                     if($login_status == "Logged_In" || $login_status == "Logged_In_Without_Time")
                     {
-                        if($this->checkCurrentIp() && $this->logIp($decryptedInput->cheese))
+                        if($this->logCommand($decryptedInput->cheese, $decryptedInput->parms) && $this->checkCurrentIp())
                         {
                             echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats("x64")], true);
                         }
@@ -100,7 +100,7 @@ class cheesey_api
 
                 else if ($login_status == "Logged_In" || $login_status == "Logged_In_Without_Time")
                 {
-                    if($this->checkCurrentIp() && $this->logIp($decryptedInput->cheese))
+                    if($this->logCommand($decryptedInput->cheese, $decryptedInput->parms) && $this->checkCurrentIp())
                     {
                         $parmesan = $decryptedInput->parms;
 
@@ -670,7 +670,7 @@ class cheesey_api
      * @param $parm
      * @return bool
      */
-    private function logIp($command)
+    private function logCommand($command, $parmesan)
     {
         if($login_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ?'))
         {
@@ -683,12 +683,13 @@ class cheesey_api
                 $login_query->bind_result($id);
                 $login_query->fetch();
 
-                if ($ip_query = $this->connection->prepare('call logIP(?, ?, ?)'))
+                if ($ip_query = $this->connection->prepare('call logCommand(?, ?, ?, ?)'))
                 {
                     $IPAddress = data_logger::getIPAddress();
-                    $ip_query->bind_param('iss', $id, $IPAddress, $command);
+                    $ip_query->bind_param('isss', $id, $IPAddress, $command, $parmesan);
+                    $ip_query->execute();
            
-                    if($ip_query->execute())
+                    if($ip_query->affected_rows > 0)
                     {
                         return true;
                     }
