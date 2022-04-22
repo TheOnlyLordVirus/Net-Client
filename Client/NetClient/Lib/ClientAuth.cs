@@ -563,7 +563,12 @@
             return plainText;
         }
 
-        bool IsSafeProcess(string procname)
+        /// <summary>
+        /// Is this a safe process?
+        /// </summary>
+        /// <param name="procname"></param>
+        /// <returns></returns>
+        protected bool IsSafeProcess(string procname)
         {
             string proc = procname.ToLower();
             if (proc == "services") return false;
@@ -583,7 +588,12 @@
             return true;
         }
 
-        bool BadProcesses(string procname)
+        /// <summary>
+        /// Does anyone have any bad processes open?
+        /// </summary>
+        /// <param name="procname"></param>
+        /// <returns></returns>
+        protected bool BadProcesses(string procname)
         {
             string proc = procname.ToLower();
 
@@ -596,7 +606,12 @@
             return false;
         }
 
-        bool BadWindowNames(string windowname)
+        /// <summary>
+        /// Does the user have any bad programms open?
+        /// </summary>
+        /// <param name="windowname"></param>
+        /// <returns></returns>
+        protected bool BadWindowNames(string windowname)
         {
             string winname = windowname.ToLower();
             if (winname.Contains("fiddler")) return true;
@@ -607,7 +622,11 @@
             return false;
         }
 
-        private bool IsSafe()
+        /// <summary>
+        /// Is our program safe?
+        /// </summary>
+        /// <returns></returns>
+        protected bool IsSafe()
         {
             try
             {
@@ -622,25 +641,21 @@
                     {
                         if (BadProcesses(proc.ProcessName) || BadWindowNames(proc.MainWindowTitle))
                         {
-                            Console.WriteLine($"{proc.ProcessName} - {proc.MainWindowTitle}");
-                            //proc.Kill();
+                            proc.Kill();
                         }
                     }
                 }
 
             }
-            catch (Exception ex)
-            {
-
-            }
+            catch (Exception ex){}
 
             return false;
         }
 
         #endregion
 
-        /*#region Import Dll functions
-
+        #region Import Dll functions
+        /*
         [DllImport("kernelbase.dll")]
         private static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
 
@@ -656,8 +671,8 @@
 
         [DllImport("kernelbase.dll")]
         private static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flNewProtect, out uint lpflOldProtect);
-
-        #endregion*/
+        */
+        #endregion
 
         #region Propertys
 
