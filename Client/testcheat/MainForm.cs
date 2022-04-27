@@ -10,7 +10,6 @@ namespace testcheat
         {
             InitializeComponent();
         }
-
         private void SampleEvent_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Hello!", "Debug");

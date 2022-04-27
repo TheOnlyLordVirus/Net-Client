@@ -8,7 +8,7 @@ create table USER
 	USER_ID int primary key auto_increment,
 	USER_EMAIL varchar(30) not null,
 	USER_NAME varchar(30) not null,
-	USER_PASS varchar(30) not null,
+	USER_PASS varchar(8000) not null,
 	IS_ADMIN boolean not null default false,
 	REGISTRATION_IP varchar(15),
 	RECENT_IP varchar(15),
@@ -40,7 +40,7 @@ create view STORED_HISTORY as select u.USER_NAME, h.COMMAND, h.PARAMETERS, h.LOG
 
 DELIMITER $$ ;
 
-create procedure addUser (IN `EMAIL` VARCHAR(25), IN `NAME` VARCHAR(25), IN `PASS` VARCHAR(25), IN `IP` VARCHAR(15), IN `ADMIN` BOOLEAN)
+create procedure addUser (IN `EMAIL` VARCHAR(25), IN `NAME` VARCHAR(25), IN `PASS` VARCHAR(8000), IN `IP` VARCHAR(15), IN `ADMIN` BOOLEAN)
 begin
   IF((SELECT u.USER_ID
         FROM USER as u
@@ -113,7 +113,7 @@ $$
 
 DELIMITER ; $$
 
-call addUser('test@mail.com', 'pastafarian', 'cheesetoast', '127.0.0.1', true);
+call addUser('test@mail.com', 'pastafarian', 'JQDp/rujvH4iauC3ITtfQoL/yGSFur9msRAcLdB/SvZ0AMZeVo9fV5QbIOTECa5w'/*'cheesetoast' encrypted*/, '127.0.0.1', true); 
 call addKey('00000-00000-00000-00000', 7/*Days*/, 1);
 call redeemKey('00000-00000-00000-00000', 1);
 

@@ -36,7 +36,7 @@ namespace testcheat
             // SampleEvent
             // 
             this.SampleEvent.Location = new System.Drawing.Point(103, 120);
-            this.SampleEvent.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.SampleEvent.Margin = new System.Windows.Forms.Padding(6);
             this.SampleEvent.Name = "SampleEvent";
             this.SampleEvent.Size = new System.Drawing.Size(353, 122);
             this.SampleEvent.TabIndex = 0;

@@ -9,6 +9,8 @@ using FileConfig;
 using System.IO;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using System.Reflection;
+using System.Security.Policy;
 
 namespace NetClient
 {
@@ -85,6 +87,7 @@ namespace NetClient
             }));
 
             MessageBox.Show("Authentication to server failed!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Process.GetCurrentProcess().Kill();
             return Task.CompletedTask;
         }
 
@@ -106,7 +109,7 @@ namespace NetClient
                     }));
 
                     MessageBox.Show("Your out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                    Process.GetCurrentProcess().Kill();
                     break;
                 }
             }
@@ -147,7 +150,7 @@ namespace NetClient
         private void LoginButton_Click(object sender, EventArgs e)
         {
             ClientAuthenticator = new ClientAuth();
-            LoginState = ClientAuthenticator.Login(UsernameTextbox.Text, PasswordTextbox.Text);
+            LoginState = ClientAuthenticator.Login(UsernameTextbox.Text, PasswordTextbox.Text, "x86");
 
             if (LoginState.Equals(ClientAuth.LoginState.Logged_In))
             {
@@ -294,30 +297,32 @@ namespace NetClient
         /// </summary>
         private void LoadCheats()
         {
-            cheats = ClientAuthenticator.GameCheats;
-            TileItems.Clear();
-
-            for (int iItem = 0; iItem < cheats.Count; iItem++)
+            if (ClientAuthenticator.GameCheats != null)
             {
-                TileItem item = new TileItem();
-                TileItemElement element = new TileItemElement();
-                element.Text = cheats[iItem].cheatname;
+                cheats = ClientAuthenticator.GameCheats;
+                TileItems.Clear();
+
+                for (int iItem = 0; iItem < cheats.Count; iItem++)
+                {
+                    TileItem item = new TileItem();
+                    TileItemElement element = new TileItemElement();
+                    element.Text = cheats[iItem].cheatname;
 
 
-                item.Elements.Add(element);
-                item.Id = iItem;
-                item.ItemSize = DevExpress.XtraEditors.TileItemSize.Wide;
-                item.Name = cheats[iItem].shortname;
+                    item.Elements.Add(element);
+                    item.Id = iItem;
+                    item.ItemSize = DevExpress.XtraEditors.TileItemSize.Wide;
+                    item.Name = cheats[iItem].shortname;
 
-                item.AllowAnimation = true;
-                item.TextAlignment = TileItemContentAlignment.MiddleCenter;
-                item.ItemClick += TileHandler;
-                TileItems.Add(item);
+                    item.AllowAnimation = true;
+                    item.TextAlignment = TileItemContentAlignment.MiddleCenter;
+                    item.ItemClick += TileHandler;
+                    TileItems.Add(item);
 
-                CheatGroup.Items.Add(TileItems[iItem]);
+                    CheatGroup.Items.Add(TileItems[iItem]);
+                }
             }
         }
-
 
         /// <summary>
         /// Get the cheat Form of the game that we have cheats for.
@@ -327,15 +332,22 @@ namespace NetClient
         private void TileHandler(object sender, TileItemEventArgs e)
         {
             TileItem item = (TileItem)sender;
-            byte[] array = ClientAuthenticator.DownloadCheat($"{ResolveName(item.Text)}");
+            byte[] cheatForm = ClientAuthenticator.DownloadCheat($"{ResolveName(item.Text)}");
 
             try
             {
-                System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(array);
-                Type type = assembly.GetType($"{e.Item.Name}.MainForm");
-                object obj = Activator.CreateInstance(type);
+                //AppDomain cheatDomain = AppDomain.CreateDomain("cheatsDomain");
+
+                Assembly assembly = Assembly.Load(cheatForm);
+
+                Type myType = assembly.GetType($"{e.Item.Name}.MainForm");
+
+                object obj = Activator.CreateInstance(myType);
+
                 XtraForm form = obj as XtraForm;
                 form.Show();
+
+                //AppDomain.Unload(cheatDomain);
             }
 
             catch (Exception Ex)

@@ -8,3 +8,4 @@ C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.dll
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.csproj.CoreCompileInputs.cache
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.dll
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.pdb
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Debug\testcheat.csproj.AssemblyReference.cache

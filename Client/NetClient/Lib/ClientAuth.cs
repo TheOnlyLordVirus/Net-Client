@@ -12,6 +12,7 @@
     using System.Text.RegularExpressions;
     using System.Diagnostics;
     using System.Runtime.InteropServices;
+
     class ClientAuth
     {
         #region Variables
@@ -93,6 +94,63 @@
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        public ClientAuth()
+        {
+            GetEncryptionKey();
+        }
+
+        /// <summary>
+        /// When the user first logs in to the server.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="password"></param>
+        /// <param name="bitcount"></param>
+        /// <returns></returns>
+        public LoginState Login(string user, string password, string bitcount = "x64")
+        {
+            IsSafe();
+            if (dkey.Equals(string.Empty))
+            {
+                this.username = user;
+                this.password = password;
+                LoginState state = GetDecryptionKey(user, password, bitcount);
+                this.authorized = (state.Equals(LoginState.Logged_In) || state.Equals(LoginState.Logged_In_Without_Time));
+                return state;
+            }
+
+            this.authorized = false;
+            return LoginState.Response_Error;
+        }
+
+        /// <summary>
+        /// Attempt to redeem a key, return boolean result of attempt.
+        /// </summary>
+        /// <param name="timeKey"></param>
+        /// <returns></returns>
+        public bool RedeemKey(string timeKey)
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "key", timeKey },
+                { "username", this.username }
+            };
+
+            if (Authorized)
+            {
+                string commandResponse = SendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
+
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    KeyResponse keyResponse = JsonConvert.DeserializeObject<KeyResponse>(commandResponse);
+                    return keyResponse.keyres;
+                }
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Get a users time left
@@ -157,73 +215,6 @@
         }
 
         /// <summary>
-        /// Attempt to redeem a key, return boolean result of attempt.
-        /// </summary>
-        /// <param name="timeKey"></param>
-        /// <returns></returns>
-        public bool RedeemKey(string timeKey)
-        {
-            Dictionary<string, string> values = new Dictionary<string, string>
-            {
-                { "key", timeKey },
-                { "username", this.username }
-            };
-
-            if (Authorized)
-            {
-                string commandResponse = SendCommand(this.username, this.password, "redeem_key", JsonConvert.SerializeObject(values));
-
-                if (!commandResponse.Equals(string.Empty))
-                {
-                    KeyResponse keyResponse = JsonConvert.DeserializeObject<KeyResponse>(commandResponse);
-                    return keyResponse.keyres;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Attempt to log in to the server.
-        /// </summary>
-        /// <returns></returns>
-        public LoginState Login(string user, string password)
-        {
-            IsSafe();
-            if (dkey.Equals(string.Empty))
-            {
-                this.username = user;
-                this.password = password;
-                return GetDecryptionKey(user, password);
-            }
-
-            else
-            {
-                this.username = user;
-                this.password = password;
-                string commandResponse = SendCommand(user, password, "login", string.Empty);
-
-                if (!commandResponse.Equals(string.Empty))
-                {
-                    LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(commandResponse);
-
-                    if (CheckTimeStamp(loginResponse.meatball) &&
-                        Enum.TryParse(loginResponse.loggedin, out LoginState myStatus))
-                    {
-                        if (myStatus.Equals(LoginState.Logged_In) || myStatus.Equals(LoginState.Logged_In_Without_Time))
-                        {
-                            this.authorized = true;
-                            return myStatus;
-                        }
-                    }
-                }
-
-                this.authorized = false;
-                return LoginState.Response_Error;
-            }
-        }
-
-        /// <summary>
         /// Attempt to register a user.
         /// </summary>
         /// <param name="email"></param>
@@ -270,30 +261,9 @@
         #region Protected Methods
 
         /// <summary>
-        /// Class constructor
-        /// </summary>
-        public ClientAuth()
-        {
-            GetEncryptionKey();
-        }
-
-        /// <summary>
-        /// Get the Encryption Key
-        /// </summary>
-        protected void GetEncryptionKey()
-        {
-            if (ekey.Equals(string.Empty))
-            {
-                var getEncryptionKey = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "cheese", "90kGPILHd22/yQ3bctAPwxzEPq+BEA4og3Wqh+hSRFQ=" } })));
-                getEncryptionKey.Wait();
-                this.ekey = getEncryptionKey.Result;
-            }
-        }
-
-        /// <summary>
         /// Get the Decryption key
         /// </summary>
-        protected LoginState GetDecryptionKey(string username, string password)
+        protected LoginState GetDecryptionKey(string username, string password, string bitcount)
         {
             this.authorized = false;
             if (dkey.Equals(string.Empty) && !(ekey.Equals(string.Empty) || ekey.Equals("0") || !IsBase64String(ekey)))
@@ -303,7 +273,7 @@
                     { "username", username },
                     { "password", password },
                     { "cheese", "get_dkey" },
-                    { "parms", string.Empty }
+                    { "parms", JsonConvert.SerializeObject(new Dictionary<string, string> { { "bitcount", bitcount } }) }
                 };
 
                 string Json = JsonConvert.SerializeObject(values);
@@ -321,7 +291,7 @@
                         {
                             this.heartRate = dkeyResponse.heartrate;
                             this.dkey = dkeyResponse.dkey;
-                            this.gameCheats = Convert.FromBase64String(dkeyResponse.gamesjson);
+                            this.gameCheats = Convert.FromBase64String(!dkeyResponse.gamesjson.Equals("false") ? dkeyResponse.gamesjson : "");
                             Task.Run(() => Heartbeat());
                             Task.Run(() => Heartrate(dkeyResponse.heartrhythm));
                             this.authorized = true;
@@ -336,30 +306,33 @@
         }
 
         /// <summary>
-        /// Check to make sure we can login twice within the 800000000 nano second window
+        /// Attempt to log in to the server. (Used for a authentication check every 5 seconds)
         /// </summary>
         /// <returns></returns>
-        protected bool CheckTimeStamp(UInt64 unixTimeStamp)
+        protected LoginState Login(string user, string password)
         {
-            string commandResponse = SendCommand(this.username, this.password, "login", string.Empty);
-
-            if (!commandResponse.Equals(string.Empty))
+            IsSafe();
+            if (!dkey.Equals(string.Empty))
             {
-                LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(commandResponse);
+                this.username = user;
+                this.password = password;
+                string commandResponse = SendCommand(user, password, "login", string.Empty);
 
-                if (Enum.TryParse(loginResponse.loggedin, out LoginState myStatus) &&
-                    myStatus.Equals(LoginState.Logged_In) || myStatus.Equals(LoginState.Logged_In_Without_Time))
-                    this.authorized = true;
-
-                UInt64 unixTimeStamp2 = loginResponse.meatball;
-                if ((unixTimeStamp2 - unixTimeStamp) < 800000000)
+                if (!commandResponse.Equals(string.Empty))
                 {
-                    return true;
+                    LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(commandResponse);
+
+                    if (CheckTimeStamp(loginResponse.meatball) &&
+                        Enum.TryParse(loginResponse.loggedin, out LoginState myStatus))
+                    {
+                        this.authorized = (myStatus.Equals(LoginState.Logged_In) || myStatus.Equals(LoginState.Logged_In_Without_Time));
+                        return myStatus;
+                    }
                 }
             }
 
-
-            return false;
+            this.authorized = false;
+            return LoginState.Response_Error;
         }
 
         /// <summary>
@@ -395,6 +368,63 @@
         }
 
         /// <summary>
+        /// Get the file bytes to send to the server and verify the files integrity.
+        /// </summary>
+        /// <returns></returns>
+        private static UInt64 GenerateFileChallenge()
+        {
+            byte[] buf = File.ReadAllBytes($"{AppDomain.CurrentDomain.BaseDirectory}\\{AppDomain.CurrentDomain.FriendlyName}");
+            int byte_read = 0;
+            UInt64 challenge_hash = 0;
+            for (int i = 0; i < buf.Length; i++)
+            {
+                challenge_hash += 5 * ((UInt64)buf[i]);
+                challenge_hash += (UInt64)buf[i];
+                challenge_hash ^= (UInt64)buf[i];
+            }
+            return ((challenge_hash ^ challenge_hash) ^ challenge_hash) * challenge_hash;
+        }
+
+        /// <summary>
+        /// Get the Encryption Key
+        /// </summary>
+        protected void GetEncryptionKey()
+        {
+            if (ekey.Equals(string.Empty))
+            {
+                var getEncryptionKey = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "cheese", "90kGPILHd22/yQ3bctAPwxzEPq+BEA4og3Wqh+hSRFQ=" } })));
+                getEncryptionKey.Wait();
+                this.ekey = getEncryptionKey.Result;
+            }
+        }
+
+        /// <summary>
+        /// Check to make sure we can login twice within the 800000000 nano second window
+        /// </summary>
+        /// <returns></returns>
+        protected bool CheckTimeStamp(UInt64 unixTimeStamp)
+        {
+            string commandResponse = SendCommand(this.username, this.password, "login", string.Empty);
+
+            if (!commandResponse.Equals(string.Empty))
+            {
+                LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(commandResponse);
+
+                if (Enum.TryParse(loginResponse.loggedin, out LoginState myStatus) &&
+                    myStatus.Equals(LoginState.Logged_In) || myStatus.Equals(LoginState.Logged_In_Without_Time))
+                    this.authorized = true;
+
+                UInt64 unixTimeStamp2 = loginResponse.meatball;
+                if ((unixTimeStamp2 - unixTimeStamp) < 800000000)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Send a command to our server.
         /// </summary>
         /// <param name="username"></param>
@@ -410,6 +440,7 @@
                 {
                     { "username", username },
                     { "password", password },
+                    /*{ "noodles", GenerateFileChallenge().ToString("X16")},*/
                     { "cheese", command },
                     { "parms", parameters }
                 };
@@ -626,7 +657,7 @@
         /// Is our program instance safe?
         /// </summary>
         /// <returns></returns>
-        protected bool IsSafe()
+        protected void IsSafe()
         {
             try
             {
@@ -637,7 +668,7 @@
                 }
                 foreach (Process proc in procList)
                 {
-                    if (IsSafeProcess(proc.ProcessName))
+                    if (!IsSafeProcess(proc.ProcessName))
                     {
                         if (BadProcesses(proc.ProcessName) || BadWindowNames(proc.MainWindowTitle))
                         {
@@ -647,9 +678,11 @@
                 }
 
             }
-            catch (Exception ex){}
 
-            return false;
+            catch (Exception ex)
+            {
+                Process.GetCurrentProcess().Kill();
+            }
         }
 
         #endregion
@@ -793,8 +826,6 @@
                     return null;
             }
         }
-
-
 
         #endregion
     }

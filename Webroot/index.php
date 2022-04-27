@@ -1,5 +1,4 @@
 <?php
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -7,7 +6,8 @@ error_reporting(E_ALL);
 date_default_timezone_set('UTC');
 
 // Get the encryption key
-if(isset($_POST['cheese'])) {
+if(isset($_POST['cheese']))
+{
     if($_POST['cheese'] == "90kGPILHd22/yQ3bctAPwxzEPq+BEA4og3Wqh+hSRFQ=")
     {
         $dayinyear = date('z') + 1;
@@ -58,8 +58,9 @@ class cheesey_api
             $DATABASE_PASS = 'JeffStar';
             $DATABASE_NAME = 'USER_INFO_DB';
 
-            $this->user_account = $this->stripAllSymbols($decryptedInput->username);
-            $this->user_password = $this->stripSomeSymbols($decryptedInput->password);
+            $this->user_account = $this->regexRealText($decryptedInput->username);
+            $this->user_password = $this->encryptPassword($this->regexPassword($decryptedInput->password));
+
             $this->connection = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 
             if (mysqli_connect_errno())
@@ -77,13 +78,14 @@ class cheesey_api
                     echo json_encode(['addres' => $this->registerUser(json_decode($decryptedInput->parms, true)), "dkey" => $this->eKey], true);
                 }
 
-                else if($decryptedInput->cheese == "get_dkey") // First login, get decryption key
+                // First login, get decryption key
+                else if($decryptedInput->cheese == "get_dkey") 
                 {
                     if($login_status == "Logged_In" || $login_status == "Logged_In_Without_Time")
                     {
                         if($this->logCommand($decryptedInput->cheese, $decryptedInput->parms) && $this->checkCurrentIp())
                         {
-                            echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats("x64")], true);
+                            echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats(json_decode($decryptedInput->parms, true)['bitcount'])], true);
                         }
 
                         else
@@ -111,18 +113,23 @@ class cheesey_api
                                 echo $this->encryptString($json);
                                 break;
 
+                            case 'change_password':
+                                $json = json_encode(['passchanged' => $this->changePassword($parmesan)], true);
+                                echo $this->encryptString($json);
+                                break;
+
                             case 'time_check':
                                 $eggnoodle = json_decode($parmesan, true);
                                 $json = json_encode(['timeleft' => $this->checkTime($eggnoodle)], true);
                                 echo $this->encryptString($json);
                                 break;
-    
+                            
                             case 'redeem_key':
                                 $eggnoodle = json_decode($parmesan, true);
                                 $json = json_encode(['keyres' => $this->redeemKey($eggnoodle)], true);
                                 echo $this->encryptString($json);
                                 break;
-    
+                            
                             case 'download_cheat':
                                 if($this->checkTime(['username' => $this->user_account]))
                                 {
@@ -137,7 +144,7 @@ class cheesey_api
                                     echo $this->encryptString($json);
                                 }
                                 break;
-    
+                            
                             case 'download_json':
                                 if($this->checkTime(['username' => $this->user_account]))
                                 {
@@ -154,18 +161,18 @@ class cheesey_api
                                 break;
 
                             // Admin commands
-                            case 'add_user': // Adds a user to the cheat api
+                            case 'add_user':
                                 $eggnoodle = json_decode($parmesan, true);
                                 $json = json_encode(['addres' => $this->addUser($eggnoodle)], true);
                                 echo $this->encryptString($json);
                                 break;
-    
-                            case 'ban_user': // Delete a user from the cheat api
+                            
+                            case 'ban_user':
                                 $eggnoodle = json_decode($parmesan, true);
                                 $json = json_encode(['banres' => $this->removeUser($eggnoodle)], true);
                                 echo $this->encryptString($json);
                                 break;
-    
+                            
                             case 'add_key':
                                 $eggnoodle = json_decode($parmesan, true);
                                 $key = $this->addKey($eggnoodle);
@@ -173,29 +180,29 @@ class cheesey_api
                                 $json = json_encode(['key' => $key], true);
                                 echo $this->encryptString($json);
                                 break;
-    
+                            
                             case 'add_key_bulk':
                                 $eggnoodle = json_decode($parmesan, true);
                                 $keyAmount = $eggnoodle['key_amount'];
                                 $keyTokenList = '';
-    
+                            
                                 for($i = 0; $i < $keyAmount; $i++)
                                 {
                                     $key = $this->addKey($eggnoodle);
                                     $keyTokenList .= $key . '|';
                                 }
-                                
+
                                 $json = json_encode(['key' => $keyTokenList], true);
                                 echo $this->encryptString($json);
                                 break;
-    
+                            
                             default:
                                 // Im a teapot, not a coffee maker.
                                 http_response_code(418);
                                 break;
                         }
                     }
-    
+                
                     else
                     {
                         $json = json_encode(['loggedin' => "IP_Mismatch"], true);
@@ -225,12 +232,72 @@ class cheesey_api
     }
 
     /**
+     * User authentication check.
+     * @return string
+     */
+    private function login()
+    {
+        if ($user_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ?'))
+        {
+            $user_query->bind_param('s', $this->user_account);
+            $user_query->execute();
+            $user_query->store_result();
+
+            if($user_query->num_rows > 0)
+            {
+                if ($login_query = $this->connection->prepare('SELECT ACTIVE FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
+                {
+                    $login_query->bind_param('ss', $this->user_account, $this->user_password);
+                    $login_query->execute();
+                    $login_query->store_result();
+                    
+                    if($login_query->num_rows > 0)
+                    {
+                        $login_query->bind_result($active);
+                        $login_query->fetch();
+
+                        if($active)
+                        {
+                            if($this->checkTime(['username' => $this->user_account]))
+                            {
+                                return "Logged_In";
+                            }
+    
+                            else
+                            {
+                                return "Logged_In_Without_Time";
+                            }
+                        }
+
+                        else
+                        {
+                            return "User_Banned";
+                        }
+                    }
+
+                    else
+                    {
+                        return "Password_Failure";
+                    }
+                }
+            }
+
+            else
+            {
+                return "User_doesnt_Exist";
+            }
+        }
+
+        return "Response_Error";
+    }
+
+    /**
      * Game name = folder name
      */
     private function getGameCheats($type)
     {
         if($type != "x64" && $type != "x86")
-            return false;
+            return true;
 
         $filename = "../cheats/". $type . "games.json";
         if(file_exists($filename))
@@ -300,22 +367,25 @@ class cheesey_api
      */
     private function registerUser($parmesan)
     {
-        $email = $parmesan['email'];
-        $username = $this->stripAllSymbols($parmesan['username']);
-        $password = $this->stripSomeSymbols($parmesan['password']);
-        $admin = 0;
-        $ip = data_logger::getIPAddress();
-
-        if ($add_user_query = $this->connection->prepare('call addUser(?, ?, ?, ?, ?)'))
+        if($this->validEmail($parmesan['email']))
         {
-            $add_user_query->bind_param('ssssi', $email, $username, $password, $ip, $admin);
-            $add_user_query->execute();
-            $add_user_query->store_result();
-
-            if($add_user_query->affected_rows > 0)
+            $email = $parmesan['email'];
+            $username = $this->regexRealText($parmesan['username']);
+            $password = $this->encryptPassword($this->regexPassword($parmesan['password']));
+            $admin = 0;
+            $ip = data_logger::getIPAddress();
+    
+            if ($add_user_query = $this->connection->prepare('call addUser(?, ?, ?, ?, ?)'))
             {
-                return true;
-            }
+                $add_user_query->bind_param('ssssi', $email, $username, $password, $ip, $admin);
+                $add_user_query->execute();
+                $add_user_query->store_result();
+    
+                if($add_user_query->affected_rows > 0)
+                {
+                    return true;
+                }
+            }    
         }
 
         return false;
@@ -328,23 +398,62 @@ class cheesey_api
      */
     private function addUser($parmesan)
     {
-        $email = $parmesan['email'];
-        $username = $this->stripAllSymbols($parmesan['username']);
-        $password = $this->stripSomeSymbols($parmesan['password']);
-        $admin = $this->stripAllSymbols($parmesan['admin']);
-        $ip = data_logger::getIPAddress();
-
-        if($this->isAdmin())
+        if($this->validEmail($parmesan['email']))
         {
-            if ($add_user_query = $this->connection->prepare('call addUser(?, ?, ?, ?, ?)'))
-            {
-                $add_user_query->bind_param('ssssi', $email, $username, $password, $ip, $admin);
-                $add_user_query->execute();
-                $add_user_query->store_result();
+            $email = $parmesan['email'];
+            $username = $this->regexRealText($parmesan['username']);
+            $password = $this->encryptPassword($this->regexPassword($parmesan['password']));
+            $admin = $this->regexRealText($parmesan['admin']);
+            $ip = data_logger::getIPAddress();
 
-                if($add_user_query->affected_rows > 0)
+            if($this->isAdmin())
+            {
+                if ($add_user_query = $this->connection->prepare('call addUser(?, ?, ?, ?, ?)'))
                 {
-                    return true;
+                    $add_user_query->bind_param('ssssi', $email, $username, $password, $ip, $admin);
+                    $add_user_query->execute();
+                    $add_user_query->store_result();
+
+                    if($add_user_query->affected_rows > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Change the user password
+     * @param $parmesan
+     * @return bool
+     */
+    private function changePassword($parmesan)
+    {
+        $username = $this->regexRealText($parmesan['username']);
+        $oldpassword = $this->encryptPassword($this->regexPassword($parmesan['oldpassword']));
+        $newpassword = $this->encryptPassword($this->regexPassword($parmesan['newpassword']));
+
+        if ($check_user_query = $this->connection->prepare('select password from USER where USER_NAME = ? and USER_PASS = ?'))
+        {
+            $check_user_query->bind_param('ss', $username, $oldpassword);
+            $check_user_query->execute();
+            $check_user_query->store_result();
+
+            if($check_user_query->num_rows > 0)
+            {
+                if ($change_pass_query = $this->connection->prepare('update USER set USER_PASS = ? where USER_NAME = ?'))
+                {
+                    $change_pass_query->bind_param('ss', $newpassword, $username);
+                    $change_pass_query->execute();
+                    $change_pass_query->store_result();
+
+                    if($change_pass_query->affected_rows > 0)
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -359,7 +468,7 @@ class cheesey_api
      */
     private function removeUser($parmesan)
     {
-        $username = $this->stripAllSymbols($parmesan['username']);
+        $username = $this->regexRealText($parmesan['username']);
 
         if($this->isAdmin())
         {
@@ -377,66 +486,6 @@ class cheesey_api
         }
 
         return false;
-    }
-
-    /**
-     * User authentication check.
-     * @return string
-     */
-    private function login()
-    {
-        if ($user_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ?'))
-        {
-            $user_query->bind_param('s', $this->user_account);
-            $user_query->execute();
-            $user_query->store_result();
-
-            if($user_query->num_rows > 0)
-            {
-                if ($login_query = $this->connection->prepare('SELECT ACTIVE FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
-                {
-                    $login_query->bind_param('ss', $this->user_account, $this->user_password);
-                    $login_query->execute();
-                    $login_query->store_result();
-                    
-                    if($login_query->num_rows > 0)
-                    {
-                        $login_query->bind_result($active);
-                        $login_query->fetch();
-
-                        if($active)
-                        {
-                            if($this->checkTime(['username' => $this->user_account]))
-                            {
-                                return "Logged_In";
-                            }
-    
-                            else
-                            {
-                                return "Logged_In_Without_Time";
-                            }
-                        }
-
-                        else
-                        {
-                            return "User_Banned";
-                        }
-                    }
-
-                    else
-                    {
-                        return "Password_Failure";
-                    }
-                }
-            }
-
-            else
-            {
-                return "User_doesnt_Exist";
-            }
-        }
-
-        return "Response_Error";
     }
 
     /**
@@ -559,7 +608,7 @@ class cheesey_api
                         }
                     }
             
-                    $time_value = $this->stripSomeSymbols($parmesan['time_value']);
+                    $time_value = $this->regexRealText($parmesan['time_value']);
                     $key = genKey();
             
                     if($key_exists_query = $this->connection->prepare('select TIME_KEY from TIME_KEYS where TIME_KEY = ?'))
@@ -603,7 +652,7 @@ class cheesey_api
     private function redeemKey($parmesan)
     {
         $key = $parmesan['key'];
-        $username = $this->stripAllSymbols($parmesan['username']);
+        $username = $this->regexRealText($parmesan['username']);
 
         if($uid_query = $this->connection->prepare('SELECT USER_ID FROM USER WHERE USER_NAME = ?'))
         {
@@ -638,7 +687,7 @@ class cheesey_api
      */
     private function checkTime($parmesan)
     {
-        $user = $this->stripAllSymbols($parmesan['username']);
+        $user = $this->regexRealText($parmesan['username']);
 
         if ($check_time_query = $this->connection->prepare('select AUTH_END_DATE from USER where USER_NAME = ?'))
         {
@@ -700,28 +749,135 @@ class cheesey_api
         return false;
     }
 
+    /**
+     * Encrypt the response
+     */
     private function encryptString($plainText)
     {
         $password = substr(hash('sha256', $this->eKey, true), 0, 32);
         return base64_encode(openssl_encrypt($plainText, 'aes-256-cbc', $password, OPENSSL_RAW_DATA, $this->iv));
     }
 
+
+    /**
+     * Decrypt the input json
+     */
     private function decryptString($encryptedString)
     {
         $password = substr(hash('sha256', $this->dKey, true), 0, 32);
         return openssl_decrypt(base64_decode($encryptedString), 'aes-256-cbc', $password, OPENSSL_RAW_DATA, $this->iv);
     }
 
-    private function stripAllSymbols($inputStream)
+    /**
+     * Encrypt the password
+     */
+    private function encryptPassword($password)
+    {
+        $password = substr(hash('sha256', $this->eKey, true), 0, 32);
+        return base64_encode(openssl_encrypt($password, 'aes-256-cbc', "cdc4ce794a02c8c2008fc8813028c36c", OPENSSL_RAW_DATA, $this->iv));
+    }
+
+    /**
+     * Decrypt the password
+     */
+    private function decryptPassword($encryptedPassword)
+    {
+        $password = substr(hash('sha256', $this->dKey, true), 0, 32);
+        return openssl_decrypt(base64_decode($encryptedPassword), 'aes-256-cbc', "cdc4ce794a02c8c2008fc8813028c36c", OPENSSL_RAW_DATA, $this->iv);
+    }
+
+    /**
+     * Make sure that this string is only numbers or alphabet chars
+     */
+    private function regexRealText($inputStream)
     {
         $outputStreams = preg_replace('/[^0-9a-zA-Z]+/', '', $inputStream);
         return $outputStreams;
     }
 
-    private function stripSomeSymbols($inputStream)
+    /**
+     * Only allow certain chars for the password
+     */
+    private function regexPassword($inputStream)
     {
         $outputStreams = preg_replace('/[^0-9a-zA-Z.!@#$%^&*-_]+/', '', $inputStream);
         return $outputStreams;
+    }
+
+    /**
+     * Is this a password?
+     */
+    private function validEmail($email)
+    {
+       $isValid = true;
+       $atIndex = strrpos($email, "@");
+
+       if (is_bool($atIndex) && !$atIndex)
+       {
+          $isValid = false;
+       }
+
+       else
+       {
+          $domain = substr($email, $atIndex+1);
+          $local = substr($email, 0, $atIndex);
+          $localLen = strlen($local);
+          $domainLen = strlen($domain);
+
+          if ($localLen < 1 || $localLen > 64)
+          {
+             // local part length exceeded
+             $isValid = false;
+          }
+
+          else if ($domainLen < 1 || $domainLen > 255)
+          {
+             // domain part length exceeded
+             $isValid = false;
+          }
+
+          else if ($local[0] == '.' || $local[$localLen-1] == '.')
+          {
+             // local part starts or ends with '.'
+             $isValid = false;
+          }
+
+          else if (preg_match('/\\.\\./', $local))
+          {
+             // local part has two consecutive dots
+             $isValid = false;
+          }
+
+          else if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain))
+          {
+             // character not valid in domain part
+             $isValid = false;
+          }
+
+          else if (preg_match('/\\.\\./', $domain))
+          {
+             // domain part has two consecutive dots
+             $isValid = false;
+          }
+
+          else if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\","",$local)))
+          {
+             // character not valid in local part unless 
+             // local part is quoted
+             if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\","",$local)))
+             {
+                $isValid = false;
+             }
+          }
+
+          if ($isValid && !(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A")))
+          {
+             // domain not found in DNS
+             $isValid = false;
+          }
+       }
+
+       return $isValid;
     }
 }
 
