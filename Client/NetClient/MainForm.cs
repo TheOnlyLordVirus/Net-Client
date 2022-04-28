@@ -396,7 +396,7 @@ namespace NetClient
             {
                 Assembly assembly = AppDomain.CurrentDomain.Load(rawAssembly: rawAsm);
 
-                return Activator.CreateInstance(assembly.GetType(typeName)) as XtraForm;
+                return Activator.CreateInstance(assembly.GetType(typeName));
             }
         }
 
