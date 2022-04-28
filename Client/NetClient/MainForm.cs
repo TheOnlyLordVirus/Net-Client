@@ -367,6 +367,7 @@ namespace NetClient
             try
             {
                 cheatForm.Close();
+                cheatForm = null; // Attempt to trigger the garbage collector do its job.
 
                 AppDomain.Unload(appDomain);
 
