@@ -31,3 +31,4 @@ C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\Release\de\DevExpre
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\Release\es\DevExpress.XtraTreeList.v20.2.resources.dll
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\Release\ja\DevExpress.XtraTreeList.v20.2.resources.dll
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\Release\ru\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\Release\NetClient.csproj.SuggestedBindingRedirects.cache

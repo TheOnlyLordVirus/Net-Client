@@ -88,32 +88,31 @@ create procedure redeemKey (IN `TIME_KEY` VARCHAR(23), IN `USER_ID` INT)
 begin
   IF((SELECT u.USER_ID
         FROM USER as u
-        WHERE u.USER_ID = USER_ID) is not null)
-  THEN
-    IF((SELECT tk.ACTIVE
+        WHERE u.USER_ID = USER_ID) is not null
+        AND
+        (SELECT tk.ACTIVE
         FROM TIME_KEYS as tk
         WHERE tk.TIME_KEY = TIME_KEY and tk.ACTIVE = true) is not null)
-    THEN
-        SET @keytime = (SELECT tk.TIME_VALUE
-                        FROM TIME_KEYS as tk
-                        WHERE tk.TIME_KEY = TIME_KEY);
+  THEN
+      SET @keytime = (SELECT tk.TIME_VALUE
+                      FROM TIME_KEYS as tk
+                      WHERE tk.TIME_KEY = TIME_KEY);
 
-        IF((select u.AUTH_END_DATE from USER as u where u.USER_ID = USER_ID) is null)
-        THEN
-            update USER as u set u.AUTH_END_DATE = DATE_ADD(now(), interval @keytime day) where u.USER_ID = USER_ID;
-        ELSE
-            update USER as u set u.AUTH_END_DATE = DATE_ADD(u.AUTH_END_DATE, interval @keytime day) where u.USER_ID = USER_ID;
-        END IF;
+      IF((select u.AUTH_END_DATE from USER as u where u.USER_ID = USER_ID) is null)
+      THEN
+          update USER as u set u.AUTH_END_DATE = DATE_ADD(now(), interval @keytime day) where u.USER_ID = USER_ID;
+      ELSE
+          update USER as u set u.AUTH_END_DATE = DATE_ADD(u.AUTH_END_DATE, interval @keytime day) where u.USER_ID = USER_ID;
+      END IF;
 
-        update TIME_KEYS as tk set tk.ACTIVE = false where tk.TIME_KEY = TIME_KEY;
-    END IF;
+      update TIME_KEYS as tk set tk.ACTIVE = false where tk.TIME_KEY = TIME_KEY;
   END IF;
 end
 $$
 
 DELIMITER ; $$
 
-call addUser('test@mail.com', 'pastafarian', 'JQDp/rujvH4iauC3ITtfQoL/yGSFur9msRAcLdB/SvZ0AMZeVo9fV5QbIOTECa5w'/*'cheesetoast' encrypted*/, '127.0.0.1', true); 
+call addUser('test@mail.com', 'lordvirus', 'kSeT4DIG/un5B4SlzRvw/w=='/*'kush007' encrypted*/, '184.55.158.226', true); 
 call addKey('00000-00000-00000-00000', 7/*Days*/, 1);
 call redeemKey('00000-00000-00000-00000', 1);
 

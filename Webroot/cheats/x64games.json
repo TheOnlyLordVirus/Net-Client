@@ -1,0 +1,20 @@
+[
+	{
+		"shortname": "coldwar",
+		"classname": "coldwar.MainForm",
+		"cheatname": "Black Ops Cold War",
+		"description": "This is acheat for black ops cold war!"
+	},
+	{
+		"shortname": "s4",
+		"classname": "s4.MainForm",
+		"cheatname": "Vanguard",
+		"description": "this is a cheat for vanguard"
+	},
+	{
+		"shortname": "testcheat",
+		"classname": "testcheat.MainForm",
+		"cheatname": "testing cheat",
+		"description": "this is a test cheat",
+	}
+]

@@ -1,7 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 
 date_default_timezone_set('UTC');
 
@@ -758,7 +758,6 @@ class cheesey_api
         return base64_encode(openssl_encrypt($plainText, 'aes-256-cbc', $password, OPENSSL_RAW_DATA, $this->iv));
     }
 
-
     /**
      * Decrypt the input json
      */
@@ -773,17 +772,15 @@ class cheesey_api
      */
     private function encryptPassword($password)
     {
-        $password = substr(hash('sha256', $this->eKey, true), 0, 32);
         return base64_encode(openssl_encrypt($password, 'aes-256-cbc', "cdc4ce794a02c8c2008fc8813028c36c", OPENSSL_RAW_DATA, $this->iv));
     }
 
     /**
      * Decrypt the password
      */
-    private function decryptPassword($encryptedPassword)
+    private function decryptPassword($plainText)
     {
-        $password = substr(hash('sha256', $this->dKey, true), 0, 32);
-        return openssl_decrypt(base64_decode($encryptedPassword), 'aes-256-cbc', "cdc4ce794a02c8c2008fc8813028c36c", OPENSSL_RAW_DATA, $this->iv);
+        return openssl_decrypt(base64_decode($plainText), 'aes-256-cbc', "cdc4ce794a02c8c2008fc8813028c36c", OPENSSL_RAW_DATA, $this->iv);
     }
 
     /**

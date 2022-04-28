@@ -6,3 +6,4 @@ C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Release\testcheat.c
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Release\testcheat.dll.licenses
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Release\testcheat.csproj.CoreCompileInputs.cache
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Release\testcheat.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\testcheat\obj\Release\testcheat.csproj.AssemblyReference.cache

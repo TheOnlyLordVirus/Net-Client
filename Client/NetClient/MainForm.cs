@@ -42,9 +42,20 @@ namespace NetClient
         private List<ClientAuth.CheatItems> cheats;
 
         /// <summary>
+        /// AppDomain for cheat forms
+        /// </summary>
+        private AppDomain appDomain = AppDomain.CreateDomain("cheatsDomain");
+
+        /// <summary>
+        /// The current cheat form opened up.
+        /// </summary>
+        private XtraForm cheatForm = new XtraForm();
+
+        /// <summary>
         /// Buttons for games.
         /// </summary>
         private List<TileItem> TileItems;
+
         public MainForm()
         {
             if (Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\dnSpy\\") || Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\dnSpy\\"))
@@ -257,7 +268,7 @@ namespace NetClient
         /// <param name="e"></param>
         private void MainTab_SelectedPageChanged(object sender, DevExpress.XtraTab.TabPageChangedEventArgs e)
         {
-           if(e.Page.Name == "TimeTab")
+           if(e.Page.Name.Equals("TimeTab"))
            {
                 timeUpdates = true;
                 Task.Run(() => updateTimesEveryHalfMinute());
@@ -265,6 +276,12 @@ namespace NetClient
 
            else
            {
+                if(!TimeCounterLabel.Text.Equals("Loading Times..."))
+                {
+                    TimeCounterLabel.Text = "Loading Times...";
+                    TimeCounterLabel.Location = new System.Drawing.Point((TimeTab.Width / 2) - (TimeCounterLabel.Width / 2), TimeCounterLabel.Location.Y);
+                }
+                
                 timeUpdates = false;
            }
         }
@@ -279,11 +296,23 @@ namespace NetClient
             {
                 this.Invoke(new MethodInvoker(delegate
                 {
-                    YearLabel.Text = "Years: " + ClientAuthenticator.YearsLeft.ToString();
-                    MonthLabel.Text = "Months: " + ClientAuthenticator.MonthsLeft.ToString();
-                    DayLabel.Text = "Days: " + ClientAuthenticator.DaysLeft.ToString();
-                    HourLabel.Text = "Hours: " + ClientAuthenticator.HoursLeft.ToString();
-                    MinuteLabel.Text = "Minutes: " + ClientAuthenticator.MinutesLeft.ToString();
+                    EndDateLabel.Text = "End Date Time: " + ClientAuthenticator.TimeLeft.ToLocalTime().ToString();
+
+                    int iYears = ClientAuthenticator.YearsLeft;
+                    int iMonths = ClientAuthenticator.MonthsLeft;
+                    int iDays = ClientAuthenticator.DaysLeft;
+                    int iHours = ClientAuthenticator.HoursLeft;
+                    int iMinutes = ClientAuthenticator.MinutesLeft;
+
+
+                    string Years = !iYears.Equals(0) ? ($"{ClientAuthenticator.YearsLeft} " + (iYears.Equals(1) ? "Year, " : "Years, ")) : string.Empty;
+                    string Months = !iMonths.Equals(0) ? ($"{ClientAuthenticator.MonthsLeft} " + (iMonths.Equals(1) ? "Month, " : "Months, ")) : string.Empty;
+                    string Days = !iDays.Equals(0) ? ($"{ClientAuthenticator.DaysLeft} " + (iDays.Equals(1) ? "Day, " : "Days, ")) : string.Empty;
+                    string Hours = !iHours.Equals(0) ? ($"{ClientAuthenticator.HoursLeft} " + (iHours.Equals(1) ? "Hour, " : "Hours, ")) : string.Empty;
+                    string Minutes = !iMinutes.Equals(0) ? ($"{ClientAuthenticator.MinutesLeft} " + (iMinutes.Equals(1) ? "Minute" : "Minutes")) : string.Empty;
+                    TimeCounterLabel.Text = Years + Months + Days + Hours + Minutes + " left";
+
+                    TimeCounterLabel.Location = new System.Drawing.Point((TimeTab.Width / 2) - (TimeCounterLabel.Width / 2), TimeCounterLabel.Location.Y);
                 }));
 
                 Thread.Sleep(30000);
@@ -329,25 +358,26 @@ namespace NetClient
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        [LoaderOptimizationAttribute(LoaderOptimization.MultiDomain)]
         private void TileHandler(object sender, TileItemEventArgs e)
         {
             TileItem item = (TileItem)sender;
-            byte[] cheatForm = ClientAuthenticator.DownloadCheat($"{ResolveName(item.Text)}");
+            ClientAuth.ToolConfig cheatFiles = ClientAuthenticator.DownloadCheat($"{ResolveName(item.Text)}");
 
             try
             {
-                //AppDomain cheatDomain = AppDomain.CreateDomain("cheatsDomain");
+                cheatForm.Close();
 
-                Assembly assembly = Assembly.Load(cheatForm);
+                AppDomain.Unload(appDomain);
 
-                Type myType = assembly.GetType($"{e.Item.Name}.MainForm");
+                appDomain = AppDomain.CreateDomain("cheatsDomain");
 
-                object obj = Activator.CreateInstance(myType);
+                AppDomainBridge isolationDomainLoadContext = (AppDomainBridge)appDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof (AppDomainBridge).ToString());
 
-                XtraForm form = obj as XtraForm;
-                form.Show();
+                // Form is MarshalByRefObject type for the current AppDomain
+                cheatForm = isolationDomainLoadContext.ExecuteFromAssembly(cheatFiles.dll, $"{ResolveClass(item.Text)}") as XtraForm;
 
-                //AppDomain.Unload(cheatDomain);
+                cheatForm.Show();
             }
 
             catch (Exception Ex)
@@ -356,8 +386,22 @@ namespace NetClient
             }
         }
 
+
         /// <summary>
-        /// Get the game cheat name.
+        /// Acts as a shared domain 
+        /// </summary>
+        private class AppDomainBridge : MarshalByRefObject
+        {
+            public Object ExecuteFromAssembly(Byte[] rawAsm, string typeName)
+            {
+                Assembly assembly = AppDomain.CurrentDomain.Load(rawAssembly: rawAsm);
+
+                return Activator.CreateInstance(assembly.GetType(typeName)) as XtraForm;
+            }
+        }
+
+        /// <summary>
+        /// Get the game cheat uri name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -368,6 +412,24 @@ namespace NetClient
                 if (name == cheats[iCheat].cheatname)
                 {
                     return cheats[iCheat].shortname;
+                }
+            }
+            return string.Empty;
+        }
+
+
+        /// <summary>
+        /// Get the game cheat class name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private string ResolveClass(string name)
+        {
+            for (int iCheat = 0; iCheat < cheats.Count; iCheat++)
+            {
+                if (name == cheats[iCheat].cheatname)
+                {
+                    return cheats[iCheat].classname;
                 }
             }
             return string.Empty;

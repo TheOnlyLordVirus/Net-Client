@@ -35,11 +35,8 @@ namespace NetClient
             this.CheatGroup = new DevExpress.XtraEditors.TileGroup();
             this.TimeTab = new DevExpress.XtraTab.XtraTabPage();
             this.TimeLabel = new System.Windows.Forms.Label();
-            this.MinuteLabel = new DevExpress.XtraEditors.LabelControl();
-            this.HourLabel = new DevExpress.XtraEditors.LabelControl();
-            this.DayLabel = new DevExpress.XtraEditors.LabelControl();
-            this.MonthLabel = new DevExpress.XtraEditors.LabelControl();
-            this.YearLabel = new DevExpress.XtraEditors.LabelControl();
+            this.EndDateLabel = new DevExpress.XtraEditors.LabelControl();
+            this.TimeCounterLabel = new DevExpress.XtraEditors.LabelControl();
             this.RedeemKeyTab = new DevExpress.XtraTab.XtraTabPage();
             this.hyphen3 = new System.Windows.Forms.Label();
             this.hyphen2 = new System.Windows.Forms.Label();
@@ -112,11 +109,8 @@ namespace NetClient
             // TimeTab
             // 
             this.TimeTab.Controls.Add(this.TimeLabel);
-            this.TimeTab.Controls.Add(this.MinuteLabel);
-            this.TimeTab.Controls.Add(this.HourLabel);
-            this.TimeTab.Controls.Add(this.DayLabel);
-            this.TimeTab.Controls.Add(this.MonthLabel);
-            this.TimeTab.Controls.Add(this.YearLabel);
+            this.TimeTab.Controls.Add(this.EndDateLabel);
+            this.TimeTab.Controls.Add(this.TimeCounterLabel);
             this.TimeTab.Margin = new System.Windows.Forms.Padding(96);
             this.TimeTab.Name = "TimeTab";
             this.TimeTab.PageEnabled = false;
@@ -135,60 +129,27 @@ namespace NetClient
             this.TimeLabel.TabIndex = 13;
             this.TimeLabel.Text = "Time Left";
             // 
-            // MinuteLabel
+            // EndDateLabel
             // 
-            this.MinuteLabel.Appearance.Font = new System.Drawing.Font("Verdana", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MinuteLabel.Appearance.Options.UseFont = true;
-            this.MinuteLabel.Location = new System.Drawing.Point(246, 434);
-            this.MinuteLabel.Margin = new System.Windows.Forms.Padding(176, 192, 176, 192);
-            this.MinuteLabel.Name = "MinuteLabel";
-            this.MinuteLabel.Size = new System.Drawing.Size(187, 52);
-            this.MinuteLabel.TabIndex = 5;
-            this.MinuteLabel.Text = "Minutes:";
+            this.EndDateLabel.Appearance.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EndDateLabel.Appearance.Options.UseFont = true;
+            this.EndDateLabel.Location = new System.Drawing.Point(10, 582);
+            this.EndDateLabel.Margin = new System.Windows.Forms.Padding(176, 192, 176, 192);
+            this.EndDateLabel.Name = "EndDateLabel";
+            this.EndDateLabel.Size = new System.Drawing.Size(252, 38);
+            this.EndDateLabel.TabIndex = 5;
+            this.EndDateLabel.Text = "End Date Time:";
             // 
-            // HourLabel
+            // TimeCounterLabel
             // 
-            this.HourLabel.Appearance.Font = new System.Drawing.Font("Verdana", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HourLabel.Appearance.Options.UseFont = true;
-            this.HourLabel.Location = new System.Drawing.Point(288, 378);
-            this.HourLabel.Margin = new System.Windows.Forms.Padding(176, 192, 176, 192);
-            this.HourLabel.Name = "HourLabel";
-            this.HourLabel.Size = new System.Drawing.Size(145, 52);
-            this.HourLabel.TabIndex = 4;
-            this.HourLabel.Text = "Hours:";
-            // 
-            // DayLabel
-            // 
-            this.DayLabel.Appearance.Font = new System.Drawing.Font("Verdana", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DayLabel.Appearance.Options.UseFont = true;
-            this.DayLabel.Location = new System.Drawing.Point(307, 322);
-            this.DayLabel.Margin = new System.Windows.Forms.Padding(176, 192, 176, 192);
-            this.DayLabel.Name = "DayLabel";
-            this.DayLabel.Size = new System.Drawing.Size(126, 52);
-            this.DayLabel.TabIndex = 3;
-            this.DayLabel.Text = "Days:";
-            // 
-            // MonthLabel
-            // 
-            this.MonthLabel.Appearance.Font = new System.Drawing.Font("Verdana", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MonthLabel.Appearance.Options.UseFont = true;
-            this.MonthLabel.Location = new System.Drawing.Point(258, 266);
-            this.MonthLabel.Margin = new System.Windows.Forms.Padding(176, 192, 176, 192);
-            this.MonthLabel.Name = "MonthLabel";
-            this.MonthLabel.Size = new System.Drawing.Size(175, 52);
-            this.MonthLabel.TabIndex = 2;
-            this.MonthLabel.Text = "Months:";
-            // 
-            // YearLabel
-            // 
-            this.YearLabel.Appearance.Font = new System.Drawing.Font("Verdana", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.YearLabel.Appearance.Options.UseFont = true;
-            this.YearLabel.Location = new System.Drawing.Point(295, 210);
-            this.YearLabel.Margin = new System.Windows.Forms.Padding(176, 192, 176, 192);
-            this.YearLabel.Name = "YearLabel";
-            this.YearLabel.Size = new System.Drawing.Size(138, 52);
-            this.YearLabel.TabIndex = 1;
-            this.YearLabel.Text = "Years:";
+            this.TimeCounterLabel.Appearance.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TimeCounterLabel.Appearance.Options.UseFont = true;
+            this.TimeCounterLabel.Location = new System.Drawing.Point(323, 298);
+            this.TimeCounterLabel.Margin = new System.Windows.Forms.Padding(176, 192, 176, 192);
+            this.TimeCounterLabel.Name = "TimeCounterLabel";
+            this.TimeCounterLabel.Size = new System.Drawing.Size(268, 38);
+            this.TimeCounterLabel.TabIndex = 1;
+            this.TimeCounterLabel.Text = "Loading Times...";
             // 
             // RedeemKeyTab
             // 
@@ -519,11 +480,8 @@ namespace NetClient
         private DevExpress.XtraTab.XtraTabPage GameCheatTab;
         private DevExpress.XtraTab.XtraTabPage TimeTab;
         private System.Windows.Forms.Label TimeLabel;
-        private DevExpress.XtraEditors.LabelControl MinuteLabel;
-        private DevExpress.XtraEditors.LabelControl HourLabel;
-        private DevExpress.XtraEditors.LabelControl DayLabel;
-        private DevExpress.XtraEditors.LabelControl MonthLabel;
-        private DevExpress.XtraEditors.LabelControl YearLabel;
+        private DevExpress.XtraEditors.LabelControl EndDateLabel;
+        private DevExpress.XtraEditors.LabelControl TimeCounterLabel;
         private DevExpress.XtraTab.XtraTabPage RedeemKeyTab;
         private System.Windows.Forms.Label hyphen3;
         private System.Windows.Forms.Label hyphen2;

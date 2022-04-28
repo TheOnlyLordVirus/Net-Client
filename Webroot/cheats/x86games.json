@@ -1,0 +1,15 @@
+[
+	{
+		"shortname": "l4d2_cheat",
+		"classname": "l4d2_cheat.MainForm",
+		"cheatname": "Left 4 Dead 2 Cheat",
+		"description": "L4D2 Host and Offhost rtm tool"
+	},
+
+	{
+		"shortname": "testcheat",
+		"classname": "testcheat.MainForm",
+		"cheatname": "Debugging Cheat",
+		"description": "Yah duh yah duh yah duh"
+	}
+]
