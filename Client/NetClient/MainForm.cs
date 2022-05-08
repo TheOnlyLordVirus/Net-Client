@@ -161,7 +161,7 @@ namespace NetClient
         private void LoginButton_Click(object sender, EventArgs e)
         {
             ClientAuthenticator = new ClientAuth();
-            LoginState = ClientAuthenticator.Login(UsernameTextbox.Text, PasswordTextbox.Text, "x86");
+            LoginState = ClientAuthenticator.Login(UsernameTextbox.Text, PasswordTextbox.Text, "x64");
 
             if (LoginState.Equals(ClientAuth.LoginState.Logged_In))
             {
@@ -303,7 +303,6 @@ namespace NetClient
                     int iDays = ClientAuthenticator.DaysLeft;
                     int iHours = ClientAuthenticator.HoursLeft;
                     int iMinutes = ClientAuthenticator.MinutesLeft;
-
 
                     string Years = !iYears.Equals(0) ? ($"{ClientAuthenticator.YearsLeft} " + (iYears.Equals(1) ? "Year, " : "Years, ")) : string.Empty;
                     string Months = !iMonths.Equals(0) ? ($"{ClientAuthenticator.MonthsLeft} " + (iMonths.Equals(1) ? "Month, " : "Months, ")) : string.Empty;
