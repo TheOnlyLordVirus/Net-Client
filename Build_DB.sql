@@ -125,14 +125,16 @@ create table API_NETWORK_HISTORY
 (
 	ID int primary key auto_increment,
 	CONNECTION_IP varchar(15) not null,
+  POST_DATA varchar(8000),
+  GET_DATA varchar(8000),
 	CREATION_DATE datetime not null default now()
 );
 
 DELIMITER $$ ;
 
-create procedure logAnonIp (IN `IP` VARCHAR(15))
+create procedure logAnonIp (IN `_IP` VARCHAR(15), IN `_POST` VARCHAR(8000), IN `_GET` VARCHAR(8000))
 begin
-  insert into API_NETWORK_HISTORY (CONNECTION_IP) values (IP);
+  insert into API_NETWORK_HISTORY (CONNECTION_IP, POST_DATA, GET_DATA) values (_IP, _POST, _GET);
 end
 $$
 

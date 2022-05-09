@@ -97,7 +97,7 @@ namespace NetClient
                 LoginButton.Enabled = true;
             }));
 
-            MessageBox.Show("Authentication to server failed!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            XtraMessageBox.Show("Authentication to server failed!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             Process.GetCurrentProcess().Kill();
             return Task.CompletedTask;
         }
@@ -119,8 +119,7 @@ namespace NetClient
                         GameCheatTab.PageEnabled = false;
                     }));
 
-                    MessageBox.Show("Your out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Process.GetCurrentProcess().Kill();
+                    XtraMessageBox.Show("Your out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 }
             }
@@ -144,12 +143,12 @@ namespace NetClient
 
                 MainTab.SelectedTabPage = RedeemKeyTab;
 
-                MessageBox.Show("User Registered!", "Register User", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                XtraMessageBox.Show("User Registered!", "Register User", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             else
             {
-                MessageBox.Show("User Registy failed!", "Register User", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show("User Registy failed!", "Register User", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -181,7 +180,7 @@ namespace NetClient
 
                 LoadCheats();
 
-                MessageBox.Show($"Logged in!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                XtraMessageBox.Show($"Logged in!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             else if(LoginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
@@ -197,32 +196,32 @@ namespace NetClient
 
                 Task.Run(() => checkAuthentication());
 
-                MessageBox.Show($"Logged in!\nNotice: You're out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                XtraMessageBox.Show($"Logged in!\nNotice: You're out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             else if (LoginState.Equals(ClientAuth.LoginState.Password_Failure))
             {
-                MessageBox.Show("Password Mismatch failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show("Password Mismatch failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             else if (LoginState.Equals(ClientAuth.LoginState.IP_Mismatch))
             {
-                MessageBox.Show("User IP Address Mismatch failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show("User IP Address Mismatch failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             else if (LoginState.Equals(ClientAuth.LoginState.User_doesnt_Exist))
             {
-                MessageBox.Show("User doesnt exist!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show("User doesnt exist!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             else if (LoginState.Equals(ClientAuth.LoginState.Response_Error))
             {
-                MessageBox.Show("Server Response failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show("Server Response failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             else if (LoginState.Equals(ClientAuth.LoginState.User_Banned))
             {
-                MessageBox.Show("We don't like you, go away.", "Banned", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show("We don't like you, go away.", "Banned", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -246,18 +245,18 @@ namespace NetClient
                     LoginButton.Enabled = false;
                     MainTab.SelectedTabPage = GameCheatTab;
 
-                    MessageBox.Show("Key Redeemed Sucessfully!", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    XtraMessageBox.Show("Key Redeemed Sucessfully!", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 else
                 {
-                    MessageBox.Show("Failed to Redeem key.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    XtraMessageBox.Show("Failed to Redeem key.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
             else
             {
-                MessageBox.Show("User isn't authorized.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show("User isn't authorized.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -382,7 +381,7 @@ namespace NetClient
 
             catch (Exception Ex)
             {
-                MessageBox.Show("Failed to load cheat!", e.Item.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show("Failed to load cheat!", e.Item.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

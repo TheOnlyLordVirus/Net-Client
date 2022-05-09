@@ -285,6 +285,7 @@
                     { "username", username },
                     { "password", password },
                     { "cheese", "get_dkey" },
+                    { "noodles", GenerateFileChallenge().ToString("X16")},
                     { "parms", JsonConvert.SerializeObject(new Dictionary<string, string> { { "bitcount", bitcount } }) }
                 };
 

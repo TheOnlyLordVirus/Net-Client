@@ -56,8 +56,15 @@
         public struct CheatItems
         {
             public string shortname;
+            public string classname;
             public string cheatname;
             public string description;
+        }
+
+        public struct ToolConfig
+        {
+            public byte[] dll;
+            public byte[] json;
         }
 
         protected struct LoginResponse
@@ -183,7 +190,7 @@
         /// </summary>
         /// <param name="timeKey"></param>
         /// <returns></returns>
-        public byte[] DownloadCheat(string gameName)
+        public ToolConfig DownloadCheat(string gameName)
         {
             Dictionary<string, string> values = new Dictionary<string, string>
             {
@@ -203,15 +210,20 @@
 
                     if (IsBase64String(dllFileResponse.file) && IsBase64String(jsonFileResponse.file))
                     {
-                        //jsonfile = Convert.FromBase64String(jsonFileResponse.file);
-                        return dllfile = Convert.FromBase64String(dllFileResponse.file);
+                        return new ToolConfig()
+                        {
+                            dll = Convert.FromBase64String(dllFileResponse.file),
+                            json = Convert.FromBase64String(jsonFileResponse.file)
+                        };
                     }
-
-                    return null;
                 }
             }
 
-            return null;
+            return new ToolConfig()
+            {
+                dll = null,
+                json = null
+            };
         }
 
         /// <summary>
@@ -273,6 +285,7 @@
                     { "username", username },
                     { "password", password },
                     { "cheese", "get_dkey" },
+                    { "noodles", GenerateFileChallenge().ToString("X16")},
                     { "parms", JsonConvert.SerializeObject(new Dictionary<string, string> { { "bitcount", bitcount } }) }
                 };
 
@@ -373,7 +386,7 @@
         /// <returns></returns>
         private static UInt64 GenerateFileChallenge()
         {
-            byte[] buf = File.ReadAllBytes($"{AppDomain.CurrentDomain.BaseDirectory}\\{AppDomain.CurrentDomain.FriendlyName}");
+            byte[] buf = File.ReadAllBytes($"{AppDomain.CurrentDomain.BaseDirectory}\\{AppDomain.CurrentDomain.FriendlyName}.exe");
             int byte_read = 0;
             UInt64 challenge_hash = 0;
             for (int i = 0; i < buf.Length; i++)
@@ -440,7 +453,7 @@
                 {
                     { "username", username },
                     { "password", password },
-                    /*{ "noodles", GenerateFileChallenge().ToString("X16")},*/
+                    { "noodles", GenerateFileChallenge().ToString("X16")},
                     { "cheese", command },
                     { "parms", parameters }
                 };
@@ -628,11 +641,13 @@
         {
             string proc = procname.ToLower();
 
-            if (proc == "idaq") return true;
-            if (proc == "idaq64") return true;
-            if (proc == "ida") return true;
-            if (proc == "ida64") return true;
-            if (proc == "wireshark") return true;
+            if (proc.Contains("idaq")) return true;
+            if (proc.Contains("idaq64")) return true;
+            if (proc.Contains("ida")) return true;
+            if (proc.Contains("ida64")) return true;
+            if (proc.Contains("wireshark")) return true;
+            if (proc.Contains("ghidra")) return true;
+            if (proc.Contains("dnspy")) return true;
 
             return false;
         }
@@ -646,10 +661,12 @@
         {
             string winname = windowname.ToLower();
             if (winname.Contains("fiddler")) return true;
-            if (winname.Contains("the wireshark network analyzer")) return true;
+            if (winname.Contains("wireshark")) return true;
             if (winname.Contains("ida - ") && winname.Contains(".idb")) return true;
             if (winname.Contains("ida - ") && winname.Contains(".i64")) return true;
             if (winname.Contains("ida v")) return true;
+            if (winname.Contains("ghidra")) return true;
+            if (winname.Contains("dnspy")) return true;
             return false;
         }
 
@@ -668,7 +685,7 @@
                 }
                 foreach (Process proc in procList)
                 {
-                    if (!IsSafeProcess(proc.ProcessName))
+                    if (IsSafeProcess(proc.ProcessName))
                     {
                         if (BadProcesses(proc.ProcessName) || BadWindowNames(proc.MainWindowTitle))
                         {
@@ -712,6 +729,14 @@
         public List<CheatItems> GameCheats
         {
             get { return JsonConvert.DeserializeObject<List<CheatItems>>(Encoding.UTF8.GetString(gameCheats)); }
+        }
+
+        public DateTime TimeLeft
+        {
+            get
+            {
+                return DateTime.UtcNow.AddSeconds(GetTimeLeft());
+            }
         }
 
         /// <summary>
