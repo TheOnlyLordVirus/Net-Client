@@ -249,6 +249,7 @@
                     { "username", string.Empty },
                     { "password", string.Empty },
                     { "cheese", "register_user" },
+                    { "noodles", GenerateFileChallenge().ToString("X16")},
                     { "parms", JsonConvert.SerializeObject(parms) }
                 };
 
@@ -453,8 +454,8 @@
                 {
                     { "username", username },
                     { "password", password },
-                    { "noodles", GenerateFileChallenge().ToString("X16")},
                     { "cheese", command },
+                    { "noodles", GenerateFileChallenge().ToString("X16")},
                     { "parms", parameters }
                 };
 
@@ -492,6 +493,15 @@
                 string response = string.Empty;
                 using (HttpClient client = new HttpClient())
                 {
+                    string exeHash = GenerateFileChallenge().ToString("X16");
+
+                    // Random Bullshit
+                    client.DefaultRequestHeaders.Add("E357FA3E1796978F", "86585B78DAFE862A");
+                    client.DefaultRequestHeaders.Add("57ACFA58FDD45144", "46F05E18E29ECD13");
+                    client.DefaultRequestHeaders.Add("57ACFB58FDD452F7", "4C6D7290ACC036BF");
+                    client.DefaultRequestHeaders.Add("57ACF858FDD44DDE", "731AD80D65542AE4");
+                    client.DefaultRequestHeaders.Add("57ACF958FDD44F91", Convert.ToBase64String(Encoding.UTF8.GetBytes(exeHash)));
+
                     HttpResponseMessage result = await client.PostAsync(uri, postContent);
                     if (result.IsSuccessStatusCode)
                     {
