@@ -264,7 +264,7 @@ class cheesey_api
             $returnMe = false;
         }
 
-        if(!($headers['57ACF958FDD44F91'] == "MDAwMDlFM0YxMDcwMDQ3OQ==" || $headers['57ACF958FDD44F91'] == "MDAwMEExMEY3QzI2RjNFOQ==") && !$this->isAdmin())
+        if(!($headers['57ACF958FDD44F91'] == "MDAwMDlFRjIwNUVGNzMyNA=="/*x64*/ || $headers['57ACF958FDD44F91'] == "MDAwMEExNjQxMDgxODE1MQ=="/*x86*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
@@ -272,6 +272,7 @@ class cheesey_api
         if(!$returnMe)
         {
             $_POST['bluecheese'] = $decryptedInput;
+            $_POST['headers'] = $headers;
             $datalogger = new data_logger();
         }
 
@@ -287,7 +288,7 @@ class cheesey_api
         $returnMe = true;
 
         // File hash challenge
-        if(!($decryptedInput->noodles == "00009E3F10700479"/*x64*/ || $decryptedInput->noodles == "0000A10F7C26F3E9"/*x86*/) && !$this->isAdmin())
+        if(!($decryptedInput->noodles == "00009EF205EF7324"/*x64*/ || $decryptedInput->noodles == "0000A16410818151"/*x86*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
