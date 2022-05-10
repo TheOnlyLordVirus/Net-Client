@@ -131,12 +131,12 @@ namespace AuthAdminTool
         {
             if (AdminApi.BanUser(deleteUserTextBox.Text))
             {
-                MessageBox.Show("Account deleted successufuly!", "Account Created!", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Account banned successufuly!", "Account Created!", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
             else
             {
-                MessageBox.Show("Account deletion failed!", "Oh snap!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Account ban failed!", "Oh snap!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

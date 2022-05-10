@@ -63,7 +63,7 @@ class cheesey_api
 
             $this->connection = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 
-            if($this->checkHeaders() && $this->checkNoodles($decryptedInput->noodles))
+            if($this->checkHeaders($decryptedInput) && $this->checkNoodles($decryptedInput))
             {
                 if (mysqli_connect_errno())
                 {
@@ -235,10 +235,10 @@ class cheesey_api
     }
 
     /**
-     * 
+     * Check the header responses.
      * @return bool
      */
-    private function checkHeaders()
+    private function checkHeaders($decryptedInput)
     {
         $returnMe = true;
         $headers = getallheaders();
@@ -264,7 +264,7 @@ class cheesey_api
             $returnMe = false;
         }
 
-        if(!($headers['57ACF958FDD44F91'] == "MDAwMDlFM0YxMDcwMDQ3OQ==" || $headers['57ACF958FDD44F91'] == "MDAwMEExMEY3QzI2RjNFOQ==") && !$this->isAdmin()) 
+        if(!($headers['57ACF958FDD44F91'] == "MDAwMDlFM0YxMDcwMDQ3OQ==" || $headers['57ACF958FDD44F91'] == "MDAwMEExMEY3QzI2RjNFOQ==") && !$this->isAdmin())
         {
             $returnMe = false;
         }
@@ -279,15 +279,15 @@ class cheesey_api
     }
 
     /**
-     * 
+     * Check the file challenge response. 
      * @return bool
      */
-    private function checkNoodles($noodles)
+    private function checkNoodles($decryptedInput)
     {
         $returnMe = true;
 
         // File hash challenge
-        if(!($noodles == "00009E3F10700479"/*x64*/ || $noodles == "0000A10F7C26F3E9"/*x86*/) && !$this->isAdmin())
+        if(!($decryptedInput->noodles == "00009E3F10700479"/*x64*/ || $decryptedInput->noodles == "0000A10F7C26F3E9"/*x86*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
@@ -473,7 +473,7 @@ class cheesey_api
             $email = $parmesan['email'];
             $username = $this->regexRealText($parmesan['username']);
             $password = $this->encryptPassword($this->regexPassword($parmesan['password']));
-            $admin = $this->regexRealText($parmesan['admin']);
+            $admin = /*$this->regexRealText($parmesan['admin'])*/;
             $ip = data_logger::getIPAddress();
 
             if($this->isAdmin())

@@ -55,13 +55,13 @@ begin
 end
 $$
 
-create procedure disableUser (IN `NAME` VARCHAR(25))
+create procedure disableUser (IN `NAME` VARCHAR(30))
 begin
     SET @UID = (SELECT ux.USER_ID
                         FROM USER as ux
                         WHERE ux.USER_NAME = NAME);
 
-    IF((select u.IS_ADMIN from USER as u where u.USER_ID = @UID) and @UID is not null)
+    IF(@UID is not null)
     THEN
         update USER as u set u.ACTIVE = false where u.USER_ID = @UID;
     END IF;
@@ -112,7 +112,7 @@ $$
 
 DELIMITER ; $$
 
-call addUser('test@mail.com', 'lordvirus', 'kSeT4DIG/un5B4SlzRvw/w=='/*'kush007' encrypted*/, '184.55.158.226', true); 
+call addUser('test@mail.com', 'lordvirus', 'y2tg/nQbaCK34eofbKCGtA=='/*'kush007' encrypted*/, '184.55.158.226', true); 
 call addKey('00000-00000-00000-00000', 7/*Days*/, 1);
 call redeemKey('00000-00000-00000-00000', 1);
 
