@@ -473,7 +473,7 @@ class cheesey_api
             $email = $parmesan['email'];
             $username = $this->regexRealText($parmesan['username']);
             $password = $this->encryptPassword($this->regexPassword($parmesan['password']));
-            $admin = /*$this->regexRealText($parmesan['admin'])*/;
+            $admin = $this->regexRealText($parmesan['admin']);
             $ip = data_logger::getIPAddress();
 
             if($this->isAdmin())
