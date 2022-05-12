@@ -15,6 +15,10 @@
 
     class ClientAuth
     {
+
+        [DllImport("kernelbase.dll")]
+        private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [In, Out] byte[] buffer, UInt32 size, out int lpNumberOfBytesWritten);
+
         #region Variables
 
         /// <summary>
@@ -387,16 +391,17 @@
         /// <returns></returns>
         private static UInt64 GenerateFileChallenge()
         {
-            byte[] buf = File.ReadAllBytes($"{AppDomain.CurrentDomain.BaseDirectory}\\{AppDomain.CurrentDomain.FriendlyName}");
-            int byte_read = 0;
+            Int64 pBaseAddr = Process.GetCurrentProcess().MainModule.BaseAddress.ToInt64();
+            byte[] buf = new byte[0x1000];
             UInt64 challenge_hash = 0;
+            ReadProcessMemory(Process.GetCurrentProcess().Handle, (IntPtr)pBaseAddr, buf, 0x1000, out int byte_read);
             for (int i = 0; i < buf.Length; i++)
             {
-                challenge_hash += 5 * ((UInt64)buf[i]);
-                challenge_hash += (UInt64)buf[i];
-                challenge_hash ^= (UInt64)buf[i];
+                challenge_hash += ((UInt64)buf[i]) + 1;
+                challenge_hash += (UInt64)buf[i] + 1;
+                challenge_hash *= (UInt64)buf[i] + 1;
             }
-            return ((challenge_hash ^ challenge_hash) ^ challenge_hash) * challenge_hash;
+            return challenge_hash;
         }
 
         /// <summary>

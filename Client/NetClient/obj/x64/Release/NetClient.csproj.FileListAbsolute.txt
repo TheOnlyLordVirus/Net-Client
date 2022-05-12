@@ -21,7 +21,6 @@ C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\x64\Release\de\DevE
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\x64\Release\es\DevExpress.XtraTreeList.v20.2.resources.dll
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\x64\Release\ja\DevExpress.XtraTreeList.v20.2.resources.dll
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\bin\x64\Release\ru\DevExpress.XtraTreeList.v20.2.resources.dll
-C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.csproj.AssemblyReference.cache
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.MainForm.resources
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.Properties.Resources.resources
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.csproj.GenerateResource.cache
@@ -29,3 +28,4 @@ C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClie
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.csproj.CoreCompileInputs.cache
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.csproj.CopyComplete
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.exe
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.csproj.AssemblyReference.cache

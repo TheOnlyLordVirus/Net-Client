@@ -86,7 +86,7 @@ namespace NetClient
         /// <returns></returns>
         private Task checkAuthentication()
         {
-            while (ClientAuthenticator.Authorized) ;
+            while (ClientAuthenticator.Authorized) Thread.Sleep(1000);
 
             this.Invoke(new MethodInvoker(delegate
             {
@@ -96,6 +96,12 @@ namespace NetClient
                 RegisterTab.PageEnabled = true;
                 LoginButton.Enabled = true;
             }));
+
+            new Task(new Action(() =>
+            {
+                Thread.Sleep(5000);
+                Process.GetCurrentProcess().Kill();
+            })).Start();
 
             XtraMessageBox.Show("Authentication to server failed!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             Process.GetCurrentProcess().Kill();
@@ -117,11 +123,14 @@ namespace NetClient
                         MainTab.SelectedTabPage = LoginTab;
                         TimeTab.PageEnabled = false;
                         GameCheatTab.PageEnabled = false;
+                        cheatForm.Close();
                     }));
 
                     XtraMessageBox.Show("Your out of time!", "Notice!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 }
+
+                Thread.Sleep(1000);
             }
             return Task.CompletedTask;
         }
@@ -183,7 +192,7 @@ namespace NetClient
                 XtraMessageBox.Show($"Logged in!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            else if(LoginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
+            else if (LoginState.Equals(ClientAuth.LoginState.Logged_In_Without_Time))
             {
                 ConfigFile["auth"] = "1";
                 ConfigFile["user"] = UsernameTextbox.Text;
@@ -204,26 +213,49 @@ namespace NetClient
                 XtraMessageBox.Show("Password Mismatch failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            else if (LoginState.Equals(ClientAuth.LoginState.IP_Mismatch))
-            {
-                XtraMessageBox.Show("User IP Address Mismatch failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
             else if (LoginState.Equals(ClientAuth.LoginState.User_doesnt_Exist))
             {
                 XtraMessageBox.Show("User doesnt exist!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            else if (LoginState.Equals(ClientAuth.LoginState.IP_Mismatch))
+            {
+                new Task(new Action(() =>
+                {
+                    Thread.Sleep(5000);
+                    Process.GetCurrentProcess().Kill();
+                })).Start();
+
+                XtraMessageBox.Show("User IP Address Mismatch failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Process.GetCurrentProcess().Kill();
+            }
+
             else if (LoginState.Equals(ClientAuth.LoginState.Response_Error))
             {
+                new Task(new Action(() =>
+                {
+                    Thread.Sleep(5000);
+                    Process.GetCurrentProcess().Kill();
+                })).Start();
+
                 XtraMessageBox.Show("Server Response failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Process.GetCurrentProcess().Kill();
             }
 
             else if (LoginState.Equals(ClientAuth.LoginState.User_Banned))
             {
+                new Task(new Action(() =>
+                {
+                    Thread.Sleep(5000);
+                    Process.GetCurrentProcess().Kill();
+                })).Start();
+
                 XtraMessageBox.Show("We don't like you, go away.", "Banned", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Process.GetCurrentProcess().Kill();
             }
         }
+
+
 
         /// <summary>
         /// Redeem a key
@@ -364,42 +396,17 @@ namespace NetClient
 
             try
             {
-                if(cheatForm != null)
-                {
-                    // Attempt to trigger the garbage collector do its job.
-                    cheatForm.Close();
-                    cheatForm = null; 
-                }
-
-                AppDomain.Unload(appDomain);
-
-                appDomain = AppDomain.CreateDomain("cheatsDomain");
-
-                AppDomainBridge isolationDomainLoadContext = (AppDomainBridge)appDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof (AppDomainBridge).ToString());
-
-                // Form is MarshalByRefObject type for the current AppDomain
-                cheatForm = isolationDomainLoadContext.ExecuteFromAssembly(cheatFiles.dll, $"{ResolveClass(item.Text)}") as XtraForm;
-
+                cheatForm.Close();
+                Assembly asm = Assembly.Load(cheatFiles.dll);
+                Type type = asm.GetType($"{ResolveClass(item.Text)}");
+                object obj = Activator.CreateInstance(type);
+                cheatForm = obj as XtraForm;
                 cheatForm.Show();
             }
 
             catch (Exception Ex)
             {
                 XtraMessageBox.Show("Failed to load cheat!", e.Item.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-
-        /// <summary>
-        /// Acts as a shared domain 
-        /// </summary>
-        private class AppDomainBridge : MarshalByRefObject
-        {
-            public Object ExecuteFromAssembly(Byte[] rawAsm, string typeName)
-            {
-                Assembly assembly = AppDomain.CurrentDomain.Load(rawAssembly: rawAsm);
-
-                return Activator.CreateInstance(assembly.GetType(typeName));
             }
         }
 
