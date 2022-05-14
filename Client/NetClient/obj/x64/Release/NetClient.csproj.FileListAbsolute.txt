@@ -29,3 +29,4 @@ C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClie
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.csproj.CopyComplete
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.exe
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.csproj.AssemblyReference.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\obj\x64\Release\NetClient.csproj.SuggestedBindingRedirects.cache
