@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\TheNe\\source\\repos\\CheatUploader\\CheatUploader\\CheatUploader.csproj": {}
+    "C:\\Users\\TheNe\\Documents\\GitHub\\AuthApi\\CheatUploader\\CheatUploader\\CheatUploader.csproj": {}
   },
   "projects": {
-    "C:\\Users\\TheNe\\source\\repos\\CheatUploader\\CheatUploader\\CheatUploader.csproj": {
+    "C:\\Users\\TheNe\\Documents\\GitHub\\AuthApi\\CheatUploader\\CheatUploader\\CheatUploader.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\TheNe\\source\\repos\\CheatUploader\\CheatUploader\\CheatUploader.csproj",
+        "projectUniqueName": "C:\\Users\\TheNe\\Documents\\GitHub\\AuthApi\\CheatUploader\\CheatUploader\\CheatUploader.csproj",
         "projectName": "CheatUploader",
-        "projectPath": "C:\\Users\\TheNe\\source\\repos\\CheatUploader\\CheatUploader\\CheatUploader.csproj",
+        "projectPath": "C:\\Users\\TheNe\\Documents\\GitHub\\AuthApi\\CheatUploader\\CheatUploader\\CheatUploader.csproj",
         "packagesPath": "C:\\Users\\TheNe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\TheNe\\source\\repos\\CheatUploader\\CheatUploader\\obj\\",
+        "outputPath": "C:\\Users\\TheNe\\Documents\\GitHub\\AuthApi\\CheatUploader\\CheatUploader\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\DevExpress 20.2\\Components\\Offline Packages",

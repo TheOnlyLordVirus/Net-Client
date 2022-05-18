@@ -76,7 +76,7 @@ namespace CheatUploader
                                 new CheatItems
                                 {
                                     shortname = fileName,
-                                    classname = fileName + ".MainForm",
+                                    classname = fileName + ".MainWindow",
                                     cheatname = nameTextbox.Text,
                                     description = descriptionTextbox.Text
                                 }

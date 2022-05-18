@@ -1,0 +1,269 @@
+﻿<Window x:Class="CheatClientWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CheatClientWpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Background="#FF262626" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize" MouseDown="Window_MouseDown">
+
+    <Border BorderThickness="1,1,1,1">
+        <Border.BorderBrush>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF569DE5" Offset="0"/>
+                <GradientStop Color="#FF464646" Offset="0.3"/>
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+        <Grid Margin="0,30,0,0">
+            <Image HorizontalAlignment="Left" Height="20" Margin="8,-25,0,0" VerticalAlignment="Top" Width="20" Source="/charttype_polarline.png"/>
+            <Label x:Name="Client_Version_Label" Content="Cheat Client" HorizontalAlignment="Left" Margin="28,-29,0,0" VerticalAlignment="Top" Foreground="#FF569DE5" Height="24"/>
+            <Button x:Name="MinimizeForm" Content="_" HorizontalAlignment="Left" Margin="740,-30,0,0" VerticalAlignment="Top" Height="30" Width="30" Background="#00000000" BorderBrush="#00000000" Foreground="White" FontFamily="OCR A Extended" FontSize="10" Click="MinimizeForm_Click"/>
+            <Button x:Name="CloseForm" Content="X" HorizontalAlignment="Left" Margin="770,-30,0,0" VerticalAlignment="Top" Height="30" Width="30" Click="CloseForm_Click" Background="#00000000" BorderBrush="#00000000" Foreground="White" FontFamily="OCR A Extended" FontSize="10"/>
+
+            <TabControl x:Name="MainTab" TabStripPlacement="Left" Background="#FF262626" BorderBrush="#FF666666" SelectedIndex="1" SelectionChanged="MainTab_SelectionChanged">
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Setter Property="Background" Value="#FF323232" />
+                        <Setter Property="Foreground" Value="DarkGray" />
+                    </Style>
+
+                    <Style TargetType="{x:Type PasswordBox}">
+                        <Setter Property="Background" Value="#FF323232" />
+                        <Setter Property="Foreground" Value="DarkGray" />
+                    </Style>
+
+                    <Style x:Key="{x:Type CheckBox}" TargetType="{x:Type CheckBox}">
+                        <Setter Property="SnapsToDevicePixels" Value="true"/>
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type CheckBox}">
+                                    <BulletDecorator Background="Transparent">
+                                        <BulletDecorator.Bullet>
+                                            <Border x:Name="Border" Width="13" Height="13" CornerRadius="0" Background="#C0C0C0" BorderThickness="1" BorderBrush="#404040">
+                                                <Path Width="7" Height="7" x:Name="CheckMark" SnapsToDevicePixels="False" Stroke="#404040" StrokeThickness="2" Data="M 0 0 L 7 7 M 0 7 L 7 0" />
+                                            </Border>
+                                        </BulletDecorator.Bullet>
+                                        <ContentPresenter Margin="4,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" RecognizesAccessKey="True"/>
+                                    </BulletDecorator>
+                                    <ControlTemplate.Triggers>
+
+                                        <Trigger Property="IsChecked" Value="false">
+                                            <Setter TargetName="CheckMark" Property="Visibility" Value="Collapsed"/>
+                                        </Trigger>
+                                        <Trigger Property="IsChecked" Value="{x:Null}">
+                                            <Setter TargetName="CheckMark" Property="Data" Value="M 0 7 L 7 0" />
+                                        </Trigger>
+
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter Property="Background" Value="#FF3C3C3C" />
+                                            <Setter Property="BorderBrush" Value="#FF569DE5" />
+                                        </Trigger>
+
+                                        <Trigger Property="IsMouseOver" Value="false">
+                                            <Setter Property="Background" Value="#FF323232"/>
+                                            <Setter Property="BorderBrush" Value="#FF666666" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="#FF323232" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Cursor" Value="Hand" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#FF3C3C3C" />
+                                            <Setter Property="BorderBrush" Value="#FF569DE5" />
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="false">
+                                            <Setter Property="Background" Value="#FF323232"/>
+                                            <Setter Property="BorderBrush" Value="#FF666666" />
+                                        </Trigger>
+
+                                        <Trigger Property="IsEnabled" Value="True">
+                                            <Setter Property="Foreground" Value="white" />
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Foreground" Value="#FF666666" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                    <Style TargetType="TabItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TabItem">
+                                    <Border Name="Border" BorderThickness="1,1,0,1" BorderBrush="#FF666666" CornerRadius=".08">
+                                        <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="10,2"/>
+                                    </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="#FF262626" />
+                                            <Setter TargetName="Border" Property="TabItem.BorderThickness" Value="1,1,0,1"/>
+                                            <Setter TargetName="Border" Property="TabItem.Margin" Value="1,-1,-1,0"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="False">
+                                            <Setter TargetName="Border" Property="TabItem.Background" Value="#FF323232" />
+                                            <Setter TargetName="Border" Property="TabItem.BorderThickness" Value="1,1,1,1" />
+                                            <Setter TargetName="Border" Property="TabItem.Margin" Value="3,-1,-1,0"/>
+                                        </Trigger>
+
+                                        <Trigger Property="IsEnabled" Value="True">
+                                            <Setter TargetName="Border" Property="TextBlock.Foreground" Value="white" />
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="Border" Property="TextBlock.Foreground" Value="DarkGray"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+
+                <TabItem x:Name="RegisterTab" Header="Register" Foreground="White">
+                    <Grid Background="#FF262626">
+                        <TextBlock HorizontalAlignment="Center" Margin="0,66,0,0" TextWrapping="Wrap" Text="Register" VerticalAlignment="Top" FontFamily="Verdana" FontWeight="Bold" FontSize="48">
+                            <TextBlock.Foreground>
+                                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.GrayTextColorKey}}"/>
+                            </TextBlock.Foreground>
+                        </TextBlock>
+
+                        <TextBlock HorizontalAlignment="Left" Margin="202,159,0,0" TextWrapping="Wrap" Text="Email:" VerticalAlignment="Top"/>
+                        <TextBox x:Name="RegisterEmail" HorizontalAlignment="Center" Margin="0,157,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="225"/>
+
+                        <TextBlock HorizontalAlignment="Left" Margin="172,190,0,0" TextWrapping="Wrap" Text="User Name:" VerticalAlignment="Top"/>
+                        <TextBox x:Name="RegisterUsername" HorizontalAlignment="Center" Margin="0,188,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="225"/>
+
+                        <TextBlock HorizontalAlignment="Left" Margin="181,222,0,0" TextWrapping="Wrap" Text="Password:" VerticalAlignment="Top"/>
+                        <PasswordBox x:Name="RegisterPassword" HorizontalAlignment="Center" Margin="0,222,0,0" VerticalAlignment="Top" Width="225"/>
+
+                        <Button x:Name="RegisterButton" Content="Register User" HorizontalAlignment="Center" Margin="0,264,0,0" VerticalAlignment="Top" Height="38" Width="169" Click="RegisterButton_Click"/>
+
+                    </Grid>
+                </TabItem>
+                
+                <TabItem x:Name="LoginTab" Header="Login" Foreground="White">
+                    <Grid Background="#FF262626">
+                        <TextBlock HorizontalAlignment="Center" Margin="0,66,0,0" TextWrapping="Wrap" Text="Login" VerticalAlignment="Top" FontFamily="Verdana" FontWeight="Bold" FontSize="48">
+                            <TextBlock.Foreground>
+                                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.GrayTextColorKey}}"/>
+                            </TextBlock.Foreground>
+                        </TextBlock>
+                        <TextBlock HorizontalAlignment="Left" Margin="172,190,0,0" TextWrapping="Wrap" Text="User Name:" VerticalAlignment="Top"/>
+                        <TextBox x:Name="LoginUser" HorizontalAlignment="Center" Margin="0,188,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="225"/>
+
+                        <TextBlock HorizontalAlignment="Left" Margin="181,222,0,0" TextWrapping="Wrap" Text="Password:" VerticalAlignment="Top"/>
+                        <PasswordBox x:Name="LoginPassword" HorizontalAlignment="Center" Margin="0,222,0,0" VerticalAlignment="Top" Width="225"/>
+
+                        <Button x:Name="LoginButton" Content="Login" HorizontalAlignment="Center" Margin="0,264,0,0" VerticalAlignment="Top" Height="38" Width="169" Click="LoginButton_Click"/>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem x:Name="RedeemKeyTab" Header="Redeem Key" Foreground="White" Width="89.2333333333333" IsEnabled="False">
+                    <Grid Background="#FF262626">
+                        <TextBlock HorizontalAlignment="Center" Margin="0,66,0,0" TextWrapping="Wrap" Text="Redeem Key" VerticalAlignment="Top" FontFamily="Verdana" FontWeight="Bold" FontSize="48">
+                            <TextBlock.Foreground>
+                                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.GrayTextColorKey}}"/>
+                            </TextBlock.Foreground>
+                        </TextBlock>
+                        <TextBlock HorizontalAlignment="Left" Margin="211,188,0,0" TextWrapping="Wrap" Text="Key:" VerticalAlignment="Top"/>
+                        <TextBox x:Name="KeyInputFullBox" HorizontalAlignment="Center" Margin="0,188,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="225" Visibility="Hidden"/>
+
+                        <TextBox x:Name="KeyInputBox1" HorizontalAlignment="Left" Margin="238,188,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="45" Visibility="Visible"/>
+                        <TextBlock x:Name="Hyphen1" HorizontalAlignment="Left" Margin="287,188,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+                        <TextBox x:Name="KeyInputBox2" HorizontalAlignment="Left" Margin="297,188,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="45" Visibility="Visible"/>
+                        <TextBlock x:Name="Hyphen2" HorizontalAlignment="Center" Margin="0,188,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+                        <TextBox x:Name="KeyInputBox3" HorizontalAlignment="Left" Margin="359,188,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="46" Visibility="Visible"/>
+                        <TextBlock x:Name="Hyphen3" HorizontalAlignment="Left" Margin="409,188,0,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+                        <TextBox x:Name="KeyInputBox4" HorizontalAlignment="Left" Margin="418,188,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="45" Visibility="Visible"/>
+
+                        <Button x:Name="RedeemKeyButton" Content="Redeem Key" HorizontalAlignment="Center" Margin="0,264,0,0" VerticalAlignment="Top" Height="38" Width="169" Click="RedeemKeyButton_Click"/>
+                        <CheckBox x:Name="KeyCheckBox" Content="Show Hyphens?" HorizontalAlignment="Left" Margin="211,222,0,0" VerticalAlignment="Top" Foreground="White" Background="#FF323232" Checked="CheckBox_Checked" Unchecked="KeyCheckBox_Unchecked" IsChecked="True"/>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem x:Name="TimeTab" Header="Time Left" Foreground="White" IsEnabled="False">
+                    <Grid Background="#FF262626">
+                        <TextBlock HorizontalAlignment="Center" Margin="0,66,0,0" TextWrapping="Wrap" Text="Time Left" VerticalAlignment="Top" FontFamily="Verdana" FontWeight="Bold" FontSize="48">
+                            <TextBlock.Foreground>
+                                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.GrayTextColorKey}}"/>
+                            </TextBlock.Foreground>
+                        </TextBlock>
+                        <TextBlock x:Name="TimeCounterLabel" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Loading..." VerticalAlignment="Center" FontFamily="Verdana" FontSize="24"/>
+                        <TextBlock x:Name="EndDateLabel" HorizontalAlignment="Left" Margin="10,373,0,0" TextWrapping="Wrap" Text="EndDate:" VerticalAlignment="Top" FontSize="24" FontFamily="Verdana"/>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem x:Name="GameCheatTab" Header="Cheats" Foreground="White" IsEnabled="False">
+                    <Grid x:Name="CheatGrid" Background="#FF262626">
+                        
+                        <ScrollViewer x:Name="MyScrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                            <local:ScrollWrapPanel x:Name="CheatPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                
+                                <local:ScrollWrapPanel.Resources>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Margin" Value="10,10" />
+                                        <Setter Property="Padding" Value="300, 300" />
+                                        <Setter Property="Background" Value="#FF323232" />
+                                        <Setter Property="Foreground" Value="White" />
+                                        <Setter Property="Cursor" Value="Hand" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#FF3C3C3C" />
+                                                            <Setter Property="BorderBrush" Value="#FF569DE5" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsMouseOver" Value="false">
+                                                            <Setter Property="Background" Value="#FF323232"/>
+                                                            <Setter Property="BorderBrush" Value="#FF666666" />
+                                                        </Trigger>
+
+                                                        <Trigger Property="IsEnabled" Value="True">
+                                                            <Setter Property="Foreground" Value="white" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="Foreground" Value="#FF666666" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </local:ScrollWrapPanel.Resources>
+                                
+                                
+                                
+                                
+                                
+                            </local:ScrollWrapPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Border>
+</Window>

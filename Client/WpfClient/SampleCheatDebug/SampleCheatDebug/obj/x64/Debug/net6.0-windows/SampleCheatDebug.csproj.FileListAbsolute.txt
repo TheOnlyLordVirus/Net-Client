@@ -1,0 +1,17 @@
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\bin\x64\Debug\net6.0-windows\SampleCheatDebug.deps.json
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\bin\x64\Debug\net6.0-windows\SampleCheatDebug.dll
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\bin\x64\Debug\net6.0-windows\SampleCheatDebug.pdb
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\SampleCheatDebug.csproj.AssemblyReference.cache
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\MainWindow.g.cs
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\SampleCheatDebug_MarkupCompile.cache
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\SampleCheatDebug_MarkupCompile.lref
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\MainWindow.baml
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\SampleCheatDebug.g.resources
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\SampleCheatDebug.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\SampleCheatDebug.AssemblyInfoInputs.cache
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\SampleCheatDebug.AssemblyInfo.cs
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\SampleCheatDebug.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\SampleCheatDebug.dll
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\refint\SampleCheatDebug.dll
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\SampleCheatDebug.pdb
+C:\Users\TheNe\source\repos\SampleCheatDebug\SampleCheatDebug\obj\x64\Debug\net6.0-windows\ref\SampleCheatDebug.dll

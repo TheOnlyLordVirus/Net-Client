@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "py+4P0KkPcc6wpxVkye8ttBnPcQFASo2Rksq5kdu1Easi9RAxXHwLpnhVdQ9iZ+X8SOaWM1avIL/laJlxsqzGg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\TheNe\\source\\repos\\CheatClientWpf\\CheatClientWpf\\CheatClientWpf.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\TheNe\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

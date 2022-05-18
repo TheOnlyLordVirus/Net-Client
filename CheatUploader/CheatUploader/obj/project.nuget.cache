@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QCw1SqCD+g7jJrX7nyDA9jnxKOgLVPWN/edOmLG+nm+C97aJBv5FnhuPDZ/1DaYOiVGRD+ZH8r3SvMXnfH6F6Q==",
+  "dgSpecHash": "J7R4fvcrc3gUysIkhAltDtBojJYoy8uaNDOKgnsvc1XnXfQ0F7aBEedAexu5n4bXxsiOer2+Wak48Hsb/8KNkg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\TheNe\\source\\repos\\CheatUploader\\CheatUploader\\CheatUploader.csproj",
+  "projectFilePath": "C:\\Users\\TheNe\\Documents\\GitHub\\AuthApi\\CheatUploader\\CheatUploader\\CheatUploader.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\TheNe\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\TheNe\\.nuget\\packages\\ssh.net\\2020.0.1\\ssh.net.2020.0.1.nupkg.sha512",
