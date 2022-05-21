@@ -61,14 +61,14 @@ namespace CheatUploader
                                     if (cheatx.shortname.Equals(fileName))
                                     {
                                         cheat = cheatx;
-                                        client.DeleteFile($"/var/www/cheats/{fileName}/{fileName}.dll");
-                                        client.DeleteFile($"/var/www/cheats/{fileName}/{fileName}.json");
-                                        client.DeleteDirectory($"/var/www/cheats/{fileName}");
+                                        client.DeleteFile($"/var/www/cheats/external/{fileName}/{fileName}.dll");
+                                        client.DeleteFile($"/var/www/cheats/external/{fileName}/{fileName}.json");
+                                        client.DeleteDirectory($"/var/www/cheats/external/{fileName}");
                                     }
                                 }
 
                                 json.Remove(cheat);
-                                client.DeleteFile("/var/www/cheats/x64games.json");
+                                client.DeleteFile("/var/www/cheats/external/x64games.json");
                             }
 
                             json.Add
@@ -86,21 +86,9 @@ namespace CheatUploader
 
                             using (MemoryStream ms = new MemoryStream(fileContent))
                             {
-                                client.CreateDirectory("/var/www/cheats/" + fileName);
-                                client.ChangeDirectory("/var/www/cheats/" + fileName);
+                                client.CreateDirectory("/var/www/cheats/external/" + fileName);
+                                client.ChangeDirectory("/var/www/cheats/external/" + fileName);
                                 client.UploadFile(ms, fileName + ".dll");
-                            }
-
-                            openFileDialog.Filter = "json files (*.json)|*.json";
-                            openFileDialog.FileName = fileName + ".json";
-                            openFileDialog.InitialDirectory = Path.GetDirectoryName(openFileDialog.FileName);
-                            if (openFileDialog.ShowDialog() == DialogResult.OK)
-                            {
-                                using (MemoryStream ms = new MemoryStream(fileContent))
-                                {
-                                    client.UploadFile(ms, fileName + ".json");
-                                    MessageBox.Show("Cheat Uploaded!");
-                                }
                             }
                         }
                     }

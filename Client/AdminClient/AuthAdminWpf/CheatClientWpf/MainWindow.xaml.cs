@@ -48,16 +48,6 @@ namespace CheatClientWpf
         private ClientAuth.LoginState LoginState = ClientAuth.LoginState.Not_logged_In;
 
         /// <summary>
-        /// Games we have cheats for.
-        /// </summary>
-        private List<ClientAuth.CheatItems> cheats;
-
-        /// <summary>
-        /// The current cheat form opened up.
-        /// </summary>
-        private Window cheatForm;
-
-        /// <summary>
         /// Create singleton.
         /// </summary>
         private static MainWindow instance;
@@ -160,18 +150,6 @@ namespace CheatClientWpf
             ClientAuthenticator = new AdminApi();
             LoginState = ClientAuthenticator.Login(LoginUser.Text, LoginPassword.Password, "x64");
 
-            if (!ClientAuthenticator.IsAdmin())
-            {
-                new Task(new Action(() =>
-                {
-                    Thread.Sleep(5000);
-                    Process.GetCurrentProcess().Kill();
-                })).Start();
-
-                MessageBox.Show("You must be an Administrator!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Process.GetCurrentProcess().Kill();
-            }
-
             if (LoginState.Equals(ClientAuth.LoginState.Logged_In))
             {
                 ConfigFile["auth"] = "1";
@@ -238,7 +216,7 @@ namespace CheatClientWpf
                     Process.GetCurrentProcess().Kill();
                 })).Start();
 
-                MessageBox.Show("Server Response failure!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Server Response failure!\n(You're Probably not and Administrator)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Process.GetCurrentProcess().Kill();
             }
 

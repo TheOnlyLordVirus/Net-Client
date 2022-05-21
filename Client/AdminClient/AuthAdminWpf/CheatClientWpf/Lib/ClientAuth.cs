@@ -12,6 +12,7 @@
     using System.Text.RegularExpressions;
     using System.Diagnostics;
     using System.Runtime.InteropServices;
+    using System.Reflection;
 
     class ClientAuth
     {
@@ -59,12 +60,6 @@
             public string classname;
             public string cheatname;
             public string description;
-        }
-
-        public struct ToolConfig
-        {
-            public byte[] dll;
-            public byte[] json;
         }
 
         protected struct LoginResponse
@@ -116,14 +111,15 @@
         /// <param name="password"></param>
         /// <param name="bitcount"></param>
         /// <returns></returns>
-        public LoginState Login(string user, string password, string bitcount = "x64")
+        public LoginState Login(string user, string password, string cheat_type = "external", string bitcount = "x64")
         {
             IsSafe();
             if (dkey.Equals(string.Empty))
             {
                 this.username = user;
                 this.password = password;
-                LoginState state = GetDecryptionKey(user, password, bitcount);
+                LoginState state = GetDecryptionKey(user, password, cheat_type, bitcount);
+                
                 this.authorized = (state.Equals(LoginState.Logged_In) || state.Equals(LoginState.Logged_In_Without_Time));
                 return state;
             }
@@ -190,39 +186,30 @@
         /// </summary>
         /// <param name="timeKey"></param>
         /// <returns></returns>
-        public ToolConfig DownloadCheat(string gameName)
+        public byte[] DownloadCheat(string type, string gameName)
         {
             Dictionary<string, string> values = new Dictionary<string, string>
             {
+                { "filetype", type },
                 { "game", gameName }
             };
 
             if (false || Authorized)
             {
-                string dllResponse = SendCommand(this.username, this.password, "download_cheat", JsonConvert.SerializeObject(values));
-                string jsonResponse = SendCommand(this.username, this.password, "download_json", JsonConvert.SerializeObject(values));
+                string dllResponse = SendCommand(this.username, this.password, "download_file", JsonConvert.SerializeObject(values));
 
-                if (!dllResponse.Equals(string.Empty) && !jsonResponse.Equals(string.Empty))
+                if (!dllResponse.Equals(string.Empty))
                 {
-                    DownloadFileResponse dllFileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
-                    DownloadFileResponse jsonFileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
+                    DownloadFileResponse FileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
 
-                    if (IsBase64String(dllFileResponse.file) && IsBase64String(jsonFileResponse.file))
+                    if (IsBase64String(FileResponse.file))
                     {
-                        return new ToolConfig()
-                        {
-                            dll = Convert.FromBase64String(dllFileResponse.file),
-                            json = Convert.FromBase64String(jsonFileResponse.file)
-                        };
+                        return Convert.FromBase64String(FileResponse.file);
                     }
                 }
             }
 
-            return new ToolConfig()
-            {
-                dll = null,
-                json = null
-            };
+            return null;
         }
 
         /// <summary>
@@ -275,7 +262,7 @@
         /// <summary>
         /// Get the Decryption key
         /// </summary>
-        protected LoginState GetDecryptionKey(string username, string password, string bitcount)
+        protected LoginState GetDecryptionKey(string username, string password, string cheat_type, string bitcount)
         {
             this.authorized = false;
             if (dkey.Equals(string.Empty) && !(ekey.Equals(string.Empty) || ekey.Equals("0") || !IsBase64String(ekey)))
@@ -286,7 +273,7 @@
                     { "password", password },
                     { "cheese", "get_dkey" },
                     { "noodles", GenerateFileChallenge().ToString("X16")},
-                    { "parms", JsonConvert.SerializeObject(new Dictionary<string, string> { { "bitcount", bitcount } }) }
+                    { "parms", JsonConvert.SerializeObject(new Dictionary<string, string> { { "dir", cheat_type }, { "bitcount", bitcount } }) }
                 };
 
                 string Json = JsonConvert.SerializeObject(values);
@@ -329,6 +316,7 @@
             {
                 this.username = user;
                 this.password = password;
+
                 string commandResponse = SendCommand(user, password, "login", string.Empty);
 
                 if (!commandResponse.Equals(string.Empty))
@@ -388,9 +376,17 @@
         /// <returns></returns>
         private static UInt64 GenerateFileChallenge()
         {
-            UInt64 ReturnVar = Convert.ToUInt64(Process.GetCurrentProcess().MainModule.ModuleMemorySize);
-            Console.WriteLine($"{ReturnVar.ToString("X16")} || {Convert.ToBase64String(Encoding.UTF8.GetBytes(ReturnVar.ToString("X16")))}");
-            return ReturnVar;
+            /*
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead($"{AppDomain.CurrentDomain.BaseDirectory}{AppDomain.CurrentDomain.FriendlyName}"))
+                {
+                    return BitConverter.ToUInt64(md5.ComputeHash(stream), 0);
+                }
+            }
+            */
+
+            return Convert.ToUInt64(Process.GetCurrentProcess().MainModule.ModuleMemorySize);
         }
 
         /// <summary>
