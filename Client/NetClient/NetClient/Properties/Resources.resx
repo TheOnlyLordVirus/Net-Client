@@ -121,4 +121,7 @@
   <data name="charttype_polarline" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\charttype_polarline.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v20.2, Version=20.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
+  <data name="charttype_radarline" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\charttype_radarline.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v20.2, Version=20.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
 </root>

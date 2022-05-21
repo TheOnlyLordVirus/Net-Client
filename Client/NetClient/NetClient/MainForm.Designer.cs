@@ -447,9 +447,9 @@ namespace NetClient
             this.ClientSize = new System.Drawing.Size(1074, 632);
             this.Controls.Add(this.MainTab);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.IconOptions.SvgImage = global::NetClient.Properties.Resources.charttype_polarline;
+            this.IconOptions.SvgImage = global::NetClient.Properties.Resources.charttype_radarline;
             this.Name = "MainForm";
-            this.Text = "Client Login";
+            this.Text = "Cheat Client";
             this.GameCheatTab.ResumeLayout(false);
             this.TimeTab.ResumeLayout(false);
             this.TimeTab.PerformLayout();

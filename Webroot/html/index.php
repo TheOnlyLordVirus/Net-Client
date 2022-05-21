@@ -87,7 +87,8 @@ class cheesey_api
                         {
                             if($this->logCommand($decryptedInput->cheese, $decryptedInput->parms) && $this->checkCurrentIp())
                             {
-                                echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats(json_decode($decryptedInput->parms, true)['bitcount'])], true);
+                                $eggnoodle = json_decode($decryptedInput->parms, true);
+                                echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats($eggnoodle['dir'], $eggnoodle['bitcount'])], true);
                             }
 
                             else
@@ -110,6 +111,10 @@ class cheesey_api
 
                             switch ($decryptedInput->cheese)
                             {
+                                case 'is_admin':
+                                    $json = json_encode(['isadmin' => $this->isAdmin()], true);
+                                    echo $this->encryptString($json);
+                                    break;
                                 case 'login':
                                     $json = json_encode(['loggedin' => $login_status, "meatball" => intval(hrtime(true))], true);
                                     echo $this->encryptString($json);
@@ -132,26 +137,11 @@ class cheesey_api
                                     echo $this->encryptString($json);
                                     break;
                                 
-                                case 'download_cheat':
+                                case 'download_file':
+                                    $eggnoodle = json_decode($parmesan, true);
                                     if($this->checkTime(['username' => $this->user_account]))
                                     {
-                                        $eggnoodle = json_decode($parmesan, true);
-                                        $json = json_encode(['file' => $this->downloadCheat($eggnoodle['game'])], true);
-                                        echo $this->encryptString($json);
-                                    }
-
-                                    else
-                                    {
-                                        $json = json_encode(['error' => true], true);
-                                        echo $this->encryptString($json);
-                                    }
-                                    break;
-                                
-                                case 'download_json':
-                                    if($this->checkTime(['username' => $this->user_account]))
-                                    {
-                                        $eggnoodle = json_decode($parmesan, true);
-                                        $json = json_encode(['file' => $this->downloadJson($eggnoodle['game'])], true);
+                                        $json = json_encode(['file' => $this->downloadFile($eggnoodle['filetype'], $eggnoodle['game'])], true);
                                         echo $this->encryptString($json);
                                     }
 
@@ -264,7 +254,7 @@ class cheesey_api
             $returnMe = false;
         }
 
-        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMEQ5RTc4ODRCMw=="/*x64 || $headers['57ACF958FDD44F91'] == "DebugString=="x86*/) && !$this->isAdmin())
+        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwRTFCNjAwMA=="/*Client*/ || $headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwMEE4OTAwMA=="/*Admin*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
@@ -288,7 +278,7 @@ class cheesey_api
         $returnMe = true;
 
         // File hash challenge
-        if(!($decryptedInput->noodles == "0000000D9E7884B3"/*x64 || $decryptedInput->noodles == "0000A16410818151" x86*/) && !$this->isAdmin())
+        if(!($decryptedInput->noodles == "000000000E1B6000"/*Client*/ || $decryptedInput->noodles == "0000000000A89000"/*Admin*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
@@ -365,12 +355,12 @@ class cheesey_api
     /**
      * Game name = folder name
      */
-    private function getGameCheats($type)
+    private function getGameCheats($dir, $type)
     {
         if($type != "x64" && $type != "x86")
-            return true;
+            return false;
 
-        $filename = "../cheats/". $type . "games.json";
+        $filename = "../cheats/". $dir . "/" . $type . "games.json";
         if(file_exists($filename))
         {
             header("Cache-Control: public");
@@ -390,36 +380,15 @@ class cheesey_api
     /**
      * Game name = folder name
      */
-    private function downloadCheat($gamename)
+    private function downloadFile($dir, $gamename)
     {
-        $filename = "../cheats/" . $gamename . "/" . $gamename . ".dll";
+        $filename = "../cheats/" . $dir . "/" . $gamename . "/" . $gamename . (($dir == "internal") ? ".exe" : ".dll");
+
         if(file_exists($filename))
         {
             header("Cache-Control: public");
             header("Content-Description: File Transfer");
             header("Content-Disposition: attachment; filename=cheat.dll");
-            header("Content-Type: application/zip");
-            header("Content-Transfer-Encoding: binary");
-            return base64_encode(file_get_contents($filename));
-        }
-        
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Game name = foldername
-     */
-    private function downloadJson($gamename)
-    {
-        $filename = "../cheats/" . $gamename . "/" . $gamename . ".json";
-        if(file_exists($filename))
-        {
-            header("Cache-Control: public");
-            header("Content-Description: File Transfer");
-            header("Content-Disposition: attachment; filename=cheat.json");
             header("Content-Type: application/zip");
             header("Content-Transfer-Encoding: binary");
             return base64_encode(file_get_contents($filename));

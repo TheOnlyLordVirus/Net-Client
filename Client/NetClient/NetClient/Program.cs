@@ -20,6 +20,11 @@ namespace NetClient
             {
                 Process.GetCurrentProcess().Kill();
             }
+
+            if (!AppDomain.CurrentDomain.FriendlyName.Equals("Cheat Client.exe"))
+            {
+                Process.GetCurrentProcess().Kill();
+            }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());

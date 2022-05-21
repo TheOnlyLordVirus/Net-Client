@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheatClientWpf", "CheatClientWpf\CheatClientWpf.csproj", "{9B8AE2A3-3193-4795-8205-C63A3D7843FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B8AE2A3-3193-4795-8205-C63A3D7843FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B8AE2A3-3193-4795-8205-C63A3D7843FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B8AE2A3-3193-4795-8205-C63A3D7843FD}.Debug|x64.ActiveCfg = Debug|x64
+		{9B8AE2A3-3193-4795-8205-C63A3D7843FD}.Debug|x64.Build.0 = Debug|x64
+		{9B8AE2A3-3193-4795-8205-C63A3D7843FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B8AE2A3-3193-4795-8205-C63A3D7843FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B8AE2A3-3193-4795-8205-C63A3D7843FD}.Release|x64.ActiveCfg = Release|x64
+		{9B8AE2A3-3193-4795-8205-C63A3D7843FD}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C7548123-8E13-4132-B349-F708736F3DBD}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,44 @@
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\bin\x64\Release\net6.0-windows\CheatClientWpf.exe
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\bin\x64\Release\net6.0-windows\CheatClientWpf.deps.json
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\bin\x64\Release\net6.0-windows\CheatClientWpf.runtimeconfig.json
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\bin\x64\Release\net6.0-windows\CheatClientWpf.dll
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\bin\x64\Release\net6.0-windows\Newtonsoft.Json.dll
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.csproj.AssemblyReference.cache
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\MainWindow.g.cs
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\App.g.cs
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf_MarkupCompile.cache
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf_MarkupCompile.lref
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\MainWindow.baml
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.g.resources
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.AssemblyInfoInputs.cache
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.AssemblyInfo.cs
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.csproj.CopyComplete
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.dll
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\refint\CheatClientWpf.dll
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.genruntimeconfig.cache
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\ref\CheatClientWpf.dll
+C:\Users\TheNe\source\repos\CheatClientWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.csproj.AssemblyReference.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\MainWindow.g.cs
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\App.g.cs
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\bin\x64\Release\net6.0-windows\Newtonsoft.Json.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\MainWindow.baml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.AssemblyInfoInputs.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.AssemblyInfo.cs
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.csproj.CopyComplete
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\CheatClientWpf.genruntimeconfig.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\bin\x64\Release\net6.0-windows\Admin Client.exe
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\bin\x64\Release\net6.0-windows\Admin Client.deps.json
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\bin\x64\Release\net6.0-windows\Admin Client.runtimeconfig.json
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\bin\x64\Release\net6.0-windows\Admin Client.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\Admin Client_Content.g.cs
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\Admin Client_MarkupCompile.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\Admin Client_MarkupCompile.lref
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\Admin Client.g.resources
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\Admin Client.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\refint\Admin Client.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\ref\Admin Client.dll

@@ -54,7 +54,6 @@ C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\bin\x64\Relea
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\bin\x64\Release\ja\DevExpress.XtraTreeList.v20.2.resources.dll
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\bin\x64\Release\ru\DevExpress.XtraTreeList.v20.2.resources.dll
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\obj\x64\Release\NetClient.csproj.AssemblyReference.cache
-C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\obj\x64\Release\NetClient.csproj.SuggestedBindingRedirects.cache
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\obj\x64\Release\NetClient.MainForm.resources
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\obj\x64\Release\NetClient.Properties.Resources.resources
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\obj\x64\Release\NetClient.csproj.GenerateResource.cache
@@ -62,3 +61,7 @@ C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\obj\x64\Relea
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\obj\x64\Release\NetClient.csproj.CoreCompileInputs.cache
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\obj\x64\Release\NetClient.csproj.CopyComplete
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\obj\x64\Release\NetClient.exe
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\bin\x64\Release\NetClient.exe.manifest
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\bin\x64\Release\NetClient.application
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\obj\x64\Release\NetClient.exe.manifest
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\NetClient\obj\x64\Release\NetClient.application

@@ -69,5 +69,15 @@ namespace NetClient.Properties {
                 return ((DevExpress.Utils.Svg.SvgImage)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
+        /// </summary>
+        internal static DevExpress.Utils.Svg.SvgImage charttype_radarline {
+            get {
+                object obj = ResourceManager.GetObject("charttype_radarline", resourceCulture);
+                return ((DevExpress.Utils.Svg.SvgImage)(obj));
+            }
+        }
     }
 }

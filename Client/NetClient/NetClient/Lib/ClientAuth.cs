@@ -12,13 +12,10 @@
     using System.Text.RegularExpressions;
     using System.Diagnostics;
     using System.Runtime.InteropServices;
+    using System.Reflection;
 
     class ClientAuth
     {
-
-        [DllImport("kernelbase.dll")]
-        private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [In, Out] byte[] buffer, UInt32 size, out int lpNumberOfBytesWritten);
-
         #region Variables
 
         /// <summary>
@@ -65,12 +62,6 @@
             public string description;
         }
 
-        public struct ToolConfig
-        {
-            public byte[] dll;
-            public byte[] json;
-        }
-
         protected struct LoginResponse
         {
             public string dkey;
@@ -96,7 +87,7 @@
             public string file;
             public string error;
         }
-        private struct RegisterUserResponse
+        protected struct RegisterUserResponse
         {
             public string dkey;
             public bool addres;
@@ -110,7 +101,26 @@
         /// </summary>
         public ClientAuth()
         {
-            GetEncryptionKey();
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "tool", "version" }
+            };
+
+            string Json = JsonConvert.SerializeObject(values);
+            Task<string> getVersion = Task.Run(() => PostURI(new Uri("http://159.223.114.162/update/update.php"), new FormUrlEncodedContent(values)));
+            getVersion.Wait();
+
+            if (getVersion.Result.Equals(Assembly.GetExecutingAssembly().GetName().Version.ToString()))
+            {
+                GetEncryptionKey();
+            }
+
+            else
+            {
+                DevExpress.XtraEditors.XtraMessageBox.Show("Please run 'Updater.exe' to update to the latest version of the loader!");
+                Process.Start($"{AppDomain.CurrentDomain.BaseDirectory}\\Updater.exe");
+                Process.GetCurrentProcess().Kill();
+            }
         }
 
         /// <summary>
@@ -120,14 +130,15 @@
         /// <param name="password"></param>
         /// <param name="bitcount"></param>
         /// <returns></returns>
-        public LoginState Login(string user, string password, string bitcount = "x64")
+        public LoginState Login(string user, string password, string cheat_type = "external", string bitcount = "x64")
         {
             IsSafe();
             if (dkey.Equals(string.Empty))
             {
                 this.username = user;
                 this.password = password;
-                LoginState state = GetDecryptionKey(user, password, bitcount);
+                LoginState state = GetDecryptionKey(user, password, cheat_type, bitcount);
+                
                 this.authorized = (state.Equals(LoginState.Logged_In) || state.Equals(LoginState.Logged_In_Without_Time));
                 return state;
             }
@@ -194,40 +205,30 @@
         /// </summary>
         /// <param name="timeKey"></param>
         /// <returns></returns>
-        public ToolConfig DownloadCheat(string gameName)
+        public byte[] DownloadCheat(string type, string gameName)
         {
             Dictionary<string, string> values = new Dictionary<string, string>
             {
+                { "filetype", type },
                 { "game", gameName }
             };
 
             if (false || Authorized)
             {
-                byte[] dllfile, jsonfile;
-                string dllResponse = SendCommand(this.username, this.password, "download_cheat", JsonConvert.SerializeObject(values));
-                string jsonResponse = SendCommand(this.username, this.password, "download_json", JsonConvert.SerializeObject(values));
+                string dllResponse = SendCommand(this.username, this.password, "download_file", JsonConvert.SerializeObject(values));
 
-                if (!dllResponse.Equals(string.Empty) && !jsonResponse.Equals(string.Empty))
+                if (!dllResponse.Equals(string.Empty))
                 {
-                    DownloadFileResponse dllFileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
-                    DownloadFileResponse jsonFileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
+                    DownloadFileResponse FileResponse = JsonConvert.DeserializeObject<DownloadFileResponse>(dllResponse);
 
-                    if (IsBase64String(dllFileResponse.file) && IsBase64String(jsonFileResponse.file))
+                    if (IsBase64String(FileResponse.file))
                     {
-                        return new ToolConfig()
-                        {
-                            dll = Convert.FromBase64String(dllFileResponse.file),
-                            json = Convert.FromBase64String(jsonFileResponse.file)
-                        };
+                        return Convert.FromBase64String(FileResponse.file);
                     }
                 }
             }
 
-            return new ToolConfig()
-            {
-                dll = null,
-                json = null
-            };
+            return null;
         }
 
         /// <summary>
@@ -280,7 +281,7 @@
         /// <summary>
         /// Get the Decryption key
         /// </summary>
-        protected LoginState GetDecryptionKey(string username, string password, string bitcount)
+        protected LoginState GetDecryptionKey(string username, string password, string cheat_type, string bitcount)
         {
             this.authorized = false;
             if (dkey.Equals(string.Empty) && !(ekey.Equals(string.Empty) || ekey.Equals("0") || !IsBase64String(ekey)))
@@ -291,7 +292,7 @@
                     { "password", password },
                     { "cheese", "get_dkey" },
                     { "noodles", GenerateFileChallenge().ToString("X16")},
-                    { "parms", JsonConvert.SerializeObject(new Dictionary<string, string> { { "bitcount", bitcount } }) }
+                    { "parms", JsonConvert.SerializeObject(new Dictionary<string, string> { { "dir", cheat_type }, { "bitcount", bitcount } }) }
                 };
 
                 string Json = JsonConvert.SerializeObject(values);
@@ -334,6 +335,7 @@
             {
                 this.username = user;
                 this.password = password;
+
                 string commandResponse = SendCommand(user, password, "login", string.Empty);
 
                 if (!commandResponse.Equals(string.Empty))
@@ -382,7 +384,9 @@
                 incrementor++;
                 Thread.Sleep(heartRhythm);
             }
+            #pragma warning disable CS0162 // Unreachable code detected
             return Task.CompletedTask;
+            #pragma warning restore CS0162 // Unreachable code detected
         }
 
         /// <summary>
@@ -396,12 +400,12 @@
             {
                 using (var stream = File.OpenRead($"{AppDomain.CurrentDomain.BaseDirectory}{AppDomain.CurrentDomain.FriendlyName}"))
                 {
-                    return BitConverter.ToUInt64(md5.ComputeHash(['', 0x66, 0x66]), 0);
+                    return BitConverter.ToUInt64(md5.ComputeHash(stream), 0);
                 }
             }
             */
 
-            return 58493273267;
+            return Convert.ToUInt64(Process.GetCurrentProcess().MainModule.ModuleMemorySize);
         }
 
         /// <summary>
@@ -761,7 +765,7 @@
         {
             get
             {
-                return (int)Math.Floor((decimal)((GetTimeLeft() / 31556952)));
+                return GetTimeLeft() / 31556952;
             }
         }
 
@@ -772,7 +776,7 @@
         {
             get
             {
-                return (int)Math.Floor((decimal)((GetTimeLeft() % 31556952) / 2592000));
+                return (GetTimeLeft() % 31556952) / 2592000;
             }
         }
 
@@ -783,7 +787,7 @@
         {
             get
             {
-                return (int)Math.Floor((decimal)((GetTimeLeft() % 2592000) / 86400));
+                return (GetTimeLeft() % 2592000) / 86400;
             }
         }
 
@@ -794,7 +798,7 @@
         {
             get
             {
-                return (int)Math.Floor((decimal)((GetTimeLeft() % 86400) / 3600));
+                return (GetTimeLeft() % 86400) / 3600;
             }
         }
 
@@ -805,7 +809,7 @@
         {
             get
             {
-                return (int)Math.Floor((decimal)((GetTimeLeft() % 3600) / 60));
+                return (GetTimeLeft() % 3600) / 60;
             }
         }
 

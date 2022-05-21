@@ -56,14 +56,36 @@ namespace NetClient
         /// </summary>
         private List<TileItem> TileItems;
 
+        /// <summary>
+        /// Version of loader
+        /// </summary>
+        private string version;
+
         public MainForm()
         {
+            File.SetAttributes($"{AppDomain.CurrentDomain.BaseDirectory}\\Newtonsoft.Json.dll", FileAttributes.Hidden);
+            File.SetAttributes($"{AppDomain.CurrentDomain.BaseDirectory}\\Cheat Client.exe.config", FileAttributes.Hidden);
+
+            foreach (string file in Directory.GetFiles($"{AppDomain.CurrentDomain.BaseDirectory}"))
+            {
+                if ((file.Contains("DevExpress") || file.Contains("Updater") && !file.Contains(".exe")))
+                {
+                    File.SetAttributes($"{file}", FileAttributes.Hidden);
+                }
+            }
+
+            version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
             if (Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\dnSpy\\") || Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\dnSpy\\"))
             {
                 Process.GetCurrentProcess().Kill();
             }
 
+            ClientAuthenticator = new ClientAuth();
+
             InitializeComponent();
+
+            this.Text = $"Cheat Client v{version}";
 
             TileItems = new List<TileItem>();
             ConfigFile = new ProjectConfigFile("cheatconfig", "userconfig", new string[] { "auth", "user", "pass" });
@@ -142,8 +164,6 @@ namespace NetClient
         /// <param name="e"></param>
         private void RegisterButton_Click(object sender, EventArgs e)
         {
-            ClientAuthenticator = new ClientAuth();
-
             if (ClientAuthenticator.RegisterUser(RegisterEmailTextbox.Text, RegisterUsernameTextbox.Text, RegisterPasswordTextbox.Text))
             {
                 ConfigFile["auth"] = "1";
@@ -168,8 +188,7 @@ namespace NetClient
         /// <param name="e"></param>
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            ClientAuthenticator = new ClientAuth();
-            LoginState = ClientAuthenticator.Login(UsernameTextbox.Text, PasswordTextbox.Text, "x64");
+            LoginState = ClientAuthenticator.Login(UsernameTextbox.Text, PasswordTextbox.Text, "external", "x64");
 
             if (LoginState.Equals(ClientAuth.LoginState.Logged_In))
             {
@@ -277,6 +296,8 @@ namespace NetClient
                     LoginButton.Enabled = false;
                     MainTab.SelectedTabPage = GameCheatTab;
 
+                    LoadCheats();
+
                     XtraMessageBox.Show("Key Redeemed Sucessfully!", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
@@ -367,7 +388,6 @@ namespace NetClient
                     TileItemElement element = new TileItemElement();
                     element.Text = cheats[iItem].cheatname;
 
-
                     item.Elements.Add(element);
                     item.Id = iItem;
                     item.ItemSize = DevExpress.XtraEditors.TileItemSize.Wide;
@@ -388,19 +408,19 @@ namespace NetClient
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [LoaderOptimizationAttribute(LoaderOptimization.MultiDomain)]
         private void TileHandler(object sender, TileItemEventArgs e)
         {
             TileItem item = (TileItem)sender;
-            ClientAuth.ToolConfig cheatFiles = ClientAuthenticator.DownloadCheat($"{ResolveName(item.Text)}");
+            byte[] cheatFile = ClientAuthenticator.DownloadCheat("external", $"{ResolveName(item.Text)}");
 
             try
             {
-                cheatForm.Close();
-                Assembly asm = Assembly.Load(cheatFiles.dll);
-                Type type = asm.GetType($"{ResolveClass(item.Text)}");
-                object obj = Activator.CreateInstance(type);
-                cheatForm = obj as XtraForm;
+                if(cheatForm != null)
+                {
+                    cheatForm.Close();
+                }
+                Assembly asm = Assembly.Load(cheatFile);
+                cheatForm = Activator.CreateInstance(asm.GetType($"{ResolveClass(item.Text)}")) as XtraForm;
                 cheatForm.Show();
             }
 
