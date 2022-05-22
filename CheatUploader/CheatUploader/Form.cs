@@ -49,9 +49,9 @@ namespace CheatUploader
                         {
                             List<CheatItems> json = new List<CheatItems>();
 
-                            if (client.Exists("/var/www/cheats/x64games.json"))
+                            if (client.Exists("/var/www/cheats/external/x64games.json"))
                             {
-                                byte[] jsonBytes = client.ReadAllBytes("/var/www/cheats/x64games.json");
+                                byte[] jsonBytes = client.ReadAllBytes("/var/www/cheats/external/x64games.json");
                                 json = JsonConvert.DeserializeObject<List<CheatItems>>(Encoding.UTF8.GetString(jsonBytes));
 
                                 int iJson = 0;
@@ -62,7 +62,6 @@ namespace CheatUploader
                                     {
                                         cheat = cheatx;
                                         client.DeleteFile($"/var/www/cheats/external/{fileName}/{fileName}.dll");
-                                        client.DeleteFile($"/var/www/cheats/external/{fileName}/{fileName}.json");
                                         client.DeleteDirectory($"/var/www/cheats/external/{fileName}");
                                     }
                                 }
@@ -82,7 +81,7 @@ namespace CheatUploader
                                 }
                             );
 
-                            client.AppendAllText("/var/www/cheats/x64games.json", JsonConvert.SerializeObject(json));
+                            client.AppendAllText("/var/www/cheats/external/x64games.json", JsonConvert.SerializeObject(json));
 
                             using (MemoryStream ms = new MemoryStream(fileContent))
                             {
@@ -90,6 +89,8 @@ namespace CheatUploader
                                 client.ChangeDirectory("/var/www/cheats/external/" + fileName);
                                 client.UploadFile(ms, fileName + ".dll");
                             }
+
+                            MessageBox.Show("Cheat Uploaded!");
                         }
                     }
                 }

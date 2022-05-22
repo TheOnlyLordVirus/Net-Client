@@ -170,7 +170,10 @@ namespace NetClient
                 ConfigFile["user"] = RegisterUsernameTextbox.Text;
                 ConfigFile["pass"] = RegisterPasswordTextbox.Text;
 
-                MainTab.SelectedTabPage = RedeemKeyTab;
+                UsernameTextbox.Text = ConfigFile["user"];
+                PasswordTextbox.Text = ConfigFile["pass"];
+
+                MainTab.SelectedTabPage = LoginTab;
 
                 XtraMessageBox.Show("User Registered!", "Register User", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

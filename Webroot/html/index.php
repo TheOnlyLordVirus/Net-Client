@@ -12,7 +12,7 @@ if(isset($_POST['cheese']))
     {
         $dayinyear = date('z') + 1;
         $year = date("Y");
-        echo base64_encode($dayinyear + $year);
+        echo base64_encode(base64_encode($dayinyear + $year));
     }
 }
 
@@ -77,7 +77,7 @@ class cheesey_api
                     // Register new user, return unencrypted response.
                     if ($decryptedInput->cheese == "register_user")
                     {
-                        echo json_encode(['addres' => $this->registerUser(json_decode($decryptedInput->parms, true)), "dkey" => $this->eKey], true);
+                        echo base64_encode(json_encode(['addres' => $this->registerUser(json_decode($decryptedInput->parms, true)), "dkey" => $this->eKey], true));
                     }
 
                     // First login, get decryption key
@@ -88,18 +88,18 @@ class cheesey_api
                             if($this->logCommand($decryptedInput->cheese, $decryptedInput->parms) && $this->checkCurrentIp())
                             {
                                 $eggnoodle = json_decode($decryptedInput->parms, true);
-                                echo json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats($eggnoodle['dir'], $eggnoodle['bitcount'])], true);
+                                echo base64_encode(json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats($eggnoodle['dir'], $eggnoodle['bitcount'])], true));
                             }
 
                             else
                             {
-                                echo json_encode(['loggedin' => "IP_Mismatch"], true); 
+                                echo base64_encode(json_encode(['loggedin' => "IP_Mismatch"], true)); 
                             }
                         }
 
                         else
                         {
-                            echo json_encode(['loggedin' => $login_status], true);
+                            echo base64_encode(json_encode(['loggedin' => $login_status], true));
                         }
                     }
 
@@ -254,7 +254,7 @@ class cheesey_api
             $returnMe = false;
         }
 
-        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwRTI3ODAwMA=="/*Client*/) && !$this->isAdmin())
+        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwRTM2MDAwMA=="/*Client*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
@@ -278,7 +278,7 @@ class cheesey_api
         $returnMe = true;
 
         // File hash challenge
-        if(!($decryptedInput->noodles == "000000000E278000"/*Client*/) && !$this->isAdmin())
+        if(!($decryptedInput->noodles == "000000000E360000"/*Client*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
