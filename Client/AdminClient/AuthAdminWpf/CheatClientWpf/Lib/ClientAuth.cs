@@ -101,6 +101,39 @@
         /// </summary>
         public ClientAuth()
         {
+            /* Client
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "tool", "version" }
+            };
+
+            string Json = JsonConvert.SerializeObject(values);
+            Task<string> getVersion = Task.Run(() => PostURI(new Uri("http://159.223.114.162/update/update.php"), new FormUrlEncodedContent(values)));
+            getVersion.Wait();
+
+            if (getVersion.Result.Equals(Assembly.GetExecutingAssembly().GetName().Version.ToString()))
+            {
+                GetEncryptionKey();
+            }
+
+            else
+            {
+                if (File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}\\Updater.exe"))
+                {
+                    DevExpress.XtraEditors.XtraMessageBox.Show("A new update is avaliable for the Cheat Loader.", $"Update: v{getVersion.Result}");
+                    Process.Start($"{AppDomain.CurrentDomain.BaseDirectory}\\Updater.exe");
+                }
+
+                else
+                {
+                    DevExpress.XtraEditors.XtraMessageBox.Show("Please run 'Updater.exe' to update to the latest version of the Cheat Loader!");
+                }
+
+                Process.GetCurrentProcess().Kill();
+            }
+            */
+
+            // Admin
             GetEncryptionKey();
         }
 
@@ -246,7 +279,9 @@
 
                 if (!response.Result.Equals(string.Empty))
                 {
-                    RegisterUserResponse registerUserResponse = JsonConvert.DeserializeObject<RegisterUserResponse>(response.Result);
+                    byte[] data = Convert.FromBase64String(response.Result);
+                    string decodedString = Encoding.UTF8.GetString(data);
+                    RegisterUserResponse registerUserResponse = JsonConvert.DeserializeObject<RegisterUserResponse>(decodedString);
                     this.dkey = registerUserResponse.dkey;
                     return registerUserResponse.addres;
                 }
@@ -283,7 +318,10 @@
 
                 if (!response.Result.Equals(string.Empty))
                 {
-                    LoginResponse dkeyResponse = JsonConvert.DeserializeObject<LoginResponse>(response.Result);
+                    byte[] data = Convert.FromBase64String(response.Result);
+                    string decodedString = Encoding.UTF8.GetString(data);
+
+                    LoginResponse dkeyResponse = JsonConvert.DeserializeObject<LoginResponse>(decodedString);
 
                     if (Enum.TryParse(dkeyResponse.loggedin, out LoginState state))
                     {
@@ -398,7 +436,11 @@
             {
                 var getEncryptionKey = Task.Run(() => PostURI(new Uri("http://159.223.114.162/index.php"), new FormUrlEncodedContent(new Dictionary<string, string> { { "cheese", "90kGPILHd22/yQ3bctAPwxzEPq+BEA4og3Wqh+hSRFQ=" } })));
                 getEncryptionKey.Wait();
-                this.ekey = getEncryptionKey.Result;
+
+                byte[] data = Convert.FromBase64String(getEncryptionKey.Result);
+                string decodedString = Encoding.UTF8.GetString(data);
+
+                this.ekey = decodedString;
             }
         }
 

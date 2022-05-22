@@ -333,12 +333,12 @@ namespace CheatClientWpf
                 #pragma warning disable CS8629 // Nullable value type may be null.
                 if ((bool)KeyCheckBox.IsChecked)
                 {
-                    KeyServerFlag = ClientAuthenticator.RedeemKey($"{KeyInputBox1.Text}-{KeyInputBox2.Text}-{KeyInputBox3.Text}-{KeyInputBox4.Text}");
+                    KeyServerFlag = ClientAuthenticator.RedeemKey($"{KeyInputBox1.Text}-{KeyInputBox2.Text}-{KeyInputBox3.Text}-{KeyInputBox4.Text}", redeemKeyUserTextBox.Text);
                 }
 
                 else
                 {
-                    KeyServerFlag = ClientAuthenticator.RedeemKey($"{KeyInputFullBox.Text}");
+                    KeyServerFlag = ClientAuthenticator.RedeemKey($"{KeyInputFullBox.Text}", redeemKeyUserTextBox.Text);
                 }
                 #pragma warning restore CS8629 // Nullable value type may be null.
 

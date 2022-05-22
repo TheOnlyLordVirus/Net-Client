@@ -11,6 +11,8 @@
     <AssemblyName>Admin Client</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <UseWindowsForms>False</UseWindowsForms>
+    <IsPublishable>True</IsPublishable>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>

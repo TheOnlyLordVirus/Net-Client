@@ -1,4 +1,16 @@
 using System.Windows;
+using System.Reflection;
+using System.Runtime.Versioning;
+
+[assembly: AssemblyCompanyAttribute("Admin Client")]
+[assembly: AssemblyConfigurationAttribute("Release")]
+[assembly: AssemblyFileVersionAttribute("1.0.0.1")]
+[assembly: AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: AssemblyProductAttribute("Admin Client")]
+[assembly: AssemblyTitleAttribute("Admin Client")]
+[assembly: AssemblyVersionAttribute("1.0.0.1")]
+[assembly: TargetPlatformAttribute("Windows7.0")]
+[assembly: SupportedOSPlatformAttribute("Windows7.0")]
 
 [assembly: ThemeInfo(
     ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
