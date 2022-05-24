@@ -1,0 +1,8 @@
+﻿  Main.cpp
+F:\Projects\Current\t7_cheat\t7_internal\Main.cpp(30,34): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+F:\Projects\Current\t7_cheat\t7_internal\Main.cpp(31,34): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+  Generating code
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+  All 1078 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  t7_internal.vcxproj -> F:\Projects\Current\t7_cheat\x64\Release\t7_internal.dll

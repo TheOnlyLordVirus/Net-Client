@@ -1,4 +1,0 @@
-C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\Updater\bin\Release\netcoreapp3.1\publish\Updater.exe
-C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\Updater\bin\Release\netcoreapp3.1\publish\Updater.dll
-C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\Updater\bin\Release\netcoreapp3.1\publish\Updater.deps.json
-C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClient\Updater\bin\Release\netcoreapp3.1\publish\Updater.runtimeconfig.json

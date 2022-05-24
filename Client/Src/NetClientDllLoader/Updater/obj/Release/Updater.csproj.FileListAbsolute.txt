@@ -1,0 +1,5 @@
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\bin\Release\Updater.exe.config
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\bin\Release\Updater.exe
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\obj\Release\Updater.csproj.AssemblyReference.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\obj\Release\Updater.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\obj\Release\Updater.exe

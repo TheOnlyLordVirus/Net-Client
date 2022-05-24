@@ -1,0 +1,7 @@
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\bin\Debug\Updater.exe.config
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\bin\Debug\Updater.exe
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\bin\Debug\Updater.pdb
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\obj\Debug\Updater.csproj.AssemblyReference.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\obj\Debug\Updater.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\obj\Debug\Updater.exe
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\NetClientDllLoader\Updater\obj\Debug\Updater.pdb

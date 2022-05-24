@@ -40,7 +40,7 @@ namespace CheatUploader
                     var host = "159.223.114.162";
                     var port = 22;
                     var username = "root";
-                    var password = "@Jazz42Blitz";
+                    var password = "@Skank42Hunt";
 
                     using (var client = new SftpClient(host, port, username, password))
                     {

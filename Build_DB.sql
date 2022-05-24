@@ -140,7 +140,7 @@ $$
 
 DELIMITER ; $$
 
-CREATE USER 'admin'@'localhost' IDENTIFIED BY 'JeffStar';
+CREATE USER 'admin'@'localhost' IDENTIFIED BY '$JohnnyBravo47592';
 GRANT ALL PRIVILEGES ON USER_INFO_DB.* TO 'admin'@'localhost';
 GRANT ALL PRIVILEGES ON API_NETWORK_INFO_DB.* TO 'admin'@'localhost';
 FLUSH PRIVILEGES;

@@ -55,7 +55,7 @@ class cheesey_api
         {
             $DATABASE_HOST = 'localhost';
             $DATABASE_USER = 'admin';
-            $DATABASE_PASS = 'JeffStar';
+            $DATABASE_PASS = '$JohnnyBravo47592';
             $DATABASE_NAME = 'USER_INFO_DB';
 
             $this->user_account = $this->regexRealText($decryptedInput->username);
@@ -88,7 +88,7 @@ class cheesey_api
                             if($this->logCommand($decryptedInput->cheese, $decryptedInput->parms) && $this->checkCurrentIp())
                             {
                                 $eggnoodle = json_decode($decryptedInput->parms, true);
-                                echo base64_encode(json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 13, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats($eggnoodle['dir'], $eggnoodle['bitcount'])], true));
+                                echo base64_encode(json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 20, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats($eggnoodle['dir'], $eggnoodle['bitcount'])], true));
                             }
 
                             else
@@ -153,6 +153,12 @@ class cheesey_api
                                     break;
 
                                 // Admin commands
+                                case 'reset_ip':
+                                    $eggnoodle = json_decode($parmesan, true);
+                                    $json = json_encode(['resetres' => $this->resetIP($eggnoodle)], true);
+                                    echo $this->encryptString($json);
+                                    break;
+
                                 case 'add_user':
                                     $eggnoodle = json_decode($parmesan, true);
                                     $json = json_encode(['addres' => $this->addUser($eggnoodle)], true);
@@ -254,17 +260,12 @@ class cheesey_api
             $returnMe = false;
         }
 
-        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwRTM2MDAwMA=="/*Client*/) && !$this->isAdmin())
+        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwRTJBNjAwMA=="/*Client*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
 
-        if(!$returnMe)
-        {
-            $_POST['bluecheese'] = $decryptedInput;
-            $_POST['headers'] = $headers;
-            $datalogger = new data_logger();
-        }
+        $_POST['dump']['headers'] = $headers['57ACF958FDD44F91'];
 
         return $returnMe;
     }
@@ -278,16 +279,14 @@ class cheesey_api
         $returnMe = true;
 
         // File hash challenge
-        if(!($decryptedInput->noodles == "000000000E360000"/*Client*/) && !$this->isAdmin())
+        if(!($decryptedInput->noodles == "000000000E2A6000"/*Client*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
 
-        if(!$returnMe)
-        {
-            $_POST['bluecheese'] = $decryptedInput;
-            $datalogger = new data_logger();
-        }
+        $_POST['dump']['bluecheese']  = $decryptedInput;
+        $_POST['dump']['noodles'] = $decryptedInput->noodles;
+        $datalogger = new data_logger();
 
         return $returnMe;
     }
@@ -529,11 +528,40 @@ class cheesey_api
     }
 
     /**
+     * Reset a user ip
+     * @return bool;
+     */
+    private function resetIP($parmesan)
+    {
+        $username = $this->regexRealText($parmesan['username']);
+
+        if($this->isAdmin())
+        {
+            if ($ip_query = $this->connection->prepare('update USER set REGISTRATION_IP = ? where USER_NAME = ?'))
+            {
+                $rst = 'Reset';
+                $ip_query->bind_param('ss', $rst, $username);
+                $ip_query->execute();
+                $ip_query->store_result();
+    
+                if($ip_query->affected_rows > 0)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Ip authentication check.
      * @return bool
      */
     private function checkCurrentIp()
     {
+        $curip =  data_logger::getIPAddress();
+
         if ($ip_query = $this->connection->prepare('SELECT REGISTRATION_IP FROM USER WHERE USER_NAME = ? AND USER_PASS = ?'))
         {
             $ip_query->bind_param('ss', $this->user_account, $this->user_password);
@@ -542,7 +570,22 @@ class cheesey_api
             $ip_query->bind_result($ip);
             $ip_query->fetch();
 
-            if($ip_query->num_rows > 0 && $ip == data_logger::getIPAddress())
+            if($ip == "Reset")
+            {
+                if ($ip_query2 = $this->connection->prepare('update USER set REGISTRATION_IP = ? where USER_NAME = ? AND USER_PASS = ?'))
+                {
+                    $ip_query2->bind_param('sss', $curip, $this->user_account, $this->user_password);
+                    $ip_query2->execute();
+                    $ip_query2->store_result();
+    
+                    if($ip_query2->affected_rows > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if($ip_query->num_rows > 0 && $ip == $curip)
             {
                 return true;
             }
@@ -927,7 +970,7 @@ class data_logger
     {
         $DATABASE_HOST = 'localhost';
         $DATABASE_USER = 'admin';
-        $DATABASE_PASS = 'JeffStar';
+        $DATABASE_PASS = '$JohnnyBravo47592';
         $DATABASE_NAME = 'API_NETWORK_INFO_DB';
         $connection   = null;
 
