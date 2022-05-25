@@ -88,7 +88,7 @@ class cheesey_api
                             if($this->logCommand($decryptedInput->cheese, $decryptedInput->parms) && $this->checkCurrentIp())
                             {
                                 $eggnoodle = json_decode($decryptedInput->parms, true);
-                                echo base64_encode(json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 20, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats($eggnoodle['dir'], $eggnoodle['bitcount'])], true));
+                                echo base64_encode(json_encode(['loggedin' => $login_status, 'dkey' => $this->eKey, 'heartrate' => 30, 'heartrhythm' => 500, "meatball" => intval(hrtime(true)), "gamesjson" => $this->getGameCheats($eggnoodle['dir'], $eggnoodle['bitcount'])], true));
                             }
 
                             else
@@ -260,7 +260,7 @@ class cheesey_api
             $returnMe = false;
         }
 
-        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwRTJBNjAwMA=="/*Client*/) && !$this->isAdmin())
+        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwRTFBODAwMA=="/*Client*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
@@ -279,7 +279,7 @@ class cheesey_api
         $returnMe = true;
 
         // File hash challenge
-        if(!($decryptedInput->noodles == "000000000E2A6000"/*Client*/) && !$this->isAdmin())
+        if(!($decryptedInput->noodles == "000000000E1A8000"/*Client*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }

@@ -37,6 +37,8 @@ namespace NetClient
             this.EndDateLabel = new DevExpress.XtraEditors.LabelControl();
             this.TimeCounterLabel = new DevExpress.XtraEditors.LabelControl();
             this.RedeemKeyTab = new DevExpress.XtraTab.XtraTabPage();
+            this.hyphenCheck = new DevExpress.XtraEditors.CheckEdit();
+            this.RedeemKeyTextbox = new DevExpress.XtraEditors.TextEdit();
             this.hyphen3 = new System.Windows.Forms.Label();
             this.hyphen2 = new System.Windows.Forms.Label();
             this.hyphen1 = new System.Windows.Forms.Label();
@@ -66,6 +68,8 @@ namespace NetClient
             this.GameCheatTab.SuspendLayout();
             this.TimeTab.SuspendLayout();
             this.RedeemKeyTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hyphenCheck.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RedeemKeyTextbox.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RedeemKeyTextbox4.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RedeemKeyTextbox3.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RedeemKeyTextbox2.Properties)).BeginInit();
@@ -152,6 +156,8 @@ namespace NetClient
             // 
             // RedeemKeyTab
             // 
+            this.RedeemKeyTab.Controls.Add(this.hyphenCheck);
+            this.RedeemKeyTab.Controls.Add(this.RedeemKeyTextbox);
             this.RedeemKeyTab.Controls.Add(this.hyphen3);
             this.RedeemKeyTab.Controls.Add(this.hyphen2);
             this.RedeemKeyTab.Controls.Add(this.hyphen1);
@@ -166,6 +172,27 @@ namespace NetClient
             this.RedeemKeyTab.PageEnabled = false;
             this.RedeemKeyTab.Size = new System.Drawing.Size(928, 628);
             this.RedeemKeyTab.Text = "Redeem Key";
+            // 
+            // hyphenCheck
+            // 
+            this.hyphenCheck.EditValue = true;
+            this.hyphenCheck.Location = new System.Drawing.Point(213, 343);
+            this.hyphenCheck.Name = "hyphenCheck";
+            this.hyphenCheck.Properties.Caption = "Show Hyphens?";
+            this.hyphenCheck.Size = new System.Drawing.Size(196, 36);
+            this.hyphenCheck.TabIndex = 6;
+            this.hyphenCheck.CheckedChanged += new System.EventHandler(this.hyphenCheck_CheckedChanged);
+            // 
+            // RedeemKeyTextbox
+            // 
+            this.RedeemKeyTextbox.Enabled = false;
+            this.RedeemKeyTextbox.Location = new System.Drawing.Point(213, 293);
+            this.RedeemKeyTextbox.Margin = new System.Windows.Forms.Padding(176, 192, 176, 192);
+            this.RedeemKeyTextbox.Name = "RedeemKeyTextbox";
+            this.RedeemKeyTextbox.Properties.MaxLength = 5;
+            this.RedeemKeyTextbox.Size = new System.Drawing.Size(516, 40);
+            this.RedeemKeyTextbox.TabIndex = 4;
+            this.RedeemKeyTextbox.Visible = false;
             // 
             // hyphen3
             // 
@@ -208,7 +235,7 @@ namespace NetClient
             // 
             // RedeemKeyTextbox3
             // 
-            this.RedeemKeyTextbox3.Location = new System.Drawing.Point(491, 294);
+            this.RedeemKeyTextbox3.Location = new System.Drawing.Point(491, 293);
             this.RedeemKeyTextbox3.Margin = new System.Windows.Forms.Padding(352, 384, 352, 384);
             this.RedeemKeyTextbox3.Name = "RedeemKeyTextbox3";
             this.RedeemKeyTextbox3.Properties.MaxLength = 5;
@@ -242,7 +269,7 @@ namespace NetClient
             this.RedeemKeyButton.Margin = new System.Windows.Forms.Padding(1424, 1536, 1424, 1536);
             this.RedeemKeyButton.Name = "RedeemKeyButton";
             this.RedeemKeyButton.Size = new System.Drawing.Size(332, 85);
-            this.RedeemKeyButton.TabIndex = 4;
+            this.RedeemKeyButton.TabIndex = 5;
             this.RedeemKeyButton.Text = "Redeem";
             this.RedeemKeyButton.Click += new System.EventHandler(this.RedeemKeyButton_Click);
             // 
@@ -457,6 +484,8 @@ namespace NetClient
             this.TimeTab.PerformLayout();
             this.RedeemKeyTab.ResumeLayout(false);
             this.RedeemKeyTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hyphenCheck.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RedeemKeyTextbox.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RedeemKeyTextbox4.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RedeemKeyTextbox3.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RedeemKeyTextbox2.Properties)).EndInit();
@@ -512,6 +541,8 @@ namespace NetClient
         private DevExpress.XtraEditors.TextEdit RegisterEmailTextbox;
         private DevExpress.XtraEditors.TileControl CheatTiles;
         private DevExpress.XtraEditors.TileGroup CheatGroup;
+        private DevExpress.XtraEditors.CheckEdit hyphenCheck;
+        private DevExpress.XtraEditors.TextEdit RedeemKeyTextbox;
     }
 }
 

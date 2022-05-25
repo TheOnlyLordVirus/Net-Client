@@ -859,7 +859,9 @@
         }
 
         /// <summary>
-        /// Veryifys the integrity of the heart beat.
+        /// Veryifys the integrity of the heart beat. 
+        /// If the incrementor of the heartrate ever exceeds the heartrate,
+        /// that means the first connection thread loop for authorization was nop'ed in memory and someone was poking around where they shouldn't be.
         /// </summary>
         public bool HeartRate
         {

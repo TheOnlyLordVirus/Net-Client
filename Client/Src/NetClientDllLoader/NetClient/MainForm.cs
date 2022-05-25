@@ -288,7 +288,21 @@ namespace NetClient
         {
             if (ClientAuthenticator.Authorized)
             {
-                if(ClientAuthenticator.RedeemKey($"{RedeemKeyTextbox1.Text}-{RedeemKeyTextbox2.Text}-{RedeemKeyTextbox3.Text}-{RedeemKeyTextbox4.Text}"))
+                bool KeyServerFlag = false;
+
+                #pragma warning disable CS8629 // Nullable value type may be null.
+                if ((bool)hyphenCheck.Checked)
+                {
+                    KeyServerFlag = ClientAuthenticator.RedeemKey($"{RedeemKeyTextbox1.Text}-{RedeemKeyTextbox2.Text}-{RedeemKeyTextbox3.Text}-{RedeemKeyTextbox4.Text}");
+                }
+
+                else
+                {
+                    KeyServerFlag = ClientAuthenticator.RedeemKey($"{RedeemKeyTextbox.Text}");
+                }
+                #pragma warning restore CS8629 // Nullable value type may be null.
+
+                if (KeyServerFlag)
                 {
                     LoginState = ClientAuth.LoginState.Logged_In;
                     Task.Run(() => checkAuthTime());
@@ -351,7 +365,7 @@ namespace NetClient
             {
                 this.Invoke(new MethodInvoker(delegate
                 {
-                    EndDateLabel.Text = "End Date Time: " + ClientAuthenticator.TimeLeft.ToLocalTime().ToString();
+                    EndDateLabel.Text = "Expiration Date: " + ClientAuthenticator.TimeLeft.ToLocalTime().ToString();
 
                     int iYears = ClientAuthenticator.YearsLeft;
                     int iMonths = ClientAuthenticator.MonthsLeft;
@@ -497,6 +511,59 @@ namespace NetClient
                 {
                     LoginButton.PerformClick();
                 }
+            }
+        }
+
+
+        /// <summary>
+        /// Show message boxes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void hyphenCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            if(hyphenCheck.Checked)
+            {
+                RedeemKeyTextbox.Visible = false;
+                RedeemKeyTextbox.Enabled = false;
+
+                RedeemKeyTextbox1.Visible = true;
+                RedeemKeyTextbox1.Enabled = true;
+
+                RedeemKeyTextbox2.Visible = true;
+                RedeemKeyTextbox1.Visible = true;
+
+                RedeemKeyTextbox3.Visible = true;
+                RedeemKeyTextbox1.Visible = true;
+
+                RedeemKeyTextbox4.Visible = true;
+                RedeemKeyTextbox1.Visible = true;
+
+                hyphen1.Visible = true;
+                hyphen2.Visible = true;
+                hyphen3.Visible = true;
+            }
+
+            else
+            {
+                RedeemKeyTextbox.Visible = true;
+                RedeemKeyTextbox.Enabled = true;
+
+                RedeemKeyTextbox1.Visible = false;
+                RedeemKeyTextbox1.Enabled = false;
+
+                RedeemKeyTextbox2.Visible = false;
+                RedeemKeyTextbox1.Visible = false;
+
+                RedeemKeyTextbox3.Visible = false;
+                RedeemKeyTextbox1.Visible = false;
+
+                RedeemKeyTextbox4.Visible = false;
+                RedeemKeyTextbox1.Visible = false;
+
+                hyphen1.Visible = false;
+                hyphen2.Visible = false;
+                hyphen3.Visible = false;
             }
         }
     }

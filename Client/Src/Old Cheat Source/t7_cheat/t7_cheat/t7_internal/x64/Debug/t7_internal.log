@@ -1,4 +1,0 @@
-﻿  Main.cpp
-F:\Projects\Current\t7_cheat\t7_internal\Main.cpp(30,34): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-F:\Projects\Current\t7_cheat\t7_internal\Main.cpp(31,34): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-  t7_internal.vcxproj -> F:\Projects\Current\t7_cheat\x64\Debug\t7_internal.dll

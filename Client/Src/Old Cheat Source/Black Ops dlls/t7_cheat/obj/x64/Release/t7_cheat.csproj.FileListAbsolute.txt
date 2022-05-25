@@ -1,0 +1,212 @@
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\t7_cheat.exe.config
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\t7_cheat.exe
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\t7_cheat.pdb
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Printing.v20.2.Core.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraGrid.v20.2.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraLayout.v20.2.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraPrinting.v20.2.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraTreeList.v20.2.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.RichEdit.v20.2.Core.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Office.v20.2.Core.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Printing.v20.2.Core.xml
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraGrid.v20.2.xml
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraLayout.v20.2.xml
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraPrinting.v20.2.xml
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraTreeList.v20.2.xml
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.RichEdit.v20.2.Core.xml
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Office.v20.2.Core.xml
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.Printing.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.Printing.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.Printing.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.Printing.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraGrid.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraGrid.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraGrid.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraGrid.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraLayout.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraLayout.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraLayout.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraLayout.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraPrinting.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraPrinting.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraPrinting.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraPrinting.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraTreeList.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraTreeList.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraTreeList.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraTreeList.v20.2.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.RichEdit.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.RichEdit.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.RichEdit.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.RichEdit.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.Office.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.Office.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.Office.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.Office.v20.2.Core.resources.dll
+F:\Projects\Current\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.AssemblyReference.cache
+F:\Projects\Current\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.MainForm.resources
+F:\Projects\Current\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.Properties.Resources.resources
+F:\Projects\Current\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.GenerateResource.cache
+F:\Projects\Current\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.exe.licenses
+F:\Projects\Current\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.CoreCompileInputs.cache
+F:\Projects\Current\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.CopyComplete
+F:\Projects\Current\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.exe
+F:\Projects\Current\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.pdb
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\t7_cheat.pdb
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Printing.v20.2.Core.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraGrid.v20.2.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraLayout.v20.2.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraPrinting.v20.2.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraTreeList.v20.2.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.RichEdit.v20.2.Core.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Office.v20.2.Core.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Printing.v20.2.Core.xml
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraGrid.v20.2.xml
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraLayout.v20.2.xml
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraPrinting.v20.2.xml
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraTreeList.v20.2.xml
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.RichEdit.v20.2.Core.xml
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Office.v20.2.Core.xml
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.AssemblyReference.cache
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.MainForm.resources
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.Properties.Resources.resources
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.GenerateResource.cache
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.CopyComplete
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.pdb
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\t7_cheat.dll.config
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\t7_cheat.dll
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.dll.licenses
+C:\Users\TheNe\Desktop\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Printing.v20.2.Core.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraGrid.v20.2.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraLayout.v20.2.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraPrinting.v20.2.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraTreeList.v20.2.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.RichEdit.v20.2.Core.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Office.v20.2.Core.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Printing.v20.2.Core.xml
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraGrid.v20.2.xml
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraLayout.v20.2.xml
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraPrinting.v20.2.xml
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.XtraTreeList.v20.2.xml
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.RichEdit.v20.2.Core.xml
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\DevExpress.Office.v20.2.Core.xml
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\de\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\es\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ja\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\ru\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.AssemblyReference.cache
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.MainForm.resources
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.Properties.Resources.resources
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.GenerateResource.cache
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.csproj.CopyComplete
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\t7_cheat.dll.config
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\bin\x64\Release\t7_cheat.dll
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.dll.licenses
+C:\Users\TheNe\Desktop\NetClient\Old dll source\t7_cheat\t7_cheat\t7_cheat\obj\x64\Release\t7_cheat.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\t7_cheat.exe.config
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\t7_cheat.exe
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.Printing.v20.2.Core.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.XtraGrid.v20.2.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.XtraLayout.v20.2.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.XtraPrinting.v20.2.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.XtraTreeList.v20.2.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.RichEdit.v20.2.Core.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.Office.v20.2.Core.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.Printing.v20.2.Core.xml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.XtraGrid.v20.2.xml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.XtraLayout.v20.2.xml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.XtraPrinting.v20.2.xml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.XtraTreeList.v20.2.xml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.RichEdit.v20.2.Core.xml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\DevExpress.Office.v20.2.Core.xml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\de\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\es\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ja\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ru\DevExpress.Printing.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\de\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\es\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ja\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ru\DevExpress.XtraGrid.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\de\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\es\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ja\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ru\DevExpress.XtraLayout.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\de\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\es\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ja\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ru\DevExpress.XtraPrinting.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\de\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\es\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ja\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ru\DevExpress.XtraTreeList.v20.2.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\de\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\es\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ja\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ru\DevExpress.RichEdit.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\de\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\es\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ja\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\bin\x64\Release\ru\DevExpress.Office.v20.2.Core.resources.dll
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.csproj.AssemblyReference.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.MainForm.resources
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.Properties.Resources.resources
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.csproj.GenerateResource.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.exe.licenses
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.csproj.CoreCompileInputs.cache
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.csproj.CopyComplete
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.exe
