@@ -162,7 +162,7 @@
                 this.username = user;
                 this.password = password;
                 LoginState state = GetDecryptionKey(user, password, cheat_type, bitcount);
-
+                
                 this.authorized = (state.Equals(LoginState.Logged_In) || state.Equals(LoginState.Logged_In_Without_Time));
                 return state;
             }
@@ -223,7 +223,6 @@
             return 0;
         }
 
-
         /// <summary>
         /// Attempt to redeem a key, return boolean result of attempt.
         /// </summary>
@@ -237,7 +236,7 @@
                 { "game", gameName }
             };
 
-            if (false || Authorized)
+            if (AuthorizedWithTimeLeft)
             {
                 string dllResponse = SendCommand(this.username, this.password, "download_file", JsonConvert.SerializeObject(values));
 
@@ -416,9 +415,9 @@
                 incrementor++;
                 Thread.Sleep(heartRhythm);
             }
-#pragma warning disable CS0162 // Unreachable code detected
+            #pragma warning disable CS0162 // Unreachable code detected
             return Task.CompletedTask;
-#pragma warning restore CS0162 // Unreachable code detected
+            #pragma warning restore CS0162 // Unreachable code detected
         }
 
         /// <summary>

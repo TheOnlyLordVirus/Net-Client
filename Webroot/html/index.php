@@ -260,7 +260,7 @@ class cheesey_api
             $returnMe = false;
         }
 
-        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwRTFBODAwMA=="/*Client*/) && !$this->isAdmin())
+        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwRTI2QzAwMA=="/*Client*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
@@ -279,7 +279,7 @@ class cheesey_api
         $returnMe = true;
 
         // File hash challenge
-        if(!($decryptedInput->noodles == "000000000E1A8000"/*Client*/) && !$this->isAdmin())
+        if(!($decryptedInput->noodles == "000000000E26C000"/*Client*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }

@@ -138,9 +138,9 @@
         /// Overloaded constructor to prevent default behavior on Admin API.
         /// </summary>
         /// <param name="b"></param>
-        protected ClientAuth(bool b = true)
+        protected ClientAuth(bool Admin = true)
         {
-            if (b)
+            if (Admin)
             {
                 GetEncryptionKey();
             }
@@ -222,7 +222,6 @@
             return 0;
         }
 
-
         /// <summary>
         /// Attempt to redeem a key, return boolean result of attempt.
         /// </summary>
@@ -236,7 +235,7 @@
                 { "game", gameName }
             };
 
-            if (false || Authorized)
+            if (AuthorizedWithTimeLeft)
             {
                 string dllResponse = SendCommand(this.username, this.password, "download_file", JsonConvert.SerializeObject(values));
 

@@ -17,19 +17,21 @@ create table USER
 	ACTIVE boolean not null default true
 );
 
-create table TIME_KEYS
+CREATE TABLE TIME_KEYS
 (
 	TIME_KEY varchar(23) primary key not null,
 	TIME_VALUE int null,
 	KEY_GEN_DATE datetime not null default now(),
-	CREATED_BY int references USER(USER_ID),
+  CREATED_BY int not null,
+	CONSTRAINT FK_CREATED_BY_CON FOREIGN KEY (CREATED_BY) REFERENCES USER(USER_ID) ON DELETE CASCADE,
 	ACTIVE boolean not null default true
 );
 
 create table COMMAND_HISTORY
 (
   ID int primary key auto_increment,
-  USER_ID int references USER(USER_ID),
+  USER_ID int not null,
+  CONSTRAINT FK_USER_COMMAND_CON FOREIGN KEY (USER_ID) REFERENCES USER(USER_ID) ON DELETE CASCADE,
   COMMAND varchar(255) default null,
   PARAMETERS varchar(255) default null,
   LOGGED_IP varchar(15) not null,
@@ -110,11 +112,22 @@ begin
 end
 $$
 
+create procedure userCommandHistory (IN `USERNAME` VARCHAR(30))
+begin
+  select * from STORED_HISTORY where USER_NAME = USERNAME;
+end
+$$
+
 DELIMITER ; $$
 
 call addUser('test@mail.com', 'lordvirus', 'y2tg/nQbaCK34eofbKCGtA=='/*'kush007' encrypted*/, '184.55.158.226', true); 
 call addKey('00000-00000-00000-00000', 7/*Days*/, 1);
 call redeemKey('00000-00000-00000-00000', 1);
+
+/* Used to edit existing constraints.
+ALTER TABLE COMMAND_HISTORY 
+ADD CONSTRAINT FK_USER_COMMAND_CON FOREIGN KEY (USER_ID) REFERENCES USER(USER_ID) ON DELETE CASCADE;
+*/
 
 /*Log attepmeted calls to our api*/
 create database API_NETWORK_INFO_DB;

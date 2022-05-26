@@ -189,7 +189,7 @@ namespace NetClient
             this.RedeemKeyTextbox.Location = new System.Drawing.Point(213, 293);
             this.RedeemKeyTextbox.Margin = new System.Windows.Forms.Padding(176, 192, 176, 192);
             this.RedeemKeyTextbox.Name = "RedeemKeyTextbox";
-            this.RedeemKeyTextbox.Properties.MaxLength = 5;
+            this.RedeemKeyTextbox.Properties.MaxLength = 23;
             this.RedeemKeyTextbox.Size = new System.Drawing.Size(516, 40);
             this.RedeemKeyTextbox.TabIndex = 4;
             this.RedeemKeyTextbox.Visible = false;
