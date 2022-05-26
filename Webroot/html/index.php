@@ -400,7 +400,7 @@ class cheesey_api
     }
 
     /**
-     * email, username, password, lifetime, hardwareid
+     * email, username, password
      * @param $parmesan
      * @return bool
      */

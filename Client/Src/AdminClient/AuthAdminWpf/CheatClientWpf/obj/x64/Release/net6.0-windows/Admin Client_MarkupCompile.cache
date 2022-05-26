@@ -1,15 +1,15 @@
 ﻿Admin Client
 
 
-winexe
+exe
 C#
 .cs
-C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\AdminClient\AuthAdminWpf\CheatClientWpf\obj\x64\Release\net6.0-windows\
 CheatClientWpf
 none
 false
 TRACE;RELEASE;NET;NET6_0;NETCOREAPP
-C:\Users\TheNe\Documents\GitHub\AuthApi\Client\AdminClient\AuthAdminWpf\CheatClientWpf\App.xaml
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\AdminClient\AuthAdminWpf\CheatClientWpf\App.xaml
 11407045341
 1308337287
 7-1825365467

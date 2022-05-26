@@ -1,6 +1,7 @@
 ﻿namespace KeyAuthorization
 {
     using Newtonsoft.Json;
+    using System;
     using System.Collections.Generic;
      
     class AdminApi : ClientAuth
@@ -44,9 +45,26 @@
         /// <summary>
         /// Class constructor
         /// </summary>
-        public AdminApi()
+        public AdminApi() : base(true) { Console.WriteLine("Debug: AdminApi instance Created!"); }
+
+        /// <summary>
+        /// Is the another user an admin?
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAdmin(string user, string pass)
         {
-            GetEncryptionKey();
+            if (Authorized)
+            {
+                string commandResponse = SendCommand(user, pass, "is_admin", "");
+
+                if (!commandResponse.Equals(string.Empty))
+                {
+                    IsAdminResponse AdminResponse = JsonConvert.DeserializeObject<IsAdminResponse>(commandResponse);
+
+                    return AdminResponse.isadmin;
+                }
+            }
+            return false;
         }
 
         /// <summary>

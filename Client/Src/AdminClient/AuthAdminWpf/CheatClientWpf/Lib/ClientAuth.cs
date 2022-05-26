@@ -13,6 +13,7 @@
     using System.Diagnostics;
     using System.Runtime.InteropServices;
     using System.Reflection;
+    using System.Windows;
 
     class ClientAuth
     {
@@ -36,6 +37,8 @@
         protected string dkey = string.Empty;
 
         protected string ekey = string.Empty;
+
+        protected bool registeredFlag = false;
 
         protected byte[] gameCheats;
 
@@ -101,7 +104,6 @@
         /// </summary>
         public ClientAuth()
         {
-            /* Client
             Dictionary<string, string> values = new Dictionary<string, string>
             {
                 { "tool", "version" }
@@ -120,21 +122,29 @@
             {
                 if (File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}\\Updater.exe"))
                 {
-                    DevExpress.XtraEditors.XtraMessageBox.Show("A new update is avaliable for the Cheat Loader.", $"Update: v{getVersion.Result}");
+                    MessageBox.Show("A new update is avaliable for the Cheat Loader.", $"Update: v{getVersion.Result}");
                     Process.Start($"{AppDomain.CurrentDomain.BaseDirectory}\\Updater.exe");
                 }
 
                 else
                 {
-                    DevExpress.XtraEditors.XtraMessageBox.Show("Please run 'Updater.exe' to update to the latest version of the Cheat Loader!");
+                    MessageBox.Show("A new update is avaliable for the Cheat Loader.\nPlease run 'Updater.exe' to update to the latest version of the Cheat Loader!", $"Update: v{getVersion.Result}");
                 }
 
                 Process.GetCurrentProcess().Kill();
             }
-            */
+        }
 
-            // Admin
-            GetEncryptionKey();
+        /// <summary>
+        /// Overloaded constructor to prevent default behavior on Admin API.
+        /// </summary>
+        /// <param name="b"></param>
+        protected ClientAuth(bool Admin = true)
+        {
+            if (Admin)
+            {
+                GetEncryptionKey();
+            }
         }
 
         /// <summary>
@@ -147,12 +157,12 @@
         public LoginState Login(string user, string password, string cheat_type = "external", string bitcount = "x64")
         {
             IsSafe();
-            if (dkey.Equals(string.Empty))
+            if (dkey.Equals(string.Empty) || registeredFlag)
             {
                 this.username = user;
                 this.password = password;
                 LoginState state = GetDecryptionKey(user, password, cheat_type, bitcount);
-                
+
                 this.authorized = (state.Equals(LoginState.Logged_In) || state.Equals(LoginState.Logged_In_Without_Time));
                 return state;
             }
@@ -283,6 +293,9 @@
                     string decodedString = Encoding.UTF8.GetString(data);
                     RegisterUserResponse registerUserResponse = JsonConvert.DeserializeObject<RegisterUserResponse>(decodedString);
                     this.dkey = registerUserResponse.dkey;
+
+                    registeredFlag = true;
+
                     return registerUserResponse.addres;
                 }
             }
@@ -300,7 +313,7 @@
         protected LoginState GetDecryptionKey(string username, string password, string cheat_type, string bitcount)
         {
             this.authorized = false;
-            if (dkey.Equals(string.Empty) && !(ekey.Equals(string.Empty) || ekey.Equals("0") || !IsBase64String(ekey)))
+            if ((dkey.Equals(string.Empty) || registeredFlag) && !(ekey.Equals(string.Empty) || ekey.Equals("0") || !IsBase64String(ekey)))
             {
                 Dictionary<string, string> values = new Dictionary<string, string>
                 {
@@ -403,9 +416,9 @@
                 incrementor++;
                 Thread.Sleep(heartRhythm);
             }
-            #pragma warning disable CS0162 // Unreachable code detected
+#pragma warning disable CS0162 // Unreachable code detected
             return Task.CompletedTask;
-            #pragma warning restore CS0162 // Unreachable code detected
+#pragma warning restore CS0162 // Unreachable code detected
         }
 
         /// <summary>
@@ -859,7 +872,9 @@
         }
 
         /// <summary>
-        /// Veryifys the integrity of the heart beat.
+        /// Veryifys the integrity of the heart beat. 
+        /// If the incrementor of the heartrate ever exceeds the heartrate,
+        /// that means the first connection thread loop for authorization was nop'ed in memory and someone was poking around where they shouldn't be.
         /// </summary>
         public bool HeartRate
         {

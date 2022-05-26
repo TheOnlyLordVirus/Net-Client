@@ -135,6 +135,18 @@
         }
 
         /// <summary>
+        /// Overloaded constructor to prevent default behavior on Admin API.
+        /// </summary>
+        /// <param name="b"></param>
+        protected ClientAuth(bool b = true)
+        {
+            if (b)
+            {
+                GetEncryptionKey();
+            }
+        }
+
+        /// <summary>
         /// When the user first logs in to the server.
         /// </summary>
         /// <param name="user"></param>
