@@ -22,7 +22,7 @@ CREATE TABLE TIME_KEYS
 	TIME_KEY varchar(23) primary key not null,
 	TIME_VALUE int null,
 	KEY_GEN_DATE datetime not null default now(),
-  CREATED_BY int not null,
+  	CREATED_BY int not null,
 	CONSTRAINT FK_CREATED_BY_CON FOREIGN KEY (CREATED_BY) REFERENCES USER(USER_ID) ON DELETE CASCADE,
 	ACTIVE boolean not null default true
 );
