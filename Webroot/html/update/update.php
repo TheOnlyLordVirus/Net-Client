@@ -3,7 +3,7 @@ if(isset($_POST['tool']))
 {
     if($_POST['tool'] == 'version')
     {
-        echo '1.0.0.8';
+        echo '1.0.0.9';
     }
 }
 ?>

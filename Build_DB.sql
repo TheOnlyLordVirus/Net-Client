@@ -2,6 +2,8 @@
 create database USER_INFO_DB;
 use USER_INFO_DB;
 set global sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+set global time_zone = '-05:00';
+set time_zone = '-05:00';
 
 create table USER
 (
@@ -22,7 +24,7 @@ CREATE TABLE TIME_KEYS
 	TIME_KEY varchar(23) primary key not null,
 	TIME_VALUE int null,
 	KEY_GEN_DATE datetime not null default now(),
-  	CREATED_BY int not null,
+  CREATED_BY int not null,
 	CONSTRAINT FK_CREATED_BY_CON FOREIGN KEY (CREATED_BY) REFERENCES USER(USER_ID) ON DELETE CASCADE,
 	ACTIVE boolean not null default true
 );
@@ -103,6 +105,9 @@ begin
       IF((select u.AUTH_END_DATE from USER as u where u.USER_ID = USER_ID) is null)
       THEN
           update USER as u set u.AUTH_END_DATE = DATE_ADD(now(), interval @keytime day) where u.USER_ID = USER_ID;
+      ELSEIF((select u.AUTH_END_DATE from USER as u where u.USER_ID = USER_ID and u.AUTH_END_DATE > now()) is null)
+      THEN
+          update USER as u set u.AUTH_END_DATE = DATE_ADD(now(), interval @keytime day) where u.USER_ID = USER_ID;
       ELSE
           update USER as u set u.AUTH_END_DATE = DATE_ADD(u.AUTH_END_DATE, interval @keytime day) where u.USER_ID = USER_ID;
       END IF;
@@ -132,7 +137,6 @@ ADD CONSTRAINT FK_USER_COMMAND_CON FOREIGN KEY (USER_ID) REFERENCES USER(USER_ID
 /*Log attepmeted calls to our api*/
 create database API_NETWORK_INFO_DB;
 use API_NETWORK_INFO_DB;
-set global sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 create table API_NETWORK_HISTORY
 (

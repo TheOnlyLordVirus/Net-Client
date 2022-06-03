@@ -3,7 +3,7 @@
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
 
-date_default_timezone_set('UTC');
+date_default_timezone_set("Canada/Central");
 
 // Get the encryption key
 if(isset($_POST['cheese']))
@@ -260,7 +260,7 @@ class cheesey_api
             $returnMe = false;
         }
 
-        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwRTI2QzAwMA=="/*Client*/) && !$this->isAdmin())
+        if(!($headers['57ACF958FDD44F91'] == "MDAwMDAwMDAwRTFBQTAwMA=="/*Client*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }
@@ -279,7 +279,7 @@ class cheesey_api
         $returnMe = true;
 
         // File hash challenge
-        if(!($decryptedInput->noodles == "000000000E26C000"/*Client*/) && !$this->isAdmin())
+        if(!($decryptedInput->noodles == "000000000E1AA000"/*Client*/) && !$this->isAdmin())
         {
             $returnMe = false;
         }

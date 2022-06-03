@@ -57,6 +57,11 @@ namespace NetClient
         private List<TileItem> TileItems;
 
         /// <summary>
+        /// Have we loaded the cheats from the server yet?
+        /// </summary>
+        private bool cheatsLoaded = false;
+
+        /// <summary>
         /// Version of loader
         /// </summary>
         private string version;
@@ -78,7 +83,7 @@ namespace NetClient
 
             if (Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\dnSpy\\") || Directory.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\dnSpy\\"))
             {
-                Process.GetCurrentProcess().Kill();
+                this.Close();
             }
 
             ClientAuthenticator = new ClientAuth();
@@ -119,14 +124,11 @@ namespace NetClient
                 LoginButton.Enabled = true;
             }));
 
-            new Task(new Action(() =>
-            {
-                Thread.Sleep(5000);
-                Process.GetCurrentProcess().Kill();
-            })).Start();
+
+            Task.Delay(5000).GetAwaiter().OnCompleted (() => { this.Close(); });
 
             XtraMessageBox.Show("Authentication to server failed!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Process.GetCurrentProcess().Kill();
+            this.Close();
             return Task.CompletedTask;
         }
 
@@ -209,7 +211,11 @@ namespace NetClient
                 Task.Run(() => checkAuthentication()); // General Auth Check.
                 Task.Run(() => checkAuthTime()); // Check that the user is authorized with time left.
 
-                LoadCheats();
+                if (!cheatsLoaded)
+                {
+                    cheatsLoaded = true;
+                    LoadCheats();
+                }
 
                 XtraMessageBox.Show($"Logged in!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -242,38 +248,26 @@ namespace NetClient
 
             else if (LoginState.Equals(ClientAuth.LoginState.IP_Mismatch))
             {
-                new Task(new Action(() =>
-                {
-                    Thread.Sleep(5000);
-                    Process.GetCurrentProcess().Kill();
-                })).Start();
+                Task.Delay(5000).GetAwaiter().OnCompleted(() => { this.Close(); });
 
                 XtraMessageBox.Show("User IP Address Mismatch failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Process.GetCurrentProcess().Kill();
+                this.Close();
             }
 
             else if (LoginState.Equals(ClientAuth.LoginState.Response_Error))
             {
-                new Task(new Action(() =>
-                {
-                    Thread.Sleep(5000);
-                    Process.GetCurrentProcess().Kill();
-                })).Start();
+                Task.Delay(5000).GetAwaiter().OnCompleted(() => { this.Close(); });
 
                 XtraMessageBox.Show("Server Response failure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Process.GetCurrentProcess().Kill();
+                this.Close();
             }
 
             else if (LoginState.Equals(ClientAuth.LoginState.User_Banned))
             {
-                new Task(new Action(() =>
-                {
-                    Thread.Sleep(5000);
-                    Process.GetCurrentProcess().Kill();
-                })).Start();
+                Task.Delay(5000).GetAwaiter().OnCompleted(() => { this.Close(); });
 
                 XtraMessageBox.Show("We don't like you, go away.", "Banned", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Process.GetCurrentProcess().Kill();
+                this.Close();
             }
         }
 
@@ -313,7 +307,11 @@ namespace NetClient
                     LoginButton.Enabled = false;
                     MainTab.SelectedTabPage = GameCheatTab;
 
-                    LoadCheats();
+                    if(!cheatsLoaded)
+                    {
+                        cheatsLoaded = true;
+                        LoadCheats();
+                    }
 
                     XtraMessageBox.Show("Key Redeemed Sucessfully!", "Redeem Key", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -365,7 +363,7 @@ namespace NetClient
             {
                 this.Invoke(new MethodInvoker(delegate
                 {
-                    EndDateLabel.Text = "Expiration Date: " + ClientAuthenticator.TimeLeft.ToLocalTime().ToString();
+                    EndDateLabel.Text = "Expiration Date: " + ClientAuthenticator.TimeLeft.ToString();
 
                     int iYears = ClientAuthenticator.YearsLeft;
                     int iMonths = ClientAuthenticator.MonthsLeft;

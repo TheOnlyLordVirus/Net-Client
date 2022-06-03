@@ -784,11 +784,15 @@
             get { return JsonConvert.DeserializeObject<List<CheatItems>>(Encoding.UTF8.GetString(gameCheats)); }
         }
 
+
+        /// <summary>
+        /// Returns the current Datetime for the users time zone.
+        /// </summary>
         public DateTime TimeLeft
         {
             get
             {
-                return DateTime.UtcNow.AddSeconds(GetTimeLeft());
+                return DateTime.Now.AddSeconds(GetTimeLeft());
             }
         }
 
