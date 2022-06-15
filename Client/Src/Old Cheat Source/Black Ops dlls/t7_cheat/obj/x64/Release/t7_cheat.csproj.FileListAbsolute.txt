@@ -210,3 +210,4 @@ C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dl
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.csproj.CoreCompileInputs.cache
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.csproj.CopyComplete
 C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.exe
+C:\Users\TheNe\Documents\GitHub\AuthApi\Client\Src\Old Cheat Source\Black Ops dlls\t7_cheat\obj\x64\Release\t7_cheat.csproj.SuggestedBindingRedirects.cache

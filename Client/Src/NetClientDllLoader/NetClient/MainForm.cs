@@ -17,6 +17,15 @@ namespace NetClient
     public partial class MainForm : XtraForm
     {
         /// <summary>
+        /// Struct to store assembly info.
+        /// </summary>
+        private struct LoadedAssembly
+        {
+            public string AsmName;
+            public Assembly RawAsm;
+        }
+
+        /// <summary>
         /// Keep running background time check?
         /// </summary>
         private bool timeUpdates = false;
@@ -42,11 +51,6 @@ namespace NetClient
         private List<ClientAuth.CheatItems> cheats;
 
         /// <summary>
-        /// AppDomain for cheat forms
-        /// </summary>
-        private AppDomain appDomain = AppDomain.CreateDomain("cheatsDomain");
-
-        /// <summary>
         /// The current cheat form opened up.
         /// </summary>
         private XtraForm cheatForm = new XtraForm();
@@ -55,6 +59,11 @@ namespace NetClient
         /// Buttons for games.
         /// </summary>
         private List<TileItem> TileItems;
+
+        /// <summary>
+        /// List of currently loaded assemblys.
+        /// </summary>
+        private List<LoadedAssembly> LoadedAssemblys;
 
         /// <summary>
         /// Have we loaded the cheats from the server yet?
@@ -418,6 +427,64 @@ namespace NetClient
             }
         }
 
+
+        /// <summary>
+        /// This is a helper function that will log which assemblys have allready been loaded to prevent a memory leak that has been present since the removal of the multi app domain.
+        /// </summary>
+        /// <param name="AssemblyName"></param>
+        /// <param name="ErrorItemName"></param>
+        /// <param name="rawAsm"></param>
+        private void AssemblyLoadHelper(string AssemblyName, string ErrorItemName)
+        {
+            if (LoadedAssemblys == null)
+            {
+                LoadedAssemblys = new List<LoadedAssembly>();
+            }
+
+            try
+            {
+                bool bFlag = true;
+                string resClass = ResolveClass(AssemblyName);
+
+                if (cheatForm != null)
+                {
+                    cheatForm.Close();
+                }
+
+                foreach(LoadedAssembly la in LoadedAssemblys)
+                {
+                    if (la.AsmName.Equals(AssemblyName))
+                    {
+                        bFlag = false;
+                        cheatForm = Activator.CreateInstance(la.RawAsm.GetType(resClass)) as XtraForm;
+                    }
+                }
+
+                if (bFlag)
+                {
+
+                    byte[] rawAsm = ClientAuthenticator.DownloadCheat("external", $"{ResolveName(AssemblyName)}");
+
+                    LoadedAssembly la = new LoadedAssembly
+                    {
+                        AsmName = AssemblyName,
+                        RawAsm = Assembly.Load(rawAsm)
+                    };
+
+                    LoadedAssemblys.Add(la);
+
+                    cheatForm = Activator.CreateInstance(la.RawAsm.GetType(resClass)) as XtraForm;
+                }
+
+                cheatForm.Show();
+            }
+
+            catch (Exception Ex)
+            {
+                XtraMessageBox.Show("Failed to load cheat!", ErrorItemName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         /// <summary>
         /// Get the cheat Form of the game that we have cheats for.
         /// </summary>
@@ -426,23 +493,7 @@ namespace NetClient
         private void TileHandler(object sender, TileItemEventArgs e)
         {
             TileItem item = (TileItem)sender;
-            byte[] cheatFile = ClientAuthenticator.DownloadCheat("external", $"{ResolveName(item.Text)}");
-
-            try
-            {
-                if(cheatForm != null)
-                {
-                    cheatForm.Close();
-                }
-                Assembly asm = Assembly.Load(cheatFile);
-                cheatForm = Activator.CreateInstance(asm.GetType($"{ResolveClass(item.Text)}")) as XtraForm;
-                cheatForm.Show();
-            }
-
-            catch (Exception Ex)
-            {
-                XtraMessageBox.Show("Failed to load cheat!", e.Item.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            AssemblyLoadHelper(item.Text, item.Name);
         }
 
         /// <summary>
