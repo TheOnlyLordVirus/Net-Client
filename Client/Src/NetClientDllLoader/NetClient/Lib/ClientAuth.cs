@@ -43,6 +43,8 @@
 
         #endregion
 
+        #region Enums
+
         public enum LoginState
         {
             Logged_In,
@@ -54,6 +56,8 @@
             Not_logged_In,
             User_Banned
         }
+
+        #endregion
 
         #region Structs
         public struct CheatItems

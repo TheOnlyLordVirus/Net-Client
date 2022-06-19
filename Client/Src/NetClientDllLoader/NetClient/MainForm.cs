@@ -449,9 +449,12 @@ namespace NetClient
                 if (cheatForm != null)
                 {
                     cheatForm.Close();
+
+                    // Call the garbage collector.
+                    GC.Collect();
                 }
 
-                foreach(LoadedAssembly la in LoadedAssemblys)
+                foreach (LoadedAssembly la in LoadedAssemblys)
                 {
                     if (la.AsmName.Equals(AssemblyName))
                     {
