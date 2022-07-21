@@ -1,3 +1,6 @@
+Example: 
+https://www.youtube.com/watch?v=8B68HYh2MlE
+
 https://github.com/TheOnlyLordVirus/Centos-7-LAMP-Stack-Install
 
 **Login as root and Run Build_DB.sql querys on DB:**
